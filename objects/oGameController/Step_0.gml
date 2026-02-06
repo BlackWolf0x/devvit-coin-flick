@@ -25,6 +25,26 @@ if (gameState == "lost") {
     exit; // Don't process game logic when lost
 }
 
+// Handle win screen
+if (gameState == "won") {
+    // Stop timer
+    timerRunning = false;
+    
+    // Fade in popup
+    winPopupAlpha = min(winPopupAlpha + 0.05, 1);
+    
+    // Check restart button
+    var _onRestartBtn = point_in_rectangle(inputX, inputY,
+        restartBtnX - restartBtnWidth/2, restartBtnY - restartBtnHeight/2,
+        restartBtnX + restartBtnWidth/2, restartBtnY + restartBtnHeight/2);
+    
+    if (_pressed && _onRestartBtn) {
+        game_restart();
+    }
+    
+    exit; // Don't process game logic when won
+}
+
 // Check if any coins are moving
 coinsMoving = false;
 with (oCoin) {
@@ -53,11 +73,21 @@ if (waitingForHit && !coinsMoving) {
     
     // Must have exactly 2 hits: the shooter and exactly 1 target
     if (_hitCount == 2 && instance_exists(_hitCoinId)) {
-        // Success! Auto-select the hit coin for next shot
-        selectedCoin = _hitCoinId;
-        selectedCoin.isSelected = true;
-        isAiming = true;
-        aimLocked = false;
+        // Success! Capture (destroy) the coin we just shot
+        if (instance_exists(lastShotCoin)) {
+            instance_destroy(lastShotCoin);
+        }
+        
+        // Check if only 1 coin remains - WIN!
+        if (instance_number(oCoin) == 1) {
+            gameState = "won";
+        } else {
+            // Auto-select the hit coin for next shot
+            selectedCoin = _hitCoinId;
+            selectedCoin.isSelected = true;
+            isAiming = true;
+            aimLocked = false;
+        }
     } else {
         // Wrong number of hits - player loses!
         gameState = "lost";
@@ -100,6 +130,12 @@ if (_pressed && _onShootBtn && selectedCoin != noone && aimLocked && !coinsMovin
         lastShotCoin = selectedCoin;
         waitingForHit = true;
         isFirstShot = false;
+        
+        // Start timer on first shot
+        if (!timerRunning) {
+            timerRunning = true;
+            startTime = current_time;
+        }
         
         // Deselect immediately
         selectedCoin.isSelected = false;
@@ -284,4 +320,9 @@ if (powerMeterActive) {
         powerMeterValue = 0;
         powerMeterDirection = 1;
     }
+}
+
+// Update timer
+if (timerRunning) {
+    elapsedTime = current_time - startTime;
 }

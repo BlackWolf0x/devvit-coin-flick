@@ -194,6 +194,25 @@ if (aimLocked) {
 }
 draw_set_alpha(1);
 
+// Draw timer
+if (timerRunning || gameState == "won") {
+    var _seconds = elapsedTime / 1000;
+    var _minutes = floor(_seconds / 60);
+    var _secs = floor(_seconds mod 60);
+    var _ms = floor((_seconds - floor(_seconds)) * 100);
+    
+    var _timeStr = string(_minutes) + ":" + 
+                   ((_secs < 10) ? "0" : "") + string(_secs) + "." +
+                   ((_ms < 10) ? "0" : "") + string(_ms);
+    
+    draw_set_color(c_white);
+    draw_set_alpha(0.9);
+    draw_set_halign(fa_right);
+    draw_set_valign(fa_top);
+    draw_text(room_width - 10, 10, "Time: " + _timeStr);
+    draw_set_halign(fa_left);
+}
+
 // Debug: Display last shot force
 if (lastShotForce > 0) {
     draw_set_color(c_lime);
@@ -263,6 +282,87 @@ if (gameState == "lost") {
     // Button text
     draw_set_color(c_white);
     draw_text(restartBtnX, restartBtnY, "RESTART");
+    
+    // Reset draw settings
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    draw_set_alpha(1);
+}
+
+// Draw win popup
+if (gameState == "won") {
+    // Dark overlay
+    draw_set_color(c_black);
+    draw_set_alpha(0.7 * winPopupAlpha);
+    draw_rectangle(0, 0, room_width, room_height, false);
+    
+    // Popup background
+    var _popupWidth = 450;
+    var _popupHeight = 300;
+    var _popupX = room_width / 2;
+    var _popupY = room_height / 2 - 30;
+    
+    draw_set_color(c_dkgray);
+    draw_set_alpha(0.95 * winPopupAlpha);
+    draw_roundrect(_popupX - _popupWidth/2, _popupY - _popupHeight/2,
+                   _popupX + _popupWidth/2, _popupY + _popupHeight/2, false);
+    
+    // Popup border
+    draw_set_color(c_lime);
+    draw_set_alpha(winPopupAlpha);
+    draw_roundrect(_popupX - _popupWidth/2, _popupY - _popupHeight/2,
+                   _popupX + _popupWidth/2, _popupY + _popupHeight/2, true);
+    
+    // "YOU WON!" text
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_lime);
+    draw_set_alpha(winPopupAlpha);
+    draw_text_transformed(_popupX, _popupY - 60, "YOU WON!", 2.5, 2.5, 0);
+    
+    // Time display
+    var _seconds = elapsedTime / 1000;
+    var _minutes = floor(_seconds / 60);
+    var _secs = floor(_seconds mod 60);
+    var _ms = floor((_seconds - floor(_seconds)) * 100);
+    
+    var _timeStr = string(_minutes) + ":" + 
+                   ((_secs < 10) ? "0" : "") + string(_secs) + "." +
+                   ((_ms < 10) ? "0" : "") + string(_ms);
+    
+    draw_set_color(c_white);
+    draw_text(_popupX, _popupY, "Time: " + _timeStr);
+    
+    // Congratulations text
+    draw_set_color(c_yellow);
+    draw_text(_popupX, _popupY + 30, "Congratulations!");
+    
+    // Restart button
+    var _btnLeft = restartBtnX - restartBtnWidth/2;
+    var _btnTop = restartBtnY - restartBtnHeight/2;
+    var _btnRight = restartBtnX + restartBtnWidth/2;
+    var _btnBottom = restartBtnY + restartBtnHeight/2;
+    
+    // Check if hovering
+    var _hovering = point_in_rectangle(inputX, inputY, _btnLeft, _btnTop, _btnRight, _btnBottom);
+    
+    // Button background
+    if (_hovering) {
+        draw_set_color(c_lime);
+    } else {
+        draw_set_color(c_green);
+    }
+    draw_set_alpha(0.9 * winPopupAlpha);
+    draw_roundrect(_btnLeft, _btnTop, _btnRight, _btnBottom, false);
+    
+    // Button border
+    draw_set_color(c_white);
+    draw_set_alpha(winPopupAlpha);
+    draw_roundrect(_btnLeft, _btnTop, _btnRight, _btnBottom, true);
+    
+    // Button text
+    draw_set_color(c_white);
+    draw_text(restartBtnX, restartBtnY, "PLAY AGAIN");
     
     // Reset draw settings
     draw_set_halign(fa_left);
