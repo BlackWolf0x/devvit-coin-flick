@@ -7,7 +7,7 @@ coinRadius = sprite_width / 2;
 isSelected = false;
 
 // Shot force (constant for now)
-shotForce = 5000;
+shotForce = 2000;
 
 // Friction/damping will slow down the coin over time
 // (configured in physics settings)
