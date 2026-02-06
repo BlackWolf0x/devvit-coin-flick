@@ -30,3 +30,20 @@ guideEndY = 0;
 // Touch/mouse input
 inputX = 0;
 inputY = 0;
+
+// Power meter settings
+minShotForce = 500;      // Minimum shot power
+maxShotForce = 6000;     // Maximum shot power
+powerMeterSpeed = 1.5;     // How fast the meter oscillates (higher = faster)
+powerMeterValue = 0;     // Current position (0 to 1)
+powerMeterDirection = 1; // 1 = going up, -1 = going down
+powerMeterActive = false; // Whether meter is oscillating
+
+// Power meter visual properties
+powerMeterX = room_width - 60;
+powerMeterY = room_height / 2;
+powerMeterWidth = 30;
+powerMeterHeight = 200;
+
+// Debug info
+lastShotForce = 0;

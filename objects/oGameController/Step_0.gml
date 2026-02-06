@@ -15,29 +15,35 @@ var _onShootBtn = point_in_rectangle(inputX, inputY,
 
 // Handle shoot button press (only when aim is locked)
 if (_pressed && _onShootBtn && selectedCoin != noone && aimLocked) {
-    shootBtnPressed = true;
-}
-
-if (_released && shootBtnPressed) {
-    shootBtnPressed = false;
-    
-    // Shoot the selected coin!
-    if (instance_exists(selectedCoin) && aimLocked) {
-        // Use the locked aim direction
-        var _forceX = lengthdir_x(selectedCoin.shotForce, aimDirection);
-        var _forceY = lengthdir_y(selectedCoin.shotForce, aimDirection);
+    // Shoot the selected coin immediately on press!
+    if (instance_exists(selectedCoin)) {
+        // Calculate shot force from power meter EXACTLY now
+        var _shotForce = lerp(minShotForce, maxShotForce, powerMeterValue);
         
-        // Apply impulse to the coin (must be called from the physics object)
+        // Store for debug display
+        lastShotForce = _shotForce;
+        
+        // Use the locked aim direction with power meter force
+        var _forceX = lengthdir_x(_shotForce, aimDirection);
+        var _forceY = lengthdir_y(_shotForce, aimDirection);
+        
+        // Apply impulse to the coin
         with (selectedCoin) {
             physics_apply_impulse(x, y, _forceX, _forceY);
         }
         
-        // Deselect after shooting
+        // Deselect immediately
         selectedCoin.isSelected = false;
         selectedCoin = noone;
         isAiming = false;
         aimLocked = false;
+        powerMeterActive = false;
     }
+}
+
+// Clean up shootBtnPressed state on release
+if (_released) {
+    shootBtnPressed = false;
 }
 
 // Handle coin selection and aim lock
@@ -48,8 +54,11 @@ if (_pressed && !_onShootBtn) {
     if (_clickedCoin != noone) {
         // If clicking on the already selected coin, toggle lock
         if (_clickedCoin == selectedCoin && isAiming) {
-            // Already selected, lock the aim
+            // Already selected, lock the aim and start power meter
             aimLocked = true;
+            powerMeterActive = true;
+            powerMeterValue = 0;
+            powerMeterDirection = 1;
         } else {
             // Deselect previous coin
             if (selectedCoin != noone && instance_exists(selectedCoin)) {
@@ -65,8 +74,11 @@ if (_pressed && !_onShootBtn) {
     } else {
         // Clicked on empty space
         if (isAiming && !aimLocked) {
-            // Lock the current aim
+            // Lock the current aim and start power meter
             aimLocked = true;
+            powerMeterActive = true;
+            powerMeterValue = 0;
+            powerMeterDirection = 1;
         } else {
             // Deselect everything
             if (selectedCoin != noone && instance_exists(selectedCoin)) {
@@ -85,8 +97,8 @@ if (isAiming && !aimLocked && selectedCoin != noone && instance_exists(selectedC
     var _dy = inputY - selectedCoin.y;
     
     if (abs(_dx) > 5 || abs(_dy) > 5) {
-        // Aim direction is OPPOSITE to where you drag (like pulling back a slingshot)
-        aimDirection = point_direction(selectedCoin.x, selectedCoin.y, inputX, inputY) + 180;
+        // Aim direction follows the cursor directly
+        aimDirection = point_direction(selectedCoin.x, selectedCoin.y, inputX, inputY);
     }
 }
 
@@ -177,4 +189,19 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
     collisionY = _coinY + _dirY * tempHitDist;
     guideEndX = collisionX;
     guideEndY = collisionY;
+}
+
+// Power meter oscillation
+if (powerMeterActive) {
+    // Update power meter value
+    powerMeterValue += powerMeterDirection * powerMeterSpeed * (1/60); // Assuming 60 FPS
+    
+    // Bounce at boundaries
+    if (powerMeterValue >= 1) {
+        powerMeterValue = 1;
+        powerMeterDirection = -1;
+    } else if (powerMeterValue <= 0) {
+        powerMeterValue = 0;
+        powerMeterDirection = 1;
+    }
 }

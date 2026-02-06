@@ -98,14 +98,106 @@ if (aimLocked) {
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 
+// Draw power meter when aim is locked
+if (powerMeterActive && aimLocked) {
+    var _meterLeft = powerMeterX - powerMeterWidth / 2;
+    var _meterTop = powerMeterY - powerMeterHeight / 2;
+    var _meterRight = powerMeterX + powerMeterWidth / 2;
+    var _meterBottom = powerMeterY + powerMeterHeight / 2;
+    
+    // Draw meter background (dark)
+    draw_set_color(c_dkgray);
+    draw_set_alpha(0.7);
+    draw_roundrect(_meterLeft - 3, _meterTop - 3, _meterRight + 3, _meterBottom + 3, false);
+    
+    // Draw meter border
+    draw_set_color(c_white);
+    draw_set_alpha(1);
+    draw_roundrect(_meterLeft - 3, _meterTop - 3, _meterRight + 3, _meterBottom + 3, true);
+    
+    // Draw gradient background for meter (shows full range)
+    // Green at bottom, yellow in middle, red at top
+    var _segments = 20;
+    var _segmentHeight = powerMeterHeight / _segments;
+    for (var i = 0; i < _segments; i++) {
+        var _ratio = i / _segments;
+        // Gradient: green -> yellow -> red (bottom to top)
+        var _col;
+        if (_ratio < 0.5) {
+            _col = merge_color(c_green, c_yellow, _ratio * 2);
+        } else {
+            _col = merge_color(c_yellow, c_red, (_ratio - 0.5) * 2);
+        }
+        draw_set_color(_col);
+        draw_set_alpha(0.3); // Dim background
+        var _segTop = _meterBottom - (i + 1) * _segmentHeight;
+        var _segBottom = _meterBottom - i * _segmentHeight;
+        draw_rectangle(_meterLeft, _segTop, _meterRight, _segBottom, false);
+    }
+    
+    // Draw filled portion based on current power
+    var _fillHeight = powerMeterHeight * powerMeterValue;
+    var _fillTop = _meterBottom - _fillHeight;
+    
+    // Draw filled segments
+    for (var i = 0; i < _segments; i++) {
+        var _segTop = _meterBottom - (i + 1) * _segmentHeight;
+        var _segBottom = _meterBottom - i * _segmentHeight;
+        
+        // Only draw if this segment is within the filled area
+        if (_segBottom >= _fillTop) {
+            var _ratio = i / _segments;
+            var _col;
+            if (_ratio < 0.5) {
+                _col = merge_color(c_green, c_yellow, _ratio * 2);
+            } else {
+                _col = merge_color(c_yellow, c_red, (_ratio - 0.5) * 2);
+            }
+            draw_set_color(_col);
+            draw_set_alpha(1);
+            
+            // Clip the top segment if needed
+            var _drawTop = max(_segTop, _fillTop);
+            draw_rectangle(_meterLeft, _drawTop, _meterRight, _segBottom, false);
+        }
+    }
+    
+    // Draw power indicator line
+    draw_set_color(c_white);
+    draw_set_alpha(1);
+    draw_line_width(_meterLeft - 5, _fillTop, _meterRight + 5, _fillTop, 2);
+    
+    // Draw power percentage text
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_bottom);
+    var _powerPercent = round(powerMeterValue * 100);
+    draw_text(powerMeterX, _meterTop - 8, string(_powerPercent) + "%");
+    
+    // Draw "POWER" label
+    draw_set_valign(fa_top);
+    draw_text(powerMeterX, _meterBottom + 8, "POWER");
+    
+    // Reset
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+}
+
 // Draw instructions at top
 draw_set_color(c_white);
 draw_set_alpha(0.8);
 if (aimLocked) {
-    draw_text(10, 10, "Aim LOCKED! Press SHOOT or click elsewhere to cancel.");
+    draw_text(10, 10, "Aim LOCKED! Press SHOOT to fire at current power.");
 } else if (selectedCoin != noone) {
     draw_text(10, 10, "Aim by moving mouse. LEFT CLICK to lock aim.");
 } else {
     draw_text(10, 10, "Click a coin to select it.");
 }
 draw_set_alpha(1);
+
+// Debug: Display last shot force
+if (lastShotForce > 0) {
+    draw_set_color(c_lime);
+    draw_set_alpha(1);
+    draw_text(10, 40, "DEBUG - Last Shot Force: " + string(round(lastShotForce)));
+    draw_text(10, 60, "Min: " + string(minShotForce) + " | Max: " + string(maxShotForce));
+}
