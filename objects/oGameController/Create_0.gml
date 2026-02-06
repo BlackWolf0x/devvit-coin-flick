@@ -76,7 +76,8 @@ playAreaWidth = room_width - 200;
 playAreaHeight = room_height - 200;
 
 // Coin spawning settings
-numCoins = 10;  // Total number of coins to spawn
+numCoins = 8;  // Total number of coins to spawn
+numObstacles = 4;  // Number of obstacles to spawn
 edgeSpawnMinDist = 50;  // Minimum distance from edge for "close" spawns
 edgeSpawnMaxDist = 120;  // Maximum distance from edge for "close" spawns
 minCoinSpacing = 80;  // Minimum distance between coin centers

@@ -287,6 +287,42 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
         }
     }
     
+    // Check collision with obstacles (circle-ray intersection)
+    with (oObstacle) {
+        // Vector from selected coin to this obstacle
+        var _toX = x - _coinX;
+        var _toY = y - _coinY;
+        
+        // Project onto ray direction
+        var _proj = _toX * _dirX + _toY * _dirY;
+        
+        // Only consider obstacles in front of us
+        if (_proj > 0) {
+            // Closest point on ray to this obstacle's center
+            var _closestX = _coinX + _dirX * _proj;
+            var _closestY = _coinY + _dirY * _proj;
+            
+            // Distance from ray to obstacle center
+            var _distToObstacle = point_distance(_closestX, _closestY, x, y);
+            
+            // Combined radius (coin + obstacle)
+            var _combinedRadius = _coinRadius + obstacleRadius;
+            
+            // Check if ray intersects this obstacle
+            if (_distToObstacle < _combinedRadius) {
+                // Calculate exact intersection point
+                var _backDist = sqrt(_combinedRadius * _combinedRadius - _distToObstacle * _distToObstacle);
+                var _intersectDist = _proj - _backDist;
+                
+                // Accept any positive intersection distance
+                if (_intersectDist > 0 && _intersectDist < other.tempHitDist) {
+                    other.tempHitDist = _intersectDist;
+                    other.hitCoin = noone; // Clear hitCoin since we hit an obstacle
+                }
+            }
+        }
+    }
+    
     // Calculate final collision point
     collisionX = _coinX + _dirX * tempHitDist;
     collisionY = _coinY + _dirY * tempHitDist;

@@ -1,21 +1,27 @@
-/// @description Spawn coins randomly in play area with even distribution
+/// @description Spawn coins and obstacles randomly in play area with even distribution
 function spawnCoins() {
-    // Clear any existing coins
+    // Clear any existing coins and obstacles
     with (oCoin) {
         instance_destroy();
     }
+    with (oObstacle) {
+        instance_destroy();
+    }
     
-    // Array to track spawned coin positions
-    var _spawnedCoins = [];
+    // Array to track spawned positions (both coins and obstacles)
+    var _spawnedPositions = [];
     var _numSpawned = 0;
+    
+    // Calculate total objects to spawn
+    var _totalObjects = numCoins + numObstacles;
     
     // Calculate how many coins near edges vs center
     var _numEdgeCoins = floor(numCoins / 2);
     var _numCenterCoins = numCoins - _numEdgeCoins;
     
     // Create grid cells for better distribution
-    var _gridCols = ceil(sqrt(numCoins * 1.5));
-    var _gridRows = ceil(sqrt(numCoins * 1.5));
+    var _gridCols = ceil(sqrt(_totalObjects * 1.5));
+    var _gridRows = ceil(sqrt(_totalObjects * 1.5));
     var _cellWidth = playAreaWidth / _gridCols;
     var _cellHeight = playAreaHeight / _gridRows;
     
@@ -39,14 +45,17 @@ function spawnCoins() {
     var _currentSpacing = minCoinSpacing;
     var _minAllowedSpacing = 40; // Absolute minimum
     
-    // Keep trying with reduced spacing until we spawn all coins
-    while (_numSpawned < numCoins && _currentSpacing >= _minAllowedSpacing) {
+    // Keep trying with reduced spacing until we spawn all objects
+    while (_numSpawned < _totalObjects && _currentSpacing >= _minAllowedSpacing) {
         // Reset for this attempt
         _numSpawned = 0;
-        _spawnedCoins = [];
+        _spawnedPositions = [];
         
-        // Clear any coins from previous attempt
+        // Clear any objects from previous attempt
         with (oCoin) {
+            instance_destroy();
+        }
+        with (oObstacle) {
             instance_destroy();
         }
         
@@ -118,11 +127,11 @@ function spawnCoins() {
                 // If this cell isn't near this edge, try next edge
                 if (!_isNearEdge) continue;
                 
-                // Check if position is valid (no overlap with existing coins)
+                // Check if position is valid (no overlap with existing objects)
                 var _valid = true;
-                for (var i = 0; i < array_length(_spawnedCoins); i++) {
-                    var _existingCoin = _spawnedCoins[i];
-                    var _dist = point_distance(_x, _y, _existingCoin.x, _existingCoin.y);
+                for (var i = 0; i < array_length(_spawnedPositions); i++) {
+                    var _existing = _spawnedPositions[i];
+                    var _dist = point_distance(_x, _y, _existing.x, _existing.y);
                     if (_dist < _currentSpacing) {
                         _valid = false;
                         break;
@@ -132,7 +141,7 @@ function spawnCoins() {
                 // Spawn coin if valid
                 if (_valid) {
                     var _coin = instance_create_layer(_x, _y, "Instances", oCoin);
-                    array_push(_spawnedCoins, {x: _x, y: _y});
+                    array_push(_spawnedPositions, {x: _x, y: _y});
                     _edgeCoinsSpawned++;
                     _numSpawned++;
                     _spawned = true;
@@ -142,7 +151,8 @@ function spawnCoins() {
         }
         
         // Spawn center coins using remaining cells
-        while (_numSpawned < numCoins && _cellIndex < array_length(_availableCells)) {
+        var _centerCoinsSpawned = 0;
+        while (_centerCoinsSpawned < _numCenterCoins && _cellIndex < array_length(_availableCells)) {
             // Get next cell
             var _cell = _availableCells[_cellIndex];
             _cellIndex++;
@@ -160,11 +170,11 @@ function spawnCoins() {
             _x = clamp(_x, playAreaX + 30, playAreaX + playAreaWidth - 30);
             _y = clamp(_y, playAreaY + 30, playAreaY + playAreaHeight - 30);
             
-            // Check if position is valid (no overlap with existing coins)
+            // Check if position is valid (no overlap with existing objects)
             var _valid = true;
-            for (var i = 0; i < array_length(_spawnedCoins); i++) {
-                var _existingCoin = _spawnedCoins[i];
-                var _dist = point_distance(_x, _y, _existingCoin.x, _existingCoin.y);
+            for (var i = 0; i < array_length(_spawnedPositions); i++) {
+                var _existing = _spawnedPositions[i];
+                var _dist = point_distance(_x, _y, _existing.x, _existing.y);
                 if (_dist < _currentSpacing) {
                     _valid = false;
                     break;
@@ -174,24 +184,68 @@ function spawnCoins() {
             // Spawn coin if valid
             if (_valid) {
                 var _coin = instance_create_layer(_x, _y, "Instances", oCoin);
-                array_push(_spawnedCoins, {x: _x, y: _y});
+                array_push(_spawnedPositions, {x: _x, y: _y});
+                _centerCoinsSpawned++;
                 _numSpawned++;
             }
         }
         
-        // If we didn't spawn all coins, reduce spacing and try again
-        if (_numSpawned < numCoins) {
+        // Spawn obstacles using remaining cells
+        var _obstaclesSpawned = 0;
+        while (_obstaclesSpawned < numObstacles && _cellIndex < array_length(_availableCells)) {
+            // Get next cell
+            var _cell = _availableCells[_cellIndex];
+            _cellIndex++;
+            
+            // Calculate random position within cell
+            var _cellX = playAreaX + (_cell.col * _cellWidth);
+            var _cellY = playAreaY + (_cell.row * _cellHeight);
+            
+            // Add some padding from cell edges for variety
+            var _padding = min(_cellWidth, _cellHeight) * 0.2;
+            var _x = _cellX + _padding + random(_cellWidth - _padding * 2);
+            var _y = _cellY + _padding + random(_cellHeight - _padding * 2);
+            
+            // Clamp to play area
+            _x = clamp(_x, playAreaX + 30, playAreaX + playAreaWidth - 30);
+            _y = clamp(_y, playAreaY + 30, playAreaY + playAreaHeight - 30);
+            
+            // Check if position is valid (no overlap with existing objects)
+            var _valid = true;
+            for (var i = 0; i < array_length(_spawnedPositions); i++) {
+                var _existing = _spawnedPositions[i];
+                var _dist = point_distance(_x, _y, _existing.x, _existing.y);
+                if (_dist < _currentSpacing) {
+                    _valid = false;
+                    break;
+                }
+            }
+            
+            // Spawn obstacle if valid
+            if (_valid) {
+                var _obstacle = instance_create_layer(_x, _y, "Instances", oObstacle);
+                array_push(_spawnedPositions, {x: _x, y: _y});
+                _obstaclesSpawned++;
+                _numSpawned++;
+            }
+        }
+        
+        // If we didn't spawn all objects, reduce spacing and try again
+        if (_numSpawned < _totalObjects) {
             _currentSpacing -= 5;
-            show_debug_message("Reducing spacing to " + string(_currentSpacing) + " to fit all coins");
+            show_debug_message("Reducing spacing to " + string(_currentSpacing) + " to fit all objects");
         }
     }
     
-    // Final check - if still not enough coins, force spawn remaining
-    if (_numSpawned < numCoins) {
-        show_debug_message("Force spawning remaining " + string(numCoins - _numSpawned) + " coins");
+    // Final check - if still not enough objects, force spawn remaining
+    if (_numSpawned < _totalObjects) {
+        show_debug_message("Force spawning remaining " + string(_totalObjects - _numSpawned) + " objects");
+        
+        var _coinsSpawned = instance_number(oCoin);
+        var _obstaclesSpawned = instance_number(oObstacle);
         
         var _forceAttempts = 0;
-        while (_numSpawned < numCoins && _forceAttempts < 5000) {
+        while (_numSpawned < _totalObjects && _forceAttempts < 5000) {
             _forceAttempts++;
             
             // Random position anywhere in play area
@@ -200,9 +254,9 @@ function spawnCoins() {
             
             // Check minimum spacing (very relaxed)
             var _valid = true;
-            for (var i = 0; i < array_length(_spawnedCoins); i++) {
-                var _existingCoin = _spawnedCoins[i];
-                var _dist = point_distance(_x, _y, _existingCoin.x, _existingCoin.y);
+            for (var i = 0; i < array_length(_spawnedPositions); i++) {
+                var _existing = _spawnedPositions[i];
+                var _dist = point_distance(_x, _y, _existing.x, _existing.y);
                 if (_dist < _minAllowedSpacing) {
                     _valid = false;
                     break;
@@ -210,12 +264,19 @@ function spawnCoins() {
             }
             
             if (_valid) {
-                var _coin = instance_create_layer(_x, _y, "Instances", oCoin);
-                array_push(_spawnedCoins, {x: _x, y: _y});
+                // Spawn coins first, then obstacles
+                if (_coinsSpawned < numCoins) {
+                    var _coin = instance_create_layer(_x, _y, "Instances", oCoin);
+                    _coinsSpawned++;
+                } else if (_obstaclesSpawned < numObstacles) {
+                    var _obstacle = instance_create_layer(_x, _y, "Instances", oObstacle);
+                    _obstaclesSpawned++;
+                }
+                array_push(_spawnedPositions, {x: _x, y: _y});
                 _numSpawned++;
             }
         }
     }
     
-    show_debug_message("Successfully spawned " + string(_numSpawned) + " out of " + string(numCoins) + " coins");
+    show_debug_message("Successfully spawned " + string(instance_number(oCoin)) + " coins and " + string(instance_number(oObstacle)) + " obstacles");
 }
