@@ -107,6 +107,20 @@ var _onShootBtn = point_in_rectangle(inputX, inputY,
     shootBtnX - shootBtnWidth/2, shootBtnY - shootBtnHeight/2,
     shootBtnX + shootBtnWidth/2, shootBtnY + shootBtnHeight/2);
 
+// Check if cancel button is pressed
+var _onCancelBtn = point_in_rectangle(inputX, inputY,
+    cancelBtnX - cancelBtnWidth/2, cancelBtnY - cancelBtnHeight/2,
+    cancelBtnX + cancelBtnWidth/2, cancelBtnY + cancelBtnHeight/2);
+
+// Handle cancel button press (only when aim is locked)
+if (_pressed && _onCancelBtn && aimLocked && !coinsMoving) {
+    // Unlock the aim so player can readjust
+    aimLocked = false;
+    powerMeterActive = false;
+    powerMeterValue = 0;
+    // Keep the coin selected and aiming active
+}
+
 // Handle shoot button press (only when aim is locked and coins not moving)
 if (_pressed && _onShootBtn && selectedCoin != noone && aimLocked && !coinsMoving) {
     // Shoot the selected coin immediately on press!
@@ -152,7 +166,7 @@ if (_released) {
 }
 
 // Handle coin selection and aim lock (only if coins not moving and not waiting for hit)
-if (_pressed && !_onShootBtn && !coinsMoving && !waitingForHit) {
+if (_pressed && !_onShootBtn && !_onCancelBtn && !coinsMoving && !waitingForHit) {
     // Check if clicking on a coin
     var _clickedCoin = instance_position(inputX, inputY, oCoin);
     

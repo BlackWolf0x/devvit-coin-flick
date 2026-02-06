@@ -15,6 +15,12 @@ shootBtnWidth = 150;
 shootBtnHeight = 60;
 shootBtnPressed = false;
 
+// Cancel button properties
+cancelBtnX = room_width / 2 - 180;
+cancelBtnY = room_height - 80;
+cancelBtnWidth = 150;
+cancelBtnHeight = 60;
+
 // Guide line properties
 guideColor = c_white;
 guideDotSpacing = 15;
