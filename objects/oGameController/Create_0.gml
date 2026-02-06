@@ -69,16 +69,6 @@ startTime = 0;
 elapsedTime = 0;
 timerRunning = false;
 
-// Lose screen
-losePopupAlpha = 0;
-restartBtnX = room_width / 2;
-restartBtnY = room_height / 2 + 60;
-restartBtnWidth = 200;
-restartBtnHeight = 70;
-
-// Win screen
-winPopupAlpha = 0;
-
 // Play area bounds
 playAreaX = 100;
 playAreaY = 100;

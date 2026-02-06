@@ -8,41 +8,13 @@ inputY = device_mouse_y(0);
 var _pressed = device_mouse_check_button_pressed(0, mb_left);
 var _released = device_mouse_check_button_released(0, mb_left);
 
-// Handle lose screen
-if (gameState == "lost") {
-    // Fade in popup
-    losePopupAlpha = min(losePopupAlpha + 0.05, 1);
-    
-    // Check restart button
-    var _onRestartBtn = point_in_rectangle(inputX, inputY,
-        restartBtnX - restartBtnWidth/2, restartBtnY - restartBtnHeight/2,
-        restartBtnX + restartBtnWidth/2, restartBtnY + restartBtnHeight/2);
-    
-    if (_pressed && _onRestartBtn) {
-        game_restart();
+// Exit early if game is over (let oGameOver handle input)
+if (gameState == "lost" || gameState == "won") {
+    // Stop timer when won
+    if (gameState == "won") {
+        timerRunning = false;
     }
-    
-    exit; // Don't process game logic when lost
-}
-
-// Handle win screen
-if (gameState == "won") {
-    // Stop timer
-    timerRunning = false;
-    
-    // Fade in popup
-    winPopupAlpha = min(winPopupAlpha + 0.05, 1);
-    
-    // Check restart button
-    var _onRestartBtn = point_in_rectangle(inputX, inputY,
-        restartBtnX - restartBtnWidth/2, restartBtnY - restartBtnHeight/2,
-        restartBtnX + restartBtnWidth/2, restartBtnY + restartBtnHeight/2);
-    
-    if (_pressed && _onRestartBtn) {
-        game_restart();
-    }
-    
-    exit; // Don't process game logic when won
+    exit;
 }
 
 // Check if any coins are moving
