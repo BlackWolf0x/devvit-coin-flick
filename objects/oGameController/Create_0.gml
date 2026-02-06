@@ -15,11 +15,11 @@ shootBtnWidth = 150;
 shootBtnHeight = 60;
 shootBtnPressed = false;
 
-// Cancel button properties
-cancelBtnX = room_width / 2 - 180;
-cancelBtnY = room_height - 80;
-cancelBtnWidth = 150;
-cancelBtnHeight = 60;
+// Unselect button properties (only for first shot)
+unselectBtnX = room_width / 2 + 180;
+unselectBtnY = room_height - 80;
+unselectBtnWidth = 150;
+unselectBtnHeight = 60;
 
 // Guide line properties
 guideColor = c_white;

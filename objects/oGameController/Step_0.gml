@@ -79,18 +79,22 @@ var _onShootBtn = point_in_rectangle(inputX, inputY,
     shootBtnX - shootBtnWidth/2, shootBtnY - shootBtnHeight/2,
     shootBtnX + shootBtnWidth/2, shootBtnY + shootBtnHeight/2);
 
-// Check if cancel button is pressed
-var _onCancelBtn = point_in_rectangle(inputX, inputY,
-    cancelBtnX - cancelBtnWidth/2, cancelBtnY - cancelBtnHeight/2,
-    cancelBtnX + cancelBtnWidth/2, cancelBtnY + cancelBtnHeight/2);
+// Check if unselect button is pressed (only for first shot)
+var _onUnselectBtn = false;
+if (isFirstShot && selectedCoin != noone) {
+    _onUnselectBtn = point_in_rectangle(inputX, inputY,
+        unselectBtnX - unselectBtnWidth/2, unselectBtnY - unselectBtnHeight/2,
+        unselectBtnX + unselectBtnWidth/2, unselectBtnY + unselectBtnHeight/2);
+}
 
-// Handle cancel button press (only when aim is locked)
-if (_pressed && _onCancelBtn && aimLocked && !coinsMoving) {
-    // Unlock the aim so player can readjust
+// Handle unselect button press (only on first shot)
+if (_pressed && _onUnselectBtn && isFirstShot && selectedCoin != noone) {
+    // Unselect the coin
+    selectedCoin.isSelected = false;
+    selectedCoin = noone;
+    isAiming = false;
     aimLocked = false;
     powerMeterActive = false;
-    powerMeterValue = 0;
-    // Keep the coin selected and aiming active
 }
 
 // Handle shoot button press (only when aim is locked and coins not moving)
@@ -138,57 +142,62 @@ if (_released) {
 }
 
 // Handle coin selection and aim lock (only if coins not moving and not waiting for hit)
-if (_pressed && !_onShootBtn && !_onCancelBtn && !coinsMoving && !waitingForHit) {
-    // Check if clicking on a coin
-    var _clickedCoin = instance_position(inputX, inputY, oCoin);
-    
-    if (_clickedCoin != noone) {
-        // Only allow selection on first shot
-        if (isFirstShot) {
-            // If clicking on the already selected coin, toggle lock
-            if (_clickedCoin == selectedCoin && isAiming) {
-                // Already selected, lock the aim and start power meter
-                aimLocked = true;
-                powerMeterActive = true;
-                powerMeterValue = 0;
-                powerMeterDirection = 1;
-            } else {
-                // Deselect previous coin
-                if (selectedCoin != noone && instance_exists(selectedCoin)) {
-                    selectedCoin.isSelected = false;
+if (_pressed && !_onShootBtn && !_onUnselectBtn && !coinsMoving && !waitingForHit) {
+    // If aim is locked, any click cancels the lock
+    if (aimLocked) {
+        aimLocked = false;
+        powerMeterActive = false;
+        powerMeterValue = 0;
+        // Keep the coin selected and aiming active
+    }
+    // Otherwise, handle normal selection/locking
+    else {
+        // Check if clicking on a coin
+        var _clickedCoin = instance_position(inputX, inputY, oCoin);
+        
+        if (_clickedCoin != noone) {
+            // First shot: can select any coin
+            if (isFirstShot) {
+                // If no coin selected yet, select this one
+                if (selectedCoin == noone) {
+                    selectedCoin = _clickedCoin;
+                    selectedCoin.isSelected = true;
+                    isAiming = true;
+                    aimLocked = false;
                 }
-                
-                // Select the new coin
-                selectedCoin = _clickedCoin;
-                selectedCoin.isSelected = true;
-                isAiming = true;
-                aimLocked = false;
+                // If clicking on the already selected coin, lock aim
+                else if (_clickedCoin == selectedCoin && isAiming && !aimLocked) {
+                    aimLocked = true;
+                    powerMeterActive = true;
+                    powerMeterValue = 0;
+                    powerMeterDirection = 1;
+                }
+                // If clicking on a different coin while one is selected, lock aim (don't change selection)
+                else if (_clickedCoin != selectedCoin && selectedCoin != noone && isAiming && !aimLocked) {
+                    aimLocked = true;
+                    powerMeterActive = true;
+                    powerMeterValue = 0;
+                    powerMeterDirection = 1;
+                }
+            } 
+            // After first shot: clicking any coin locks aim
+            else {
+                // Lock aim when clicking on any coin (selected or not)
+                if (isAiming && !aimLocked) {
+                    aimLocked = true;
+                    powerMeterActive = true;
+                    powerMeterValue = 0;
+                    powerMeterDirection = 1;
+                }
             }
         } else {
-            // After first shot, can only lock aim on already selected coin
-            if (_clickedCoin == selectedCoin && isAiming) {
+            // Clicked on empty space - lock aim if currently aiming
+            if (isAiming && !aimLocked && selectedCoin != noone) {
                 aimLocked = true;
                 powerMeterActive = true;
                 powerMeterValue = 0;
                 powerMeterDirection = 1;
             }
-        }
-    } else {
-        // Clicked on empty space
-        if (isAiming && !aimLocked) {
-            // Lock the current aim and start power meter
-            aimLocked = true;
-            powerMeterActive = true;
-            powerMeterValue = 0;
-            powerMeterDirection = 1;
-        } else if (isFirstShot) {
-            // Only allow deselection on first shot
-            if (selectedCoin != noone && instance_exists(selectedCoin)) {
-                selectedCoin.isSelected = false;
-            }
-            selectedCoin = noone;
-            isAiming = false;
-            aimLocked = false;
         }
     }
 }

@@ -106,35 +106,35 @@ if (aimLocked) {
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 
-// Draw cancel button (only when aim is locked)
-if (aimLocked) {
-    var _cancelLeft = cancelBtnX - cancelBtnWidth/2;
-    var _cancelTop = cancelBtnY - cancelBtnHeight/2;
-    var _cancelRight = cancelBtnX + cancelBtnWidth/2;
-    var _cancelBottom = cancelBtnY + cancelBtnHeight/2;
+// Draw unselect button (only on first shot when a coin is selected)
+if (isFirstShot && selectedCoin != noone) {
+    var _unselectLeft = unselectBtnX - unselectBtnWidth/2;
+    var _unselectTop = unselectBtnY - unselectBtnHeight/2;
+    var _unselectRight = unselectBtnX + unselectBtnWidth/2;
+    var _unselectBottom = unselectBtnY + unselectBtnHeight/2;
     
     // Check if hovering
-    var _hovering = point_in_rectangle(inputX, inputY, _cancelLeft, _cancelTop, _cancelRight, _cancelBottom);
+    var _hovering = point_in_rectangle(inputX, inputY, _unselectLeft, _unselectTop, _unselectRight, _unselectBottom);
     
     // Button background
     if (_hovering) {
-        draw_set_color(c_orange);
+        draw_set_color(c_yellow);
     } else {
-        draw_set_color(c_maroon);
+        draw_set_color(c_dkgray);
     }
     draw_set_alpha(0.8);
-    draw_roundrect(_cancelLeft, _cancelTop, _cancelRight, _cancelBottom, false);
+    draw_roundrect(_unselectLeft, _unselectTop, _unselectRight, _unselectBottom, false);
     
     // Button border
     draw_set_color(c_white);
     draw_set_alpha(1);
-    draw_roundrect(_cancelLeft, _cancelTop, _cancelRight, _cancelBottom, true);
+    draw_roundrect(_unselectLeft, _unselectTop, _unselectRight, _unselectBottom, true);
     
     // Button text
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
     draw_set_color(c_white);
-    draw_text(cancelBtnX, cancelBtnY, "CANCEL");
+    draw_text(unselectBtnX, unselectBtnY, "UNSELECT");
     
     // Reset draw settings
     draw_set_halign(fa_left);
