@@ -51,3 +51,16 @@ lastShotForce = 0;
 // Movement control
 coinsMoving = false;  // Track if any coins are moving
 movementThreshold = 1;  // Speed threshold to consider coins "moving"
+
+// Game state
+gameState = "start";  // "start", "playing", "lost"
+isFirstShot = true;  // Track if this is the first shot
+lastShotCoin = noone;  // The coin that was just shot
+waitingForHit = false;  // Waiting to see if shot coin hits another
+
+// Lose screen
+losePopupAlpha = 0;
+restartBtnX = room_width / 2;
+restartBtnY = room_height / 2 + 60;
+restartBtnWidth = 200;
+restartBtnHeight = 70;

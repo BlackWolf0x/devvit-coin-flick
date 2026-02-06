@@ -23,6 +23,7 @@
   "name":"coin-game-test",
   "resources":[
     {"id":{"name":"oCoin","path":"objects/oCoin/oCoin.yy",},},
+    {"id":{"name":"oCoin","path":"objects/oCoin/oCoin.yy",},},
     {"id":{"name":"oGameController","path":"objects/oGameController/oGameController.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"sCoin","path":"sprites/sCoin/sCoin.yy",},},

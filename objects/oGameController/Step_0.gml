@@ -1,5 +1,30 @@
 /// @description Handle input, selection, and shooting
 
+// Get input position (works for both mouse and touch)
+inputX = device_mouse_x(0);
+inputY = device_mouse_y(0);
+
+// Check for press (works for touch and mouse)
+var _pressed = device_mouse_check_button_pressed(0, mb_left);
+var _released = device_mouse_check_button_released(0, mb_left);
+
+// Handle lose screen
+if (gameState == "lost") {
+    // Fade in popup
+    losePopupAlpha = min(losePopupAlpha + 0.05, 1);
+    
+    // Check restart button
+    var _onRestartBtn = point_in_rectangle(inputX, inputY,
+        restartBtnX - restartBtnWidth/2, restartBtnY - restartBtnHeight/2,
+        restartBtnX + restartBtnWidth/2, restartBtnY + restartBtnHeight/2);
+    
+    if (_pressed && _onRestartBtn) {
+        game_restart();
+    }
+    
+    exit; // Don't process game logic when lost
+}
+
 // Check if any coins are moving
 coinsMoving = false;
 with (oCoin) {
@@ -10,21 +35,50 @@ with (oCoin) {
     }
 }
 
-// Get input position (works for both mouse and touch)
-inputX = device_mouse_x(0);
-inputY = device_mouse_y(0);
-
-// Check for press (works for touch and mouse) - only if coins aren't moving
-var _pressed = !coinsMoving && device_mouse_check_button_pressed(0, mb_left);
-var _released = device_mouse_check_button_released(0, mb_left);
+// Check if we were waiting for a hit and coins stopped moving
+if (waitingForHit && !coinsMoving) {
+    // Count how many coins were hit
+    var _hitCount = 0;
+    var _hitCoinId = noone;
+    
+    with (oCoin) {
+        if (wasHit) {
+            _hitCount++;
+            // Store the coin that's NOT the one we shot
+            if (id != other.lastShotCoin) {
+                _hitCoinId = id;
+            }
+        }
+    }
+    
+    // Must have exactly 2 hits: the shooter and exactly 1 target
+    if (_hitCount == 2 && instance_exists(_hitCoinId)) {
+        // Success! Auto-select the hit coin for next shot
+        selectedCoin = _hitCoinId;
+        selectedCoin.isSelected = true;
+        isAiming = true;
+        aimLocked = false;
+    } else {
+        // Wrong number of hits - player loses!
+        gameState = "lost";
+    }
+    
+    // Reset all wasHit flags
+    with (oCoin) {
+        wasHit = false;
+    }
+    
+    waitingForHit = false;
+    lastShotCoin = noone;
+}
 
 // Check if shoot button is pressed
 var _onShootBtn = point_in_rectangle(inputX, inputY, 
     shootBtnX - shootBtnWidth/2, shootBtnY - shootBtnHeight/2,
     shootBtnX + shootBtnWidth/2, shootBtnY + shootBtnHeight/2);
 
-// Handle shoot button press (only when aim is locked)
-if (_pressed && _onShootBtn && selectedCoin != noone && aimLocked) {
+// Handle shoot button press (only when aim is locked and coins not moving)
+if (_pressed && _onShootBtn && selectedCoin != noone && aimLocked && !coinsMoving) {
     // Shoot the selected coin immediately on press!
     if (instance_exists(selectedCoin)) {
         // Calculate shot force from power meter EXACTLY now
@@ -42,6 +96,11 @@ if (_pressed && _onShootBtn && selectedCoin != noone && aimLocked) {
             physics_apply_impulse(x, y, _forceX, _forceY);
         }
         
+        // Track this shot
+        lastShotCoin = selectedCoin;
+        waitingForHit = true;
+        isFirstShot = false;
+        
         // Deselect immediately
         selectedCoin.isSelected = false;
         selectedCoin = noone;
@@ -56,30 +115,41 @@ if (_released) {
     shootBtnPressed = false;
 }
 
-// Handle coin selection and aim lock
-if (_pressed && !_onShootBtn) {
+// Handle coin selection and aim lock (only if coins not moving and not waiting for hit)
+if (_pressed && !_onShootBtn && !coinsMoving && !waitingForHit) {
     // Check if clicking on a coin
     var _clickedCoin = instance_position(inputX, inputY, oCoin);
     
     if (_clickedCoin != noone) {
-        // If clicking on the already selected coin, toggle lock
-        if (_clickedCoin == selectedCoin && isAiming) {
-            // Already selected, lock the aim and start power meter
-            aimLocked = true;
-            powerMeterActive = true;
-            powerMeterValue = 0;
-            powerMeterDirection = 1;
-        } else {
-            // Deselect previous coin
-            if (selectedCoin != noone && instance_exists(selectedCoin)) {
-                selectedCoin.isSelected = false;
+        // Only allow selection on first shot
+        if (isFirstShot) {
+            // If clicking on the already selected coin, toggle lock
+            if (_clickedCoin == selectedCoin && isAiming) {
+                // Already selected, lock the aim and start power meter
+                aimLocked = true;
+                powerMeterActive = true;
+                powerMeterValue = 0;
+                powerMeterDirection = 1;
+            } else {
+                // Deselect previous coin
+                if (selectedCoin != noone && instance_exists(selectedCoin)) {
+                    selectedCoin.isSelected = false;
+                }
+                
+                // Select the new coin
+                selectedCoin = _clickedCoin;
+                selectedCoin.isSelected = true;
+                isAiming = true;
+                aimLocked = false;
             }
-            
-            // Select the new coin
-            selectedCoin = _clickedCoin;
-            selectedCoin.isSelected = true;
-            isAiming = true;
-            aimLocked = false;
+        } else {
+            // After first shot, can only lock aim on already selected coin
+            if (_clickedCoin == selectedCoin && isAiming) {
+                aimLocked = true;
+                powerMeterActive = true;
+                powerMeterValue = 0;
+                powerMeterDirection = 1;
+            }
         }
     } else {
         // Clicked on empty space
@@ -89,8 +159,8 @@ if (_pressed && !_onShootBtn) {
             powerMeterActive = true;
             powerMeterValue = 0;
             powerMeterDirection = 1;
-        } else {
-            // Deselect everything
+        } else if (isFirstShot) {
+            // Only allow deselection on first shot
             if (selectedCoin != noone && instance_exists(selectedCoin)) {
                 selectedCoin.isSelected = false;
             }
