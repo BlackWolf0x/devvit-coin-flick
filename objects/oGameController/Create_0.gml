@@ -78,3 +78,9 @@ restartBtnHeight = 70;
 
 // Win screen
 winPopupAlpha = 0;
+
+// Play area bounds
+playAreaX = 100;
+playAreaY = 100;
+playAreaWidth = room_width - 200;
+playAreaHeight = room_height - 200;

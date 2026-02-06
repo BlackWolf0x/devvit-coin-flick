@@ -341,3 +341,21 @@ if (powerMeterActive) {
 if (timerRunning) {
     elapsedTime = current_time - startTime;
 }
+
+// Check if any coin is fully outside play area
+with (oCoin) {
+    var _playLeft = other.playAreaX;
+    var _playTop = other.playAreaY;
+    var _playRight = other.playAreaX + other.playAreaWidth;
+    var _playBottom = other.playAreaY + other.playAreaHeight;
+    
+    // Check if coin is FULLY outside (all edges past the boundary)
+    if (x + coinRadius < _playLeft || 
+        x - coinRadius > _playRight ||
+        y + coinRadius < _playTop ||
+        y - coinRadius > _playBottom) {
+        // Coin is fully outside - player loses!
+        other.gameState = "lost";
+        break;
+    }
+}
