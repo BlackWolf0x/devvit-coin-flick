@@ -32,8 +32,8 @@ inputX = 0;
 inputY = 0;
 
 // Power meter settings
-minShotForce = 500;      // Minimum shot power
-maxShotForce = 6000;     // Maximum shot power
+minShotForce = 100;      // Minimum shot power
+maxShotForce = 3000;     // Maximum shot power
 powerMeterSpeed = 1.5;     // How fast the meter oscillates (higher = faster)
 powerMeterValue = 0;     // Current position (0 to 1)
 powerMeterDirection = 1; // 1 = going up, -1 = going down
@@ -47,3 +47,7 @@ powerMeterHeight = 200;
 
 // Debug info
 lastShotForce = 0;
+
+// Movement control
+coinsMoving = false;  // Track if any coins are moving
+movementThreshold = 1;  // Speed threshold to consider coins "moving"

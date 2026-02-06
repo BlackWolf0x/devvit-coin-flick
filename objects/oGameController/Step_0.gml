@@ -1,11 +1,21 @@
 /// @description Handle input, selection, and shooting
 
+// Check if any coins are moving
+coinsMoving = false;
+with (oCoin) {
+    var _speed = sqrt(phy_linear_velocity_x * phy_linear_velocity_x + phy_linear_velocity_y * phy_linear_velocity_y);
+    if (_speed > other.movementThreshold) {
+        other.coinsMoving = true;
+        break;
+    }
+}
+
 // Get input position (works for both mouse and touch)
 inputX = device_mouse_x(0);
 inputY = device_mouse_y(0);
 
-// Check for press (works for touch and mouse)
-var _pressed = device_mouse_check_button_pressed(0, mb_left);
+// Check for press (works for touch and mouse) - only if coins aren't moving
+var _pressed = !coinsMoving && device_mouse_check_button_pressed(0, mb_left);
 var _released = device_mouse_check_button_released(0, mb_left);
 
 // Check if shoot button is pressed
