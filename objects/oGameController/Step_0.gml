@@ -291,7 +291,8 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
                     var _backDist = sqrt(_combinedRadius * _combinedRadius - _distToCoin * _distToCoin);
                     var _intersectDist = _proj - _backDist;
                     
-                    if (_intersectDist > _coinRadius && _intersectDist < other.tempHitDist) {
+                    // Accept any positive intersection distance (even if very close)
+                    if (_intersectDist > 0 && _intersectDist < other.tempHitDist) {
                         other.tempHitDist = _intersectDist;
                         other.hitCoin = id;
                     }
