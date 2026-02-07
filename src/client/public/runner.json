@@ -2,8 +2,8 @@
 "runner.js",
 "runner.wasm",
 "audio-worklet.js",
-"game.unx" ], "manifestFilesMD5" : [ "6ada10f295b7a240e8f8cf0f96201f4a",
+"game.unx" ], "manifestFilesMD5" : [ "3a7dece35258c8a1ee6dafd4656609f3",
 "9ea38b2c465024d351bcd10d0021e2de",
 "e33507c4aefd19d28c5da8f149fcfbb2",
 "e8f1e8db8cf996f8715a6f2164c2e44e",
-"d53c9e58034b221c10555a895d0e4273" ], "mainJS" : "runner.js", "unx": "game.unx", "index": "index.html", "runner": {"version": "2024.14.3.260", "yyc": false}}
+"13a2f135fd5ede7f6dd2ee8616eeb817" ], "mainJS" : "runner.js", "unx": "game.unx", "index": "index.html", "runner": {"version": "2024.14.3.260", "yyc": false}}

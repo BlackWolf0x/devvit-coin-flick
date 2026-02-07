@@ -1,12 +1,12 @@
 /// @description Draw aiming guide and UI
 
 // Draw play area boundary
-draw_set_color(c_white);
-draw_set_alpha(0.3);
-draw_rectangle(playAreaX, playAreaY, playAreaX + playAreaWidth, playAreaY + playAreaHeight, true);
-draw_set_alpha(0.1);
-draw_rectangle(playAreaX + 1, playAreaY + 1, playAreaX + playAreaWidth - 1, playAreaY + playAreaHeight - 1, true);
-draw_set_alpha(1);
+//draw_set_color(c_white);
+//draw_set_alpha(0.3); // 0.3
+//draw_rectangle(playAreaX, playAreaY, playAreaX + playAreaWidth, playAreaY + playAreaHeight, true);
+//draw_set_alpha(0.1); // 0.1
+//draw_rectangle(playAreaX + 1, playAreaY + 1, playAreaX + playAreaWidth - 1, playAreaY + playAreaHeight - 1, true);
+//draw_set_alpha(1);
 
 // Draw the aiming guide line if we have a selected coin
 if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
