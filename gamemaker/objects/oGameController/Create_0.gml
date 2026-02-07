@@ -70,10 +70,20 @@ elapsedTime = 0;
 timerRunning = false;
 
 // Play area bounds
-playAreaX = 100;
-playAreaY = 100;
-playAreaWidth = room_width - 200;
-playAreaHeight = room_height - 200;
+// Set default padding if not already set
+global.top_padding = -70;
+global.left_padding = 0;
+
+// Define play area size
+var _playAreaWidth = 940;
+var _playAreaHeight = 1600;
+
+// Center the play area with optional padding offsets
+playAreaX = (room_width - _playAreaWidth) / 2 + global.left_padding;
+playAreaY = (room_height - _playAreaHeight) / 2 + global.top_padding;
+playAreaWidth = _playAreaWidth;
+playAreaHeight = _playAreaHeight;
+
 
 // Coin spawning settings
 numCoins = 8;  // Total number of coins to spawn
