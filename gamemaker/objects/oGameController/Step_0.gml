@@ -8,6 +8,9 @@ inputY = device_mouse_y(0);
 var _pressed = device_mouse_check_button_pressed(0, mb_left);
 var _released = device_mouse_check_button_released(0, mb_left);
 
+// Check for spacebar press
+var _spacePressed = keyboard_check_pressed(vk_space);
+
 // Exit early if game is over (let oGameOver handle input)
 if (gameState == "lost" || gameState == "won") {
     // Stop timer when won
@@ -97,8 +100,8 @@ if (_pressed && _onUnselectBtn && isFirstShot && selectedCoin != noone) {
     powerMeterActive = false;
 }
 
-// Handle shoot button press
-if (_pressed && _onShootBtn && selectedCoin != noone && !coinsMoving) {
+// Handle shoot button press (or spacebar)
+if (((_pressed && _onShootBtn) || _spacePressed) && selectedCoin != noone && !coinsMoving) {
     // If aim is locked, shoot!
     if (aimLocked) {
         if (instance_exists(selectedCoin)) {
