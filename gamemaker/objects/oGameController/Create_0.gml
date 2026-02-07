@@ -83,7 +83,7 @@ edgeSpawnMaxDist = 120;  // Maximum distance from edge for "close" spawns
 minCoinSpacing = 80;  // Minimum distance between coin centers
 
 // Initialize random seed
-randomize();
+//randomize();
 
 // Spawn coins at start
 spawnCoins();
