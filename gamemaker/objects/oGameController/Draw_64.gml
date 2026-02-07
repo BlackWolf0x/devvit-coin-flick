@@ -66,81 +66,6 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
     draw_set_color(c_white);
 }
 
-// Draw shoot button
-var _btnLeft = shootBtnX - shootBtnWidth/2;
-var _btnTop = shootBtnY - shootBtnHeight/2;
-var _btnRight = shootBtnX + shootBtnWidth/2;
-var _btnBottom = shootBtnY + shootBtnHeight/2;
-
-// Button background
-if (shootBtnPressed) {
-    draw_set_color(c_green);
-} else if (aimLocked) {
-    draw_set_color(c_lime);  // Bright green when ready to shoot
-} else if (selectedCoin != noone) {
-    draw_set_color(c_olive);  // Dim when aiming but not locked
-} else {
-    draw_set_color(c_gray);
-}
-draw_set_alpha(0.8);
-draw_roundrect(_btnLeft, _btnTop, _btnRight, _btnBottom, false);
-
-// Button border
-draw_set_color(c_white);
-draw_set_alpha(1);
-draw_roundrect(_btnLeft, _btnTop, _btnRight, _btnBottom, true);
-
-// Button text
-draw_set_halign(fa_center);
-draw_set_valign(fa_middle);
-draw_set_color(c_white);
-if (aimLocked) {
-    draw_text(shootBtnX, shootBtnY, "SHOOT!");
-} else if (selectedCoin != noone) {
-    draw_text(shootBtnX, shootBtnY, "CLICK TO LOCK");
-} else {
-    draw_text(shootBtnX, shootBtnY, "SELECT COIN");
-}
-
-// Reset draw settings
-draw_set_halign(fa_left);
-draw_set_valign(fa_top);
-
-// Draw unselect button (only on first shot when a coin is selected)
-if (isFirstShot && selectedCoin != noone) {
-    var _unselectLeft = unselectBtnX - unselectBtnWidth/2;
-    var _unselectTop = unselectBtnY - unselectBtnHeight/2;
-    var _unselectRight = unselectBtnX + unselectBtnWidth/2;
-    var _unselectBottom = unselectBtnY + unselectBtnHeight/2;
-    
-    // Check if hovering
-    var _hovering = point_in_rectangle(inputX, inputY, _unselectLeft, _unselectTop, _unselectRight, _unselectBottom);
-    
-    // Button background
-    if (_hovering) {
-        draw_set_color(c_yellow);
-    } else {
-        draw_set_color(c_dkgray);
-    }
-    draw_set_alpha(0.8);
-    draw_roundrect(_unselectLeft, _unselectTop, _unselectRight, _unselectBottom, false);
-    
-    // Button border
-    draw_set_color(c_white);
-    draw_set_alpha(1);
-    draw_roundrect(_unselectLeft, _unselectTop, _unselectRight, _unselectBottom, true);
-    
-    // Button text
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    draw_set_color(c_white);
-    draw_text(unselectBtnX, unselectBtnY, "UNSELECT");
-    
-    // Reset draw settings
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_top);
-}
-
 // Draw power meter when aim is locked
 if (powerMeterActive && aimLocked) {
     var _meterLeft = powerMeterX - powerMeterWidth / 2;
@@ -254,6 +179,23 @@ if (timerRunning || gameState == "won") {
     draw_set_valign(fa_top);
     draw_text(room_width - 10, 10, "Time: " + _timeStr);
     draw_set_halign(fa_left);
+}
+
+// Draw "Select a coin" message when no coin is selected (only on first shot)
+if (selectedCoin == noone && isFirstShot) {
+    draw_set_color(c_white);
+	draw_set_font(arial_big);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    
+    // Draw in the button area (bottom center of screen)
+    var _textY = room_height - 140;
+    draw_text(room_width / 2, _textY, "Select a coin");
+    
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+	draw_set_font(-1);
+
 }
 
 // Debug: Display last shot force

@@ -108,80 +108,10 @@ if (waitingForHit && !coinsMoving) {
 }
 
 // Check if shoot button is pressed
-var _onShootBtn = point_in_rectangle(inputX, inputY, 
-    shootBtnX - shootBtnWidth/2, shootBtnY - shootBtnHeight/2,
-    shootBtnX + shootBtnWidth/2, shootBtnY + shootBtnHeight/2);
+var _onShootBtn = false;  // Now handled by oBtnFlick
 
 // Check if unselect button is pressed (only for first shot)
-var _onUnselectBtn = false;
-if (isFirstShot && selectedCoin != noone) {
-    _onUnselectBtn = point_in_rectangle(inputX, inputY,
-        unselectBtnX - unselectBtnWidth/2, unselectBtnY - unselectBtnHeight/2,
-        unselectBtnX + unselectBtnWidth/2, unselectBtnY + unselectBtnHeight/2);
-}
-
-// Handle unselect button press (only on first shot)
-if (_pressed && _onUnselectBtn && isFirstShot && selectedCoin != noone) {
-    // Unselect the coin
-    selectedCoin.isSelected = false;
-    selectedCoin = noone;
-    isAiming = false;
-    aimLocked = false;
-    powerMeterActive = false;
-}
-
-// Handle shoot button press (or spacebar)
-if (((_pressed && _onShootBtn) || _spacePressed) && selectedCoin != noone && !coinsMoving) {
-    // If aim is locked, shoot!
-    if (aimLocked) {
-        if (instance_exists(selectedCoin)) {
-            // Calculate shot force from power meter EXACTLY now
-            var _shotForce = lerp(minShotForce, maxShotForce, powerMeterValue);
-            
-            // Store for debug display
-            lastShotForce = _shotForce;
-            
-            // Use the locked aim direction with power meter force
-            var _forceX = lengthdir_x(_shotForce, aimDirection);
-            var _forceY = lengthdir_y(_shotForce, aimDirection);
-            
-            // Apply impulse to the coin
-            with (selectedCoin) {
-                physics_apply_impulse(x, y, _forceX, _forceY);
-            }
-            
-            // Track this shot
-            lastShotCoin = selectedCoin;
-            waitingForHit = true;
-            isFirstShot = false;
-            
-            // Start timer on first shot
-            if (!timerRunning) {
-                timerRunning = true;
-                startTime = current_time;
-            }
-            
-            // Deselect immediately
-            selectedCoin.isSelected = false;
-            selectedCoin = noone;
-            isAiming = false;
-            aimLocked = false;
-            powerMeterActive = false;
-        }
-    }
-    // If aim is not locked but we're aiming, lock it
-    else if (isAiming && !aimLocked) {
-        aimLocked = true;
-        powerMeterActive = true;
-        powerMeterValue = 0;
-        powerMeterDirection = 1;
-    }
-}
-
-// Clean up shootBtnPressed state on release
-if (_released) {
-    shootBtnPressed = false;
-}
+var _onUnselectBtn = false;  // Now handled by oBtnUnselect
 
 // Handle coin selection and aim lock (only if coins not moving and not waiting for hit)
 if (_pressed && !_onShootBtn && !_onUnselectBtn && !coinsMoving && !waitingForHit) {

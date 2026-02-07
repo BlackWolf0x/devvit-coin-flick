@@ -8,19 +8,6 @@ isAiming = false;
 aimLocked = false;  // TRUE = aim is locked in, ready to shoot
 aimDirection = 0;   // Angle in degrees
 
-// Shoot button properties
-shootBtnX = room_width / 2;
-shootBtnY = room_height - 80;
-shootBtnWidth = 150;
-shootBtnHeight = 60;
-shootBtnPressed = false;
-
-// Unselect button properties (only for first shot)
-unselectBtnX = room_width / 2 + 180;
-unselectBtnY = room_height - 80;
-unselectBtnWidth = 150;
-unselectBtnHeight = 60;
-
 // Guide line properties
 guideColor = c_white;
 guideDotSpacing = 15;
