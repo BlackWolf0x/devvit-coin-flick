@@ -71,12 +71,12 @@ timerRunning = false;
 
 // Play area bounds
 // Set default padding if not already set
-global.top_padding = -70;
+global.top_padding = -16;
 global.left_padding = 0;
 
 // Define play area size
-var _playAreaWidth = 940;
-var _playAreaHeight = 1600;
+var _playAreaWidth = 952;
+var _playAreaHeight = 1440;
 
 // Center the play area with optional padding offsets
 playAreaX = (room_width - _playAreaWidth) / 2 + global.left_padding;
