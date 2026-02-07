@@ -11,8 +11,11 @@ physics_fixture_set_density(fix, 10.0);
 physics_fixture_set_restitution(fix, 0.8);
 physics_fixture_set_friction(fix, 0.3);
 physics_fixture_set_kinematic(fix);
-physics_fixture_bind(fix, id);
+var _fixture_id = physics_fixture_bind(fix, id);
 physics_fixture_delete(fix);
+
+// Make sure it's kinematic (immovable)
+phy_fixed_rotation = true;
 
 // Store initial position
 startX = x;
