@@ -74,9 +74,18 @@ timerRunning = false;
 global.top_padding = -16;
 global.left_padding = 0;
 
-// Define play area size
-var _playAreaWidth = 952;
-var _playAreaHeight = 1440;
+// Define play area size based on platform
+var _playAreaWidth, _playAreaHeight;
+
+if (global.is_mobile) {
+    // Mobile: Portrait orientation (tall)
+    _playAreaWidth = 952;
+    _playAreaHeight = 1440;
+} else {
+    // Desktop: Landscape orientation (wide) - swap dimensions
+    _playAreaWidth = 1440;
+    _playAreaHeight = 952;
+}
 
 // Center the play area with optional padding offsets
 playAreaX = (room_width - _playAreaWidth) / 2 + global.left_padding;

@@ -1,6 +1,6 @@
 global.is_mobile = display_get_height() > display_get_width();
 
-global.is_mobile = !global.is_mobile;
+//global.is_mobile = !global.is_mobile;
 
 
 if (global.is_mobile) {
@@ -34,6 +34,9 @@ if (global.is_mobile) {
     
     // Update window size
     window_set_size(_width, _height);
+    
+    // Set window clear color to match game background (dark green)
+    //draw_clear(make_color_rgb(11, 44, 11));
     
     // Center the view at 0,0
     camera_set_view_pos(cam, 0, 0);
