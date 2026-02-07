@@ -1,8 +1,8 @@
 /// @description Initialize coin properties
 
 // Apply scale
-image_xscale = global.play_scale;
-image_yscale = global.play_scale;
+image_xscale = global.play_scale * 0.5;
+image_yscale = global.play_scale * 0.5;
 
 // Create scaled physics fixture
 var fix = physics_fixture_create();
