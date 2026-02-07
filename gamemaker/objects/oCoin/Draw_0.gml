@@ -1,5 +1,8 @@
 /// @description Draw coin with selection indicator
 
+// Draw shadow underneath the coin
+draw_sprite_ext(sCoinShadow, 0, x, y, image_xscale, image_yscale, image_angle, c_white, 1);
+
 // Draw the coin sprite
 draw_self();
 
