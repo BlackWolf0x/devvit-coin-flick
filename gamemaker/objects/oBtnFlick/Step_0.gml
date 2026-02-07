@@ -4,6 +4,12 @@
 var _controller = instance_find(oGameController, 0);
 if (_controller == noone) exit;
 
+// Only visible and active when aim is locked (power mode active)
+visible = (_controller.aimLocked && !_controller.coinsMoving);
+
+// Exit early if not visible - don't process any input
+if (!visible) exit;
+
 // Get input position
 var _inputX = device_mouse_x(0);
 var _inputY = device_mouse_y(0);
@@ -14,11 +20,9 @@ var _spacePressed = keyboard_check_pressed(vk_space);
 var _onButton = point_in_rectangle(_inputX, _inputY, 
     bbox_left, bbox_top, bbox_right, bbox_bottom);
 
-// Only visible when a coin is selected and aiming
-visible = (_controller.selectedCoin != noone && _controller.isAiming && !_controller.coinsMoving);
-
-// Handle button press (or spacebar)
-if (((_pressed && _onButton) || _spacePressed) && _controller.selectedCoin != noone && !_controller.coinsMoving) {
+// Handle button press (or spacebar) - allow shooting when aim is locked OR when aiming
+if (((_pressed && _onButton) || _spacePressed) && !_controller.coinsMoving && 
+    ((_controller.selectedCoin != noone) || _controller.aimLocked)) {
     // If aim is locked, shoot!
     if (_controller.aimLocked) {
         if (instance_exists(_controller.selectedCoin)) {

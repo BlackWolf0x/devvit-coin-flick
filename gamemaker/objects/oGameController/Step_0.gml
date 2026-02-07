@@ -113,8 +113,16 @@ var _onShootBtn = false;  // Now handled by oBtnFlick
 // Check if unselect button is pressed (only for first shot)
 var _onUnselectBtn = false;  // Now handled by oBtnUnselect
 
+// Check if lock aim button is pressed
+var _onLockAimBtn = false;
+with (oBtnLockAim) {
+    if (visible && point_in_rectangle(other.inputX, other.inputY, bbox_left, bbox_top, bbox_right, bbox_bottom)) {
+        _onLockAimBtn = true;
+    }
+}
+
 // Handle coin selection and aim lock (only if coins not moving and not waiting for hit)
-if (_pressed && !_onShootBtn && !_onUnselectBtn && !coinsMoving && !waitingForHit) {
+if (_pressed && !_onShootBtn && !_onUnselectBtn && !_onLockAimBtn && !coinsMoving && !waitingForHit) {
     // If aim is locked, any click cancels the lock
     if (aimLocked) {
         aimLocked = false;
