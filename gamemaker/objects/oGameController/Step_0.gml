@@ -11,6 +11,36 @@ var _released = device_mouse_check_button_released(0, mb_left);
 // Check for spacebar press
 var _spacePressed = keyboard_check_pressed(vk_space);
 
+// Check if any coin is fully outside play area (do this BEFORE early exit)
+var _anyOutOfBounds = false;
+with (oCoin) {
+    var _playLeft = other.playAreaX;
+    var _playTop = other.playAreaY;
+    var _playRight = other.playAreaX + other.playAreaWidth;
+    var _playBottom = other.playAreaY + other.playAreaHeight;
+    
+    // Check if coin is FULLY outside (all edges past the boundary)
+    if (x + coinRadius < _playLeft || 
+        x - coinRadius > _playRight ||
+        y + coinRadius < _playTop ||
+        y - coinRadius > _playBottom) {
+        // Start shrinking animation
+        if (!isShrinking) {
+            isShrinking = true;
+            // Stop physics movement
+            phy_linear_velocity_x = 0;
+            phy_linear_velocity_y = 0;
+            phy_angular_velocity = 0;
+            _anyOutOfBounds = true;
+        }
+    }
+}
+
+// Set game state to lost if any coin went out of bounds
+if (_anyOutOfBounds) {
+    gameState = "lost";
+}
+
 // Exit early if game is over (let oGameOver handle input)
 if (gameState == "lost" || gameState == "won") {
     // Stop timer when won
@@ -375,30 +405,4 @@ if (powerMeterActive) {
 // Update timer
 if (timerRunning) {
     elapsedTime = current_time - startTime;
-}
-
-// Check if any coin is fully outside play area
-with (oCoin) {
-    var _playLeft = other.playAreaX;
-    var _playTop = other.playAreaY;
-    var _playRight = other.playAreaX + other.playAreaWidth;
-    var _playBottom = other.playAreaY + other.playAreaHeight;
-    
-    // Check if coin is FULLY outside (all edges past the boundary)
-    if (x + coinRadius < _playLeft || 
-        x - coinRadius > _playRight ||
-        y + coinRadius < _playTop ||
-        y - coinRadius > _playBottom) {
-        // Start shrinking animation
-        if (!isShrinking) {
-            isShrinking = true;
-            // Stop physics movement
-            phy_linear_velocity_x = 0;
-            phy_linear_velocity_y = 0;
-            phy_angular_velocity = 0;
-            // Coin is fully outside - player loses!
-            other.gameState = "lost";
-        }
-        break;
-    }
 }
