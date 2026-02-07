@@ -99,7 +99,7 @@ playAreaHeight = _playAreaHeight;
 
 
 // Coin spawning settings
-numCoins = 8;  // Total number of coins to spawn
+numCoins = 6;  // Total number of coins to spawn
 numObstacles = 4;  // Number of obstacles to spawn
 edgeSpawnMinDist = 50;  // Minimum distance from edge for "close" spawns
 edgeSpawnMaxDist = 120;  // Maximum distance from edge for "close" spawns

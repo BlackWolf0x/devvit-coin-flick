@@ -19,11 +19,19 @@ function spawnCoins() {
     var _numEdgeCoins = floor(numCoins / 2);
     var _numCenterCoins = numCoins - _numEdgeCoins;
     
+    // ALWAYS use mobile dimensions for spawning (portrait: 952x1440)
+    var _baseWidth = 952;
+    var _baseHeight = 1440;
+    var _spawnWidth = _baseWidth * global.play_scale;
+    var _spawnHeight = _baseHeight * global.play_scale;
+    var _spawnX = (room_width - _spawnWidth) / 2 + global.left_padding;
+    var _spawnY = (room_height - _spawnHeight) / 2 + global.top_padding;
+    
     // Create grid cells for better distribution
     var _gridCols = ceil(sqrt(_totalObjects * 1.5));
     var _gridRows = ceil(sqrt(_totalObjects * 1.5));
-    var _cellWidth = playAreaWidth / _gridCols;
-    var _cellHeight = playAreaHeight / _gridRows;
+    var _cellWidth = _spawnWidth / _gridCols;
+    var _cellHeight = _spawnHeight / _gridRows;
     
     // Create array of available cells
     var _availableCells = [];
@@ -68,9 +76,9 @@ function spawnCoins() {
             var _cell = _availableCells[_cellIndex];
             _cellIndex++;
             
-            // Calculate cell bounds
-            var _cellX = playAreaX + (_cell.col * _cellWidth);
-            var _cellY = playAreaY + (_cell.row * _cellHeight);
+            // Calculate cell bounds (using spawn dimensions)
+            var _cellX = _spawnX + (_cell.col * _cellWidth);
+            var _cellY = _spawnY + (_cell.row * _cellHeight);
             
             // Try each edge to see if this cell is near one
             var _spawned = false;
@@ -95,30 +103,30 @@ function spawnCoins() {
                 
                 switch (_edge) {
                     case 0: // Left edge
-                        if (_cellX < playAreaX + edgeSpawnMaxDist + _cellWidth) {
-                            _x = playAreaX + _distFromEdge;
+                        if (_cellX < _spawnX + edgeSpawnMaxDist + _cellWidth) {
+                            _x = _spawnX + _distFromEdge;
                             _y = _cellY + random(_cellHeight);
                             _isNearEdge = true;
                         }
                         break;
                     case 1: // Right edge
-                        if (_cellX > playAreaX + playAreaWidth - edgeSpawnMaxDist - _cellWidth) {
-                            _x = playAreaX + playAreaWidth - _distFromEdge;
+                        if (_cellX > _spawnX + _spawnWidth - edgeSpawnMaxDist - _cellWidth) {
+                            _x = _spawnX + _spawnWidth - _distFromEdge;
                             _y = _cellY + random(_cellHeight);
                             _isNearEdge = true;
                         }
                         break;
                     case 2: // Top edge
-                        if (_cellY < playAreaY + edgeSpawnMaxDist + _cellHeight) {
+                        if (_cellY < _spawnY + edgeSpawnMaxDist + _cellHeight) {
                             _x = _cellX + random(_cellWidth);
-                            _y = playAreaY + _distFromEdge;
+                            _y = _spawnY + _distFromEdge;
                             _isNearEdge = true;
                         }
                         break;
                     case 3: // Bottom edge
-                        if (_cellY > playAreaY + playAreaHeight - edgeSpawnMaxDist - _cellHeight) {
+                        if (_cellY > _spawnY + _spawnHeight - edgeSpawnMaxDist - _cellHeight) {
                             _x = _cellX + random(_cellWidth);
-                            _y = playAreaY + playAreaHeight - _distFromEdge;
+                            _y = _spawnY + _spawnHeight - _distFromEdge;
                             _isNearEdge = true;
                         }
                         break;
@@ -140,7 +148,22 @@ function spawnCoins() {
                 
                 // Spawn coin if valid
                 if (_valid) {
-                    var _coin = instance_create_layer(_x, _y, "Instances", oCoin);
+                    // For desktop, swap x and y to achieve -90 deg rotation
+                    var _finalX, _finalY;
+                    if (global.is_mobile) {
+                        _finalX = _x;
+                        _finalY = _y;
+                    } else {
+                        // Rotate -90 degrees: swap and adjust
+                        // Convert to relative coordinates
+                        var _relX = _x - _spawnX;
+                        var _relY = _y - _spawnY;
+                        // Swap and flip: new_x = y, new_y = width - x
+                        _finalX = playAreaX + _relY;
+                        _finalY = playAreaY + (_spawnWidth - _relX);
+                    }
+                    
+                    var _coin = instance_create_layer(_finalX, _finalY, "Instances", oCoin);
                     array_push(_spawnedPositions, {x: _x, y: _y});
                     _edgeCoinsSpawned++;
                     _numSpawned++;
@@ -157,18 +180,18 @@ function spawnCoins() {
             var _cell = _availableCells[_cellIndex];
             _cellIndex++;
             
-            // Calculate random position within cell
-            var _cellX = playAreaX + (_cell.col * _cellWidth);
-            var _cellY = playAreaY + (_cell.row * _cellHeight);
+            // Calculate random position within cell (using spawn dimensions)
+            var _cellX = _spawnX + (_cell.col * _cellWidth);
+            var _cellY = _spawnY + (_cell.row * _cellHeight);
             
             // Add some padding from cell edges for variety
             var _padding = min(_cellWidth, _cellHeight) * 0.2;
             var _x = _cellX + _padding + random(_cellWidth - _padding * 2);
             var _y = _cellY + _padding + random(_cellHeight - _padding * 2);
             
-            // Clamp to play area
-            _x = clamp(_x, playAreaX + 30, playAreaX + playAreaWidth - 30);
-            _y = clamp(_y, playAreaY + 30, playAreaY + playAreaHeight - 30);
+            // Clamp to spawn area
+            _x = clamp(_x, _spawnX + 30, _spawnX + _spawnWidth - 30);
+            _y = clamp(_y, _spawnY + 30, _spawnY + _spawnHeight - 30);
             
             // Check if position is valid (no overlap with existing objects)
             var _valid = true;
@@ -183,7 +206,20 @@ function spawnCoins() {
             
             // Spawn coin if valid
             if (_valid) {
-                var _coin = instance_create_layer(_x, _y, "Instances", oCoin);
+                // For desktop, swap x and y to achieve -90 deg rotation
+                var _finalX, _finalY;
+                if (global.is_mobile) {
+                    _finalX = _x;
+                    _finalY = _y;
+                } else {
+                    // Rotate -90 degrees: swap and adjust
+                    var _relX = _x - _spawnX;
+                    var _relY = _y - _spawnY;
+                    _finalX = playAreaX + _relY;
+                    _finalY = playAreaY + (_spawnWidth - _relX);
+                }
+                
+                var _coin = instance_create_layer(_finalX, _finalY, "Instances", oCoin);
                 array_push(_spawnedPositions, {x: _x, y: _y});
                 _centerCoinsSpawned++;
                 _numSpawned++;
@@ -197,18 +233,18 @@ function spawnCoins() {
             var _cell = _availableCells[_cellIndex];
             _cellIndex++;
             
-            // Calculate random position within cell
-            var _cellX = playAreaX + (_cell.col * _cellWidth);
-            var _cellY = playAreaY + (_cell.row * _cellHeight);
+            // Calculate random position within cell (using spawn dimensions)
+            var _cellX = _spawnX + (_cell.col * _cellWidth);
+            var _cellY = _spawnY + (_cell.row * _cellHeight);
             
             // Add some padding from cell edges for variety
             var _padding = min(_cellWidth, _cellHeight) * 0.2;
             var _x = _cellX + _padding + random(_cellWidth - _padding * 2);
             var _y = _cellY + _padding + random(_cellHeight - _padding * 2);
             
-            // Clamp to play area
-            _x = clamp(_x, playAreaX + 30, playAreaX + playAreaWidth - 30);
-            _y = clamp(_y, playAreaY + 30, playAreaY + playAreaHeight - 30);
+            // Clamp to spawn area
+            _x = clamp(_x, _spawnX + 30, _spawnX + _spawnWidth - 30);
+            _y = clamp(_y, _spawnY + 30, _spawnY + _spawnHeight - 30);
             
             // Check if position is valid (no overlap with existing objects)
             var _valid = true;
@@ -223,7 +259,20 @@ function spawnCoins() {
             
             // Spawn obstacle if valid
             if (_valid) {
-                var _obstacle = instance_create_layer(_x, _y, "Instances", oObstacle);
+                // For desktop, swap x and y to achieve -90 deg rotation
+                var _finalX, _finalY;
+                if (global.is_mobile) {
+                    _finalX = _x;
+                    _finalY = _y;
+                } else {
+                    // Rotate -90 degrees: swap and adjust
+                    var _relX = _x - _spawnX;
+                    var _relY = _y - _spawnY;
+                    _finalX = playAreaX + _relY;
+                    _finalY = playAreaY + (_spawnWidth - _relX);
+                }
+                
+                var _obstacle = instance_create_layer(_finalX, _finalY, "Instances", oObstacle);
                 array_push(_spawnedPositions, {x: _x, y: _y});
                 _obstaclesSpawned++;
                 _numSpawned++;
@@ -248,9 +297,9 @@ function spawnCoins() {
         while (_numSpawned < _totalObjects && _forceAttempts < 5000) {
             _forceAttempts++;
             
-            // Random position anywhere in play area
-            var _x = playAreaX + random(playAreaWidth);
-            var _y = playAreaY + random(playAreaHeight);
+            // Random position anywhere in spawn area
+            var _x = _spawnX + random(_spawnWidth);
+            var _y = _spawnY + random(_spawnHeight);
             
             // Check minimum spacing (very relaxed)
             var _valid = true;
@@ -264,12 +313,25 @@ function spawnCoins() {
             }
             
             if (_valid) {
+                // For desktop, swap x and y to achieve -90 deg rotation
+                var _finalX, _finalY;
+                if (global.is_mobile) {
+                    _finalX = _x;
+                    _finalY = _y;
+                } else {
+                    // Rotate -90 degrees: swap and adjust
+                    var _relX = _x - _spawnX;
+                    var _relY = _y - _spawnY;
+                    _finalX = playAreaX + _relY;
+                    _finalY = playAreaY + (_spawnWidth - _relX);
+                }
+                
                 // Spawn coins first, then obstacles
                 if (_coinsSpawned < numCoins) {
-                    var _coin = instance_create_layer(_x, _y, "Instances", oCoin);
+                    var _coin = instance_create_layer(_finalX, _finalY, "Instances", oCoin);
                     _coinsSpawned++;
                 } else if (_obstaclesSpawned < numObstacles) {
-                    var _obstacle = instance_create_layer(_x, _y, "Instances", oObstacle);
+                    var _obstacle = instance_create_layer(_finalX, _finalY, "Instances", oObstacle);
                     _obstaclesSpawned++;
                 }
                 array_push(_spawnedPositions, {x: _x, y: _y});
