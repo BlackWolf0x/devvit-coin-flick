@@ -8,6 +8,7 @@ if (_controller == noone) exit;
 var _inputX = device_mouse_x(0);
 var _inputY = device_mouse_y(0);
 var _pressed = device_mouse_check_button_pressed(0, mb_left);
+var _spacePressed = keyboard_check_pressed(vk_space);
 
 // Check if button is clicked
 var _onButton = point_in_rectangle(_inputX, _inputY, 
@@ -16,8 +17,9 @@ var _onButton = point_in_rectangle(_inputX, _inputY,
 // Only visible when aiming but aim not locked yet
 visible = (_controller.isAiming && !_controller.aimLocked && _controller.selectedCoin != noone && !_controller.coinsMoving);
 
-// Handle button press
-if (_pressed && _onButton && _controller.isAiming && !_controller.aimLocked && _controller.selectedCoin != noone) {
+// Handle button press (or spacebar)
+if (((_pressed && _onButton) || _spacePressed) && 
+    _controller.isAiming && !_controller.aimLocked && _controller.selectedCoin != noone) {
     // Lock the aim
     _controller.aimLocked = true;
     _controller.powerMeterActive = true;
