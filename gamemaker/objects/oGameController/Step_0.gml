@@ -174,23 +174,27 @@ if (_pressed && !_onShootBtn && !_onUnselectBtn && !coinsMoving && !waitingForHi
                     isAiming = true;
                     aimLocked = false;
                 }
-                // If clicking on the already selected coin, lock aim
-                else if (_clickedCoin == selectedCoin && isAiming && !aimLocked) {
-                    aimLocked = true;
-                    powerMeterActive = true;
-                    powerMeterValue = 0;
-                    powerMeterDirection = 1;
-                }
-                // If clicking on a different coin while one is selected, lock aim (don't change selection)
-                else if (_clickedCoin != selectedCoin && selectedCoin != noone && isAiming && !aimLocked) {
-                    aimLocked = true;
-                    powerMeterActive = true;
-                    powerMeterValue = 0;
-                    powerMeterDirection = 1;
+                // On desktop: clicking locks aim
+                // On mobile: clicking does nothing (must use button)
+                else if (!global.is_mobile) {
+                    // If clicking on the already selected coin, lock aim
+                    if (_clickedCoin == selectedCoin && isAiming && !aimLocked) {
+                        aimLocked = true;
+                        powerMeterActive = true;
+                        powerMeterValue = 0;
+                        powerMeterDirection = 1;
+                    }
+                    // If clicking on a different coin while one is selected, lock aim (don't change selection)
+                    else if (_clickedCoin != selectedCoin && selectedCoin != noone && isAiming && !aimLocked) {
+                        aimLocked = true;
+                        powerMeterActive = true;
+                        powerMeterValue = 0;
+                        powerMeterDirection = 1;
+                    }
                 }
             } 
-            // After first shot: clicking any coin locks aim
-            else {
+            // After first shot: clicking any coin locks aim (desktop only)
+            else if (!global.is_mobile) {
                 // Lock aim when clicking on any coin (selected or not)
                 if (isAiming && !aimLocked) {
                     aimLocked = true;
@@ -200,8 +204,10 @@ if (_pressed && !_onShootBtn && !_onUnselectBtn && !coinsMoving && !waitingForHi
                 }
             }
         } else {
-            // Clicked on empty space - lock aim if currently aiming
-            if (isAiming && !aimLocked && selectedCoin != noone) {
+            // Clicked on empty space
+            // On desktop: lock aim if currently aiming
+            // On mobile: do nothing (must use button)
+            if (!global.is_mobile && isAiming && !aimLocked && selectedCoin != noone) {
                 aimLocked = true;
                 powerMeterActive = true;
                 powerMeterValue = 0;

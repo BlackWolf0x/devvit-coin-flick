@@ -1,6 +1,6 @@
 global.is_mobile = display_get_height() > display_get_width();
 
-//global.is_mobile = !global.is_mobile;
+global.is_mobile = !global.is_mobile;
 
 
 if (global.is_mobile) {
@@ -8,8 +8,8 @@ if (global.is_mobile) {
     show_debug_message("Mobile detected - Using default room size 750x1168");
 } else {
     // Desktop: Set room and window size to 1000x730
-    var _width = 1000;
-    var _height = 730;
+    var _width = 1448;
+    var _height = 1168;
     
     room_width = _width;
     room_height = _height;
