@@ -389,8 +389,16 @@ with (oCoin) {
         x - coinRadius > _playRight ||
         y + coinRadius < _playTop ||
         y - coinRadius > _playBottom) {
-        // Coin is fully outside - player loses!
-        other.gameState = "lost";
+        // Start shrinking animation
+        if (!isShrinking) {
+            isShrinking = true;
+            // Stop physics movement
+            phy_linear_velocity_x = 0;
+            phy_linear_velocity_y = 0;
+            phy_angular_velocity = 0;
+            // Coin is fully outside - player loses!
+            other.gameState = "lost";
+        }
         break;
     }
 }

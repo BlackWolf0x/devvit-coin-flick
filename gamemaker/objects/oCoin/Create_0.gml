@@ -27,5 +27,9 @@ shotForce = 2000;
 // Hit detection
 wasHit = false;
 
+// Shrinking state (when going out of bounds)
+isShrinking = false;
+shrinkSpeed = 0.05;  // How fast to shrink (per step)
+
 // Friction/damping will slow down the coin over time
 // (configured in physics settings)
