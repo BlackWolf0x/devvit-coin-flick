@@ -97,42 +97,51 @@ if (_pressed && _onUnselectBtn && isFirstShot && selectedCoin != noone) {
     powerMeterActive = false;
 }
 
-// Handle shoot button press (only when aim is locked and coins not moving)
-if (_pressed && _onShootBtn && selectedCoin != noone && aimLocked && !coinsMoving) {
-    // Shoot the selected coin immediately on press!
-    if (instance_exists(selectedCoin)) {
-        // Calculate shot force from power meter EXACTLY now
-        var _shotForce = lerp(minShotForce, maxShotForce, powerMeterValue);
-        
-        // Store for debug display
-        lastShotForce = _shotForce;
-        
-        // Use the locked aim direction with power meter force
-        var _forceX = lengthdir_x(_shotForce, aimDirection);
-        var _forceY = lengthdir_y(_shotForce, aimDirection);
-        
-        // Apply impulse to the coin
-        with (selectedCoin) {
-            physics_apply_impulse(x, y, _forceX, _forceY);
+// Handle shoot button press
+if (_pressed && _onShootBtn && selectedCoin != noone && !coinsMoving) {
+    // If aim is locked, shoot!
+    if (aimLocked) {
+        if (instance_exists(selectedCoin)) {
+            // Calculate shot force from power meter EXACTLY now
+            var _shotForce = lerp(minShotForce, maxShotForce, powerMeterValue);
+            
+            // Store for debug display
+            lastShotForce = _shotForce;
+            
+            // Use the locked aim direction with power meter force
+            var _forceX = lengthdir_x(_shotForce, aimDirection);
+            var _forceY = lengthdir_y(_shotForce, aimDirection);
+            
+            // Apply impulse to the coin
+            with (selectedCoin) {
+                physics_apply_impulse(x, y, _forceX, _forceY);
+            }
+            
+            // Track this shot
+            lastShotCoin = selectedCoin;
+            waitingForHit = true;
+            isFirstShot = false;
+            
+            // Start timer on first shot
+            if (!timerRunning) {
+                timerRunning = true;
+                startTime = current_time;
+            }
+            
+            // Deselect immediately
+            selectedCoin.isSelected = false;
+            selectedCoin = noone;
+            isAiming = false;
+            aimLocked = false;
+            powerMeterActive = false;
         }
-        
-        // Track this shot
-        lastShotCoin = selectedCoin;
-        waitingForHit = true;
-        isFirstShot = false;
-        
-        // Start timer on first shot
-        if (!timerRunning) {
-            timerRunning = true;
-            startTime = current_time;
-        }
-        
-        // Deselect immediately
-        selectedCoin.isSelected = false;
-        selectedCoin = noone;
-        isAiming = false;
-        aimLocked = false;
-        powerMeterActive = false;
+    }
+    // If aim is not locked but we're aiming, lock it
+    else if (isAiming && !aimLocked) {
+        aimLocked = true;
+        powerMeterActive = true;
+        powerMeterValue = 0;
+        powerMeterDirection = 1;
     }
 }
 
