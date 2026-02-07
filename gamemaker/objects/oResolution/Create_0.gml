@@ -5,13 +5,15 @@ global.is_mobile = display_get_height() > display_get_width();
 
 if (global.is_mobile) {
     // Mobile: Keep default size (750x1168 - set in room properties)
+    global.play_scale = 1.0;  // 100% scale for mobile
     show_debug_message("Mobile detected - Using default room size 750x1168");
 } else {
     // Desktop: Set room and window size to 1000x730
+    global.play_scale = 0.9;  // 90% scale for desktop
     var _width = 1448;
     var _height = 1168;
     
-    room_width = _width;
+    room_width = _width
     room_height = _height;
     
     // Enable views if not already enabled

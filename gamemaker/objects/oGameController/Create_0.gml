@@ -74,17 +74,21 @@ timerRunning = false;
 global.top_padding = -16;
 global.left_padding = 0;
 
+// Define base play area size (before scaling)
+var _baseWidth = 952;
+var _baseHeight = 1440;
+
 // Define play area size based on platform
 var _playAreaWidth, _playAreaHeight;
 
 if (global.is_mobile) {
     // Mobile: Portrait orientation (tall)
-    _playAreaWidth = 952;
-    _playAreaHeight = 1440;
+    _playAreaWidth = _baseWidth * global.play_scale;
+    _playAreaHeight = _baseHeight * global.play_scale;
 } else {
-    // Desktop: Landscape orientation (wide) - swap dimensions
-    _playAreaWidth = 1440;
-    _playAreaHeight = 952;
+    // Desktop: Landscape orientation (wide) - swap dimensions and scale
+    _playAreaWidth = _baseHeight * global.play_scale;
+    _playAreaHeight = _baseWidth * global.play_scale;
 }
 
 // Center the play area with optional padding offsets
