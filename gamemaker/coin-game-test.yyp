@@ -43,6 +43,7 @@
     {"id":{"name":"oTable","path":"objects/oTable/oTable.yy",},},
     {"id":{"name":"oTableDesktop","path":"objects/oTableDesktop/oTableDesktop.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"level_cache_manager","path":"scripts/level_cache_manager/level_cache_manager.yy",},},
     {"id":{"name":"reddit_demo_server_api","path":"scripts/reddit_demo_server_api/reddit_demo_server_api.yy",},},
     {"id":{"name":"reddit_functions","path":"scripts/reddit_functions/reddit_functions.yy",},},
     {"id":{"name":"spawnCoins","path":"scripts/spawnCoins/spawnCoins.yy",},},
