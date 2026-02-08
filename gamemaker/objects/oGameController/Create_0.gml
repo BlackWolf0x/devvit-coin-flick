@@ -1,5 +1,8 @@
 /// @description Initialize game controller
 
+// Stop all audio to prevent looping sounds on restart
+audio_stop_all();
+
 // Currently selected coin
 selectedCoin = noone;
 
