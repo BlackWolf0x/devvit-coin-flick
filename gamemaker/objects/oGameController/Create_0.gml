@@ -26,7 +26,7 @@ inputY = 0;
 
 // Power meter settings
 minShotForce = 500;      // Minimum shot power
-maxShotForce = 6400;     // Maximum shot power
+maxShotForce = 8000;     // Maximum shot power
 powerMeterSpeed = 1;     // How fast the meter oscillates (higher = faster)
 powerMeterValue = 0;     // Current position (0 to 1)
 powerMeterDirection = 1; // 1 = going up, -1 = going down
