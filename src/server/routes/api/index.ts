@@ -8,6 +8,7 @@ import trackPlayer from './track-player';
 import playerCount from './player-count';
 import topPlayer from './top-player';
 import createPuzzle from './create-puzzle';
+import getPostDate from './get-post-date';
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use(trackPlayer);
 router.use(playerCount);
 router.use(topPlayer);
 router.use(createPuzzle);
+router.use(getPostDate);
 
 export default router;

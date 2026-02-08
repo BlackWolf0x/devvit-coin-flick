@@ -1,9 +1,55 @@
 /// @description Initialize game controller
 
+// Visual debug log for mobile/browser (can't see console there)
+global.debug_logs = [];
+global.max_debug_logs = 20; // Keep last 20 messages
+
+/// @func debug_log(msg)
+/// @param {String} msg The message to log
+function debug_log(msg) {
+    show_debug_message(msg);
+    array_push(global.debug_logs, string(msg));
+    if (array_length(global.debug_logs) > global.max_debug_logs) {
+        array_delete(global.debug_logs, 0, 1);
+    }
+}
+
 // Load volume settings
 if (!variable_global_exists("volume_muted")) {
     volumeSettings_load();
 }
+
+debug_log("=== GAME STARTING ===");
+debug_log("Fetching post date...");
+
+// Fetch post date for debugging
+api_get_post_date(function(_http_status, _ok, _result, _payload) {
+    debug_log("=== POST DATE RESPONSE ===");
+    debug_log("HTTP: " + string(_http_status ?? "undef"));
+    debug_log("OK: " + string(_ok ?? "undef"));
+    debug_log("Len: " + string(string_length(_result ?? "")));
+    
+    if (_ok && !is_undefined(_result) && _result != "") {
+        try {
+            var _data = json_parse(_result);
+            debug_log("JSON parsed OK");
+            debug_log("Status: " + string(_data.status));
+            
+            if (_data.status == "success") {
+                debug_log("Post ID: " + string(_data.postId));
+                debug_log("Created: " + string(_data.createdAt));
+                debug_log("Timestamp: " + string(_data.createdAtTimestamp));
+            } else {
+                debug_log("Error: " + string(_data.message));
+            }
+        } catch(_ex) {
+            debug_log("JSON Error: " + string(_ex));
+        }
+    } else {
+        debug_log("Request failed or empty");
+    }
+    debug_log("======================");
+});
 
 // Currently selected coin
 selectedCoin = noone;
