@@ -123,6 +123,16 @@ with (oBtnLockAim) {
 
 // Handle coin selection and aim lock (only if coins not moving and not waiting for hit)
 if (_pressed && !_onShootBtn && !_onUnselectBtn && !_onLockAimBtn && !coinsMoving && !waitingForHit) {
+    // Check if click is inside play area (ignore clicks outside)
+    var _inPlayArea = point_in_rectangle(inputX, inputY, 
+        playAreaX, playAreaY, 
+        playAreaX + playAreaWidth, playAreaY + playAreaHeight);
+    
+    if (!_inPlayArea) {
+        // Click is outside play area, ignore it
+        exit;
+    }
+    
     // If aim is locked, any click cancels the lock
     if (aimLocked) {
         aimLocked = false;
