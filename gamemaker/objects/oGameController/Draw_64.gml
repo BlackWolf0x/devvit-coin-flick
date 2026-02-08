@@ -51,15 +51,38 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
         // Hit a wall
         draw_set_color(c_white);
     }
-    draw_circle(guideEndX, guideEndY, _coinRadius, true);
-    draw_circle(guideEndX, guideEndY, _coinRadius - 2, true);
+    // Draw thick circle using primitive - creates a crisp ring
+    draw_primitive_begin(pr_trianglestrip);
+    var _segments = 64; // More segments = smoother circle
+    var _thickness = 3;
+    for (var i = 0; i <= _segments; i++) {
+        var _angle = (i / _segments) * 360;
+        var _outerX = guideEndX + lengthdir_x(_coinRadius, _angle);
+        var _outerY = guideEndY + lengthdir_y(_coinRadius, _angle);
+        var _innerX = guideEndX + lengthdir_x(_coinRadius - _thickness, _angle);
+        var _innerY = guideEndY + lengthdir_y(_coinRadius - _thickness, _angle);
+        draw_vertex(_outerX, _outerY);
+        draw_vertex(_innerX, _innerY);
+    }
+    draw_primitive_end();
     
     // If hitting another coin, also highlight that coin
     if (hitCoin != noone && instance_exists(hitCoin)) {
         draw_set_color(c_red);
         draw_set_alpha(0.5);
-        draw_circle(hitCoin.x, hitCoin.y, hitCoin.coinRadius + 3, true);
-        draw_circle(hitCoin.x, hitCoin.y, hitCoin.coinRadius + 5, true);
+        // Draw thick circle using primitive
+        draw_primitive_begin(pr_trianglestrip);
+        var _targetRadius = hitCoin.coinRadius + 4;
+        for (var i = 0; i <= _segments; i++) {
+            var _angle = (i / _segments) * 360;
+            var _outerX = hitCoin.x + lengthdir_x(_targetRadius, _angle);
+            var _outerY = hitCoin.y + lengthdir_y(_targetRadius, _angle);
+            var _innerX = hitCoin.x + lengthdir_x(_targetRadius - _thickness, _angle);
+            var _innerY = hitCoin.y + lengthdir_y(_targetRadius - _thickness, _angle);
+            draw_vertex(_outerX, _outerY);
+            draw_vertex(_innerX, _innerY);
+        }
+        draw_primitive_end();
     }
     
     draw_set_alpha(1);
