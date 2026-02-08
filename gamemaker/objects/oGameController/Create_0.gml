@@ -43,7 +43,7 @@ lastShotForce = 0;
 
 // Movement control
 coinsMoving = false;  // Track if any coins are moving
-movementThreshold = 1;  // Speed threshold to consider coins "moving"
+movementThreshold = 25;  // Speed threshold to consider coins "moving" (matches coin stop threshold)
 
 // Game state
 gameState = "start";  // "start", "playing", "lost", "won"
