@@ -96,4 +96,4 @@ minCoinSpacing = 80;  // Minimum distance between coin centers
 //randomize();
 
 // Spawn coins at start
-//spawnCoins();
+spawnCoins();
