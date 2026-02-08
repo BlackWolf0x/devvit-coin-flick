@@ -8,13 +8,18 @@ if (_controller != noone && (_controller.gameState == "lost" || _controller.game
     exit;
 }
 
+// Only play sound if at least one coin is moving significantly
+var _mySpeed = sqrt(phy_linear_velocity_x * phy_linear_velocity_x + phy_linear_velocity_y * phy_linear_velocity_y);
+var _otherSpeed = sqrt(other.phy_linear_velocity_x * other.phy_linear_velocity_x + other.phy_linear_velocity_y * other.phy_linear_velocity_y);
+var _speedThreshold = 50;  // Minimum speed to play collision sound
+
 // When two coins collide, mark both as having been hit
 // This ensures we detect the collision regardless of which coin is "active"
 wasHit = true;
 other.wasHit = true;
 
-// Play coin collision sound only once per collision pair
-// (only play if this coin's ID is less than the other's)
-if (id < other.id) {
+// Play coin collision sound only if coins are actually moving
+// (only play if this coin's ID is less than the other's to avoid duplicate sounds)
+if (id < other.id && (_mySpeed > _speedThreshold || _otherSpeed > _speedThreshold)) {
     audio_play_sound(sndCoinHitCoin, 1, false);
 }

@@ -8,4 +8,10 @@ if (_controller != noone && (_controller.gameState == "lost" || _controller.game
     exit;
 }
 
-audio_play_sound(sndCoinHitObstacle, 1, false);
+// Only play sound if coin is moving significantly
+var _coinSpeed = sqrt(other.phy_linear_velocity_x * other.phy_linear_velocity_x + other.phy_linear_velocity_y * other.phy_linear_velocity_y);
+var _speedThreshold = 50;  // Minimum speed to play collision sound
+
+if (_coinSpeed > _speedThreshold) {
+    audio_play_sound(sndCoinHitObstacle, 1, false);
+}
