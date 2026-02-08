@@ -1,5 +1,13 @@
 /// @description Mark collision between coins
 
+// Get game controller
+var _controller = instance_find(oGameController, 0);
+
+// Don't process collisions if game is over
+if (_controller != noone && (_controller.gameState == "lost" || _controller.gameState == "won")) {
+    exit;
+}
+
 // When two coins collide, mark both as having been hit
 // This ensures we detect the collision regardless of which coin is "active"
 wasHit = true;

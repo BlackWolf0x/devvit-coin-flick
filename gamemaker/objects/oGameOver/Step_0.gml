@@ -23,7 +23,8 @@ if (_gameState == "lost") {
         restartBtnX + restartBtnWidth/2, restartBtnY + restartBtnHeight/2);
     
     if (_pressed && _onRestartBtn) {
-        game_restart();
+        audio_stop_all();
+        room_restart();
     }
 }
 
@@ -38,6 +39,7 @@ if (_gameState == "won") {
         restartBtnX + restartBtnWidth/2, restartBtnY + restartBtnHeight/2);
     
     if (_pressed && _onRestartBtn) {
-        game_restart();
+        audio_stop_all();
+        room_restart();
     }
 }
