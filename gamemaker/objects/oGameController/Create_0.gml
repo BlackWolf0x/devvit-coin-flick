@@ -3,6 +3,9 @@
 // Stop all audio to prevent looping sounds on restart
 audio_stop_all();
 
+// Play start sound
+audio_play_sound(sndStart, 1, false);
+
 // Currently selected coin
 selectedCoin = noone;
 
