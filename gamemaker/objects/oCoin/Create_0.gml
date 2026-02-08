@@ -7,9 +7,12 @@ image_yscale = global.play_scale * 0.5;
 // Random rotation for visual variety
 image_angle = random(360);
 
+// Coin radius for collision calculations (after scaling)
+coinRadius = sprite_width / 2 * global.play_scale;
+
 // Create scaled physics fixture
 var fix = physics_fixture_create();
-physics_fixture_set_circle_shape(fix, 48 * global.play_scale);
+physics_fixture_set_circle_shape(fix, coinRadius);
 physics_fixture_set_density(fix, 1.0);
 physics_fixture_set_restitution(fix, 0.7);
 physics_fixture_set_linear_damping(fix, 0.54);
@@ -20,9 +23,6 @@ physics_fixture_delete(fix);
 
 // Set physics rotation after fixture is created
 phy_rotation = image_angle;
-
-// Coin radius for collision calculations (after scaling)
-coinRadius = sprite_width / 2 * global.play_scale;
 
 // Selection state
 isSelected = false;

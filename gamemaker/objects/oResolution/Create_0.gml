@@ -1,6 +1,6 @@
 global.is_mobile = display_get_height() > display_get_width();
 
-//global.is_mobile = !global.is_mobile;
+global.is_mobile = !global.is_mobile;
 
 
 if (global.is_mobile) {
