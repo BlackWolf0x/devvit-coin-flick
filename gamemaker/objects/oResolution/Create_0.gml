@@ -36,6 +36,13 @@ if (global.is_mobile) {
     // Update window size
     window_set_size(_width, _height);
     
+    // Center the window on the screen
+    var _display_width = display_get_width();
+    var _display_height = display_get_height();
+    var _window_x = (_display_width - _width) / 2;
+    var _window_y = (_display_height - _height) / 2;
+    window_set_position(_window_x, _window_y + 80);
+    
     // Set window clear color to match game background (dark green)
     //draw_clear(make_color_rgb(11, 44, 11));
     
@@ -43,4 +50,5 @@ if (global.is_mobile) {
     camera_set_view_pos(cam, 0, 0);
     
     show_debug_message("Desktop detected - Room size set to " + string(_width) + "x" + string(_height));
+    show_debug_message("Window centered at " + string(_window_x) + "," + string(_window_y));
 }

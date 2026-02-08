@@ -53,7 +53,7 @@ powerMeterActive = false; // Whether meter is oscillating
 
 // Power meter visual properties
 powerMeterX = room_width / 2;  // Centered horizontally
-powerMeterY = room_height * 0.76;  // Slightly below mid-screen (76% down)
+powerMeterY = global.is_mobile ? room_height * 0.76 : room_height * 0.7; 
 powerMeterWidth = 50;
 powerMeterHeight = 300;
 
@@ -74,6 +74,7 @@ waitingForHit = false;  // Waiting to see if shot coin hits another
 startTime = 0;
 elapsedTime = 0;
 timerRunning = false;
+
 
 // Score submission state
 timeSubmitted = false;

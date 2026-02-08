@@ -27,6 +27,7 @@
   "resources":[
     {"id":{"name":"arial_big","path":"fonts/arial_big/arial_big.yy",},},
     {"id":{"name":"saira_regular","path":"fonts/saira_regular/saira_regular.yy",},},
+    {"id":{"name":"oBackground","path":"objects/oBackground/oBackground.yy",},},
     {"id":{"name":"obj_http_manager","path":"objects/obj_http_manager/obj_http_manager.yy",},},
     {"id":{"name":"oBtnFlick","path":"objects/oBtnFlick/oBtnFlick.yy",},},
     {"id":{"name":"oBtnLockAim","path":"objects/oBtnLockAim/oBtnLockAim.yy",},},

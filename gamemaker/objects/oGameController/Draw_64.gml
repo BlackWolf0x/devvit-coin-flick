@@ -186,19 +186,19 @@ draw_set_color(c_white);
 draw_set_alpha(0.9);
 draw_set_halign(fa_center);
 draw_set_valign(fa_top);
-draw_text(room_width / 2, 80, _timeStr);
+draw_text(room_width / 2, global.is_mobile? 80 : 32, _timeStr);
 draw_set_halign(fa_left);
 draw_set_font(-1);
 
 // Draw "Select a coin" message when no coin is selected (only on first shot)
 if (selectedCoin == noone && isFirstShot) {
     draw_set_color(c_white);
-	draw_set_font(arial_big);
+	draw_set_font(saira_regular);
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
     
     // Draw in the button area (bottom center of screen)
-    var _textY = room_height - 140;
+    var _textY = global.is_mobile ? room_height - 140 : room_height - 90;
     draw_text(room_width / 2, _textY, "Select a coin");
     
     draw_set_halign(fa_left);
