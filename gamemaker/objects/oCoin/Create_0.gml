@@ -8,7 +8,9 @@ image_yscale = global.play_scale * 0.5;
 image_angle = random(360);
 
 // Coin radius for collision calculations (after scaling)
-coinRadius = sprite_width / 2 * global.play_scale;
+// Use sprite_get_width to get base size, then apply the same scaling
+var _baseRadius = sprite_get_width(sprite_index) / 2;
+coinRadius = _baseRadius * global.play_scale * 0.5;
 
 // Create scaled physics fixture
 var fix = physics_fixture_create();
