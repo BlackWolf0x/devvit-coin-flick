@@ -77,11 +77,8 @@ with (oCoin) {
     }
     
     if (_fallenOff && !isShrinking) {
-        isShrinking = true;
-        // Stop physics movement
-        phy_linear_velocity_x = 0;
-        phy_linear_velocity_y = 0;
-        phy_angular_velocity = 0;
+        audio_play_sound(sndCoinFall, 1, false);
+        startCoinShrink(id);
         _anyOutOfBounds = true;
     }
 }
@@ -128,9 +125,10 @@ if (waitingForHit && !coinsMoving) {
     
     // Must have exactly 2 hits: the shooter and exactly 1 target
     if (_hitCount == 2 && instance_exists(_hitCoinId)) {
-        // Success! Capture (destroy) the coin we just shot
+        // Success! Capture (destroy) the coin we just shot with shrink animation
         if (instance_exists(lastShotCoin)) {
-            instance_destroy(lastShotCoin);
+            audio_play_sound(sndCoinCollect, 1, false);
+            startCoinShrink(lastShotCoin);
         }
         
         // Check if only 1 coin remains - WIN!
@@ -305,7 +303,7 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
     
     // Check collision with other coins (circle-ray intersection)
     with (oCoin) {
-        if (id != other.selectedCoin) {
+        if (id != other.selectedCoin && !isShrinking) {  // Skip shrinking coins
             // Vector from selected coin to this coin
             var _toX = x - _coinX;
             var _toY = y - _coinY;

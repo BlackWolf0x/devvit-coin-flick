@@ -41,6 +41,9 @@ if (((_pressed && _onButton) || _spacePressed) && !_controller.coinsMoving &&
                 physics_apply_impulse(x, y, _forceX, _forceY);
             }
             
+            // Play flick sound
+            audio_play_sound(sndFlick, 1, false);
+            
             // Track this shot
             _controller.lastShotCoin = _controller.selectedCoin;
             _controller.waitingForHit = true;
