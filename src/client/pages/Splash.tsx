@@ -54,9 +54,6 @@ export default function Splash() {
 				onMessage: (data: any) => {
 					if (data.type === 'balance-update') {
 						setRealtimeBalance(data.balance);
-
-						// Update React Query cache
-						queryClient.setQueryData(['userBalance'], data.balance.toString());
 					}
 				},
 			});
