@@ -47,6 +47,8 @@
     {"id":{"name":"sndCoinHitObstacle","path":"sounds/sndCoinHitObstacle/sndCoinHitObstacle.yy",},},
     {"id":{"name":"sndFlick","path":"sounds/sndFlick/sndFlick.yy",},},
     {"id":{"name":"sndFlick2","path":"sounds/sndFlick2/sndFlick2.yy",},},
+    {"id":{"name":"sndLose","path":"sounds/sndLose/sndLose.yy",},},
+    {"id":{"name":"sndWin","path":"sounds/sndWin/sndWin.yy",},},
     {"id":{"name":"sBackground","path":"sprites/sBackground/sBackground.yy",},},
     {"id":{"name":"sCoin","path":"sprites/sCoin/sCoin.yy",},},
     {"id":{"name":"sCoinShadow","path":"sprites/sCoinShadow/sCoinShadow.yy",},},

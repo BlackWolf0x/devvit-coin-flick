@@ -85,6 +85,7 @@ with (oCoin) {
 
 // Set game state to lost if any coin went out of bounds
 if (_anyOutOfBounds) {
+    audio_play_sound(sndLose, 1, false);
     gameState = "lost";
 }
 
@@ -146,6 +147,8 @@ if (waitingForHit && !coinsMoving) {
             if (instance_exists(_lastCoin)) {
                 startCoinShrink(_lastCoin);
             }
+            // Play win sound
+            audio_play_sound(sndWin, 1, false);
             gameState = "won";
         } else {
             // Auto-select the hit coin for next shot
@@ -156,6 +159,7 @@ if (waitingForHit && !coinsMoving) {
         }
     } else {
         // Wrong number of hits - player loses!
+        audio_play_sound(sndLose, 1, false);
         gameState = "lost";
     }
     
