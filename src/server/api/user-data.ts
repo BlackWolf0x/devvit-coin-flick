@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
-import { context, redis } from '@devvit/web/server';
+import { context, redis, realtime } from '@devvit/web/server';
 
 const router = Router();
 
@@ -17,11 +17,10 @@ router.get('/api/user-data', async (req: Request, res: Response): Promise<void> 
 
 	try {
 		const balance = await redis.get(`wallet:${userId}`);
-		console.log('🤑 balance from user-data: ', balance);
 
 		res.json({
 			status: 'success',
-			rewarded: balance,
+			balance: balance || '0',
 		});
 	} catch (error) {
 		console.log(error);

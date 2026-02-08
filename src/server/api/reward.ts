@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
-import { context, redis } from '@devvit/web/server';
+import { context, redis, realtime } from '@devvit/web/server';
 
 const router = Router();
 
@@ -19,11 +19,18 @@ router.post('/api/reward', async (req: Request, res: Response): Promise<void> =>
 	try {
 		const walletKey = `wallet:${userId}`;
 		const newBalance = await redis.incrBy(walletKey, amount);
-		console.log('🤑 new balance: ', newBalance);
+
+		// Send real-time update to user's wallet channel
+		await realtime.send(`wallet_${userId}`, {
+			type: 'balance-update',
+			balance: newBalance,
+			timestamp: Date.now(),
+		});
 
 		res.json({
 			status: 'success',
 			rewarded: amount,
+			balance: newBalance,
 		});
 	} catch (error) {
 		console.log(error);
