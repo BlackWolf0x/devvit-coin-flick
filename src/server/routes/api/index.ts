@@ -22,6 +22,8 @@ router.use(trackPlayer);
 router.use(playerCount);
 router.use(topPlayer);
 router.use(createPuzzle);
+
+// Coin game routes
 router.use(getPostDate);
 
 export default router;

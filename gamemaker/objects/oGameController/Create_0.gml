@@ -22,31 +22,54 @@ if (!variable_global_exists("volume_muted")) {
 debug_log("=== GAME STARTING ===");
 debug_log("Fetching post date...");
 
-// Fetch post date for debugging
+// Flag to track if level is ready
+levelReady = false;
+
+// Fetch post date and use it as seed for level generation
 api_get_post_date(function(_http_status, _ok, _result, _payload) {
     debug_log("=== POST DATE RESPONSE ===");
     debug_log("HTTP: " + string(_http_status ?? "undef"));
     debug_log("OK: " + string(_ok ?? "undef"));
-    debug_log("Len: " + string(string_length(_result ?? "")));
     
     if (_ok && !is_undefined(_result) && _result != "") {
         try {
             var _data = json_parse(_result);
             debug_log("JSON parsed OK");
-            debug_log("Status: " + string(_data.status));
             
             if (_data.status == "success") {
-                debug_log("Post ID: " + string(_data.postId));
-                debug_log("Created: " + string(_data.createdAt));
-                debug_log("Timestamp: " + string(_data.createdAtTimestamp));
+                var _timestamp = _data.createdAtTimestamp;
+                debug_log("Post timestamp: " + string(_timestamp));
+                
+                // Use timestamp as random seed for consistent level generation
+                random_set_seed(_timestamp);
+                debug_log("Random seed set!");
+                
+                // Now spawn the level with this seed
+                spawnCoins();
+                debug_log("Level spawned!");
+                
+                // Mark level as ready
+                oGameController.levelReady = true;
             } else {
                 debug_log("Error: " + string(_data.message));
+                // Fallback: use randomize if API fails
+                randomize();
+                spawnCoins();
+                oGameController.levelReady = true;
             }
         } catch(_ex) {
             debug_log("JSON Error: " + string(_ex));
+            // Fallback: use randomize if parsing fails
+            randomize();
+            spawnCoins();
+            oGameController.levelReady = true;
         }
     } else {
         debug_log("Request failed or empty");
+        // Fallback: use randomize if request fails
+        randomize();
+        spawnCoins();
+        oGameController.levelReady = true;
     }
     debug_log("======================");
 });
@@ -143,8 +166,6 @@ edgeSpawnMinDist = 50;  // Minimum distance from edge for "close" spawns
 edgeSpawnMaxDist = 120;  // Maximum distance from edge for "close" spawns
 minCoinSpacing = 120;  // Minimum distance between coin/obstacle centers (increased to prevent touching)
 
-// Initialize random seed
-//randomize();
+// Note: spawnCoins() is called in the API callback after setting the random seed
+// This ensures everyone playing the same post gets the same level
 
-// Spawn coins at start
-spawnCoins();
