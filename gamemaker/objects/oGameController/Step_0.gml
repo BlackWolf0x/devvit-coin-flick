@@ -263,8 +263,8 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
             // Project onto ray direction
             var _proj = _toX * _dirX + _toY * _dirY;
             
-            // Only consider coins in front of us
-            if (_proj > 0) {
+            // Only consider coins in front of us (allow slightly negative for very close coins)
+            if (_proj > -_coinRadius * 0.5) {
                 // Closest point on ray to this coin's center
                 var _closestX = _coinX + _dirX * _proj;
                 var _closestY = _coinY + _dirY * _proj;
@@ -282,9 +282,9 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
                     var _backDist = sqrt(_combinedRadius * _combinedRadius - _distToCoin * _distToCoin);
                     var _intersectDist = _proj - _backDist;
                     
-                    // Accept any positive intersection distance (even if very close)
-                    if (_intersectDist > 0 && _intersectDist < other.tempHitDist) {
-                        other.tempHitDist = _intersectDist;
+                    // Accept intersection even if very close (>= -1 instead of > 0)
+                    if (_intersectDist >= -1 && _intersectDist < other.tempHitDist) {
+                        other.tempHitDist = max(0, _intersectDist);  // Clamp to 0 minimum
                         other.hitCoin = id;
                     }
                 }
