@@ -27,6 +27,7 @@
   "resources":[
     {"id":{"name":"arial_big","path":"fonts/arial_big/arial_big.yy",},},
     {"id":{"name":"saira_regular","path":"fonts/saira_regular/saira_regular.yy",},},
+    {"id":{"name":"obj_http_manager","path":"objects/obj_http_manager/obj_http_manager.yy",},},
     {"id":{"name":"oBtnFlick","path":"objects/oBtnFlick/oBtnFlick.yy",},},
     {"id":{"name":"oBtnLockAim","path":"objects/oBtnLockAim/oBtnLockAim.yy",},},
     {"id":{"name":"oBtnRestartIcon","path":"objects/oBtnRestartIcon/oBtnRestartIcon.yy",},},
@@ -42,6 +43,8 @@
     {"id":{"name":"oTable","path":"objects/oTable/oTable.yy",},},
     {"id":{"name":"oTableDesktop","path":"objects/oTableDesktop/oTableDesktop.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"reddit_demo_server_api","path":"scripts/reddit_demo_server_api/reddit_demo_server_api.yy",},},
+    {"id":{"name":"reddit_functions","path":"scripts/reddit_functions/reddit_functions.yy",},},
     {"id":{"name":"spawnCoins","path":"scripts/spawnCoins/spawnCoins.yy",},},
     {"id":{"name":"startCoinShrink","path":"scripts/startCoinShrink/startCoinShrink.yy",},},
     {"id":{"name":"volumeSettings","path":"scripts/volumeSettings/volumeSettings.yy",},},

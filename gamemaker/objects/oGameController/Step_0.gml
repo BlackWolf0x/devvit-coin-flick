@@ -152,6 +152,36 @@ if (waitingForHit && !coinsMoving) {
             // Play win sound
             audio_play_sound(sndWin, 1, false);
             gameState = "won";
+            
+            // Submit time to leaderboard
+            if (!timeSubmitted) {
+                timeSubmitted = true;
+                
+                if (is_reddit_build()) {
+                    // REDDIT BUILD: Submit time to server
+                    submissionStatus = "submitting";
+                    
+                    api_submit_time(elapsedTime, function(_http_status, _ok, _result, _payload) {
+                        if (_ok && !is_undefined(_result) && _result != "") {
+                            try {
+                                var _data = json_parse(_result);
+                                if (_data.status == "success") {
+                                    oGameController.submissionStatus = "success";
+                                } else {
+                                    oGameController.submissionStatus = "failed";
+                                }
+                            } catch(_ex) {
+                                oGameController.submissionStatus = "failed";
+                            }
+                        } else {
+                            oGameController.submissionStatus = "failed";
+                        }
+                    });
+                } else {
+                    // TEST BUILD: Skip submission
+                    submissionStatus = "success";
+                }
+            }
         } else {
             // Auto-select the hit coin for next shot
             selectedCoin = _hitCoinId;
