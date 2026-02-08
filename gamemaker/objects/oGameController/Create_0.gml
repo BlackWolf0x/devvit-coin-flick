@@ -90,7 +90,7 @@ numCoins = 6;  // Total number of coins to spawn
 numObstacles = 4;  // Number of obstacles to spawn
 edgeSpawnMinDist = 50;  // Minimum distance from edge for "close" spawns
 edgeSpawnMaxDist = 120;  // Maximum distance from edge for "close" spawns
-minCoinSpacing = 80;  // Minimum distance between coin centers
+minCoinSpacing = 120;  // Minimum distance between coin/obstacle centers (increased to prevent touching)
 
 // Initialize random seed
 //randomize();
