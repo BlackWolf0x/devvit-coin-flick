@@ -11,7 +11,7 @@ var _released = device_mouse_check_button_released(0, mb_left);
 // Check for spacebar press
 var _spacePressed = keyboard_check_pressed(vk_space);
 
-// Check if any coin is fully outside play area (do this BEFORE early exit)
+// Check if any coin has fallen off the table (more than half outside play area)
 var _anyOutOfBounds = false;
 with (oCoin) {
     var _playLeft = other.playAreaX;
@@ -19,20 +19,70 @@ with (oCoin) {
     var _playRight = other.playAreaX + other.playAreaWidth;
     var _playBottom = other.playAreaY + other.playAreaHeight;
     
-    // Check if coin is FULLY outside (all edges past the boundary)
-    if (x + coinRadius < _playLeft || 
-        x - coinRadius > _playRight ||
-        y + coinRadius < _playTop ||
-        y - coinRadius > _playBottom) {
-        // Start shrinking animation
-        if (!isShrinking) {
-            isShrinking = true;
-            // Stop physics movement
-            phy_linear_velocity_x = 0;
-            phy_linear_velocity_y = 0;
-            phy_angular_velocity = 0;
-            _anyOutOfBounds = true;
+    // A coin falls when more than half of it is off the table
+    // This means the center must be just past the edge (51% off = center 1% past edge)
+    var _fallThreshold = coinRadius * 0.01;  // Very small threshold for ~51% off
+    
+    var _fallenOff = false;
+    
+    // Check each edge - coin falls if center is too far past the boundary
+    // Left edge: coin center is to the left of (playLeft - fallThreshold)
+    if (x < _playLeft - _fallThreshold) {
+        _fallenOff = true;
+    }
+    // Right edge: coin center is to the right of (playRight + fallThreshold)
+    else if (x > _playRight + _fallThreshold) {
+        _fallenOff = true;
+    }
+    // Top edge: coin center is above (playTop - fallThreshold)
+    else if (y < _playTop - _fallThreshold) {
+        _fallenOff = true;
+    }
+    // Bottom edge: coin center is below (playBottom + fallThreshold)
+    else if (y > _playBottom + _fallThreshold) {
+        _fallenOff = true;
+    }
+    
+    // Check corners - coin can fall off diagonally at corners
+    // Only check corners if we're outside the table bounds on both axes
+    if (!_fallenOff) {
+        // Top-left corner
+        if (x < _playLeft && y < _playTop) {
+            var _distToCorner = point_distance(x, y, _playLeft, _playTop);
+            if (_distToCorner > coinRadius - _fallThreshold) {
+                _fallenOff = true;
+            }
         }
+        // Top-right corner
+        else if (x > _playRight && y < _playTop) {
+            var _distToCorner = point_distance(x, y, _playRight, _playTop);
+            if (_distToCorner > coinRadius - _fallThreshold) {
+                _fallenOff = true;
+            }
+        }
+        // Bottom-left corner
+        else if (x < _playLeft && y > _playBottom) {
+            var _distToCorner = point_distance(x, y, _playLeft, _playBottom);
+            if (_distToCorner > coinRadius - _fallThreshold) {
+                _fallenOff = true;
+            }
+        }
+        // Bottom-right corner
+        else if (x > _playRight && y > _playBottom) {
+            var _distToCorner = point_distance(x, y, _playRight, _playBottom);
+            if (_distToCorner > coinRadius - _fallThreshold) {
+                _fallenOff = true;
+            }
+        }
+    }
+    
+    if (_fallenOff && !isShrinking) {
+        isShrinking = true;
+        // Stop physics movement
+        phy_linear_velocity_x = 0;
+        phy_linear_velocity_y = 0;
+        phy_angular_velocity = 0;
+        _anyOutOfBounds = true;
     }
 }
 
