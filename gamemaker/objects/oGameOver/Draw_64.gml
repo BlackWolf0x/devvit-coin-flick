@@ -108,18 +108,36 @@ if (_gameState == "won") {
     var _seconds = gameController.elapsedTime / 1000;
     var _minutes = floor(_seconds / 60);
     var _secs = floor(_seconds mod 60);
-    var _ms = floor((_seconds - floor(_seconds)) * 100);
     
     var _timeStr = string(_minutes) + ":" + 
-                   ((_secs < 10) ? "0" : "") + string(_secs) + "." +
-                   ((_ms < 10) ? "0" : "") + string(_ms);
+                   ((_secs < 10) ? "0" : "") + string(_secs);
     
     draw_set_color(c_white);
-    draw_text(_popupX, _popupY, "Time: " + _timeStr);
+    draw_text(_popupX, _popupY - 10, "Time: " + _timeStr);
     
-    // Congratulations text
-    draw_set_color(c_yellow);
-    draw_text(_popupX, _popupY + 30, "Congratulations!");
+    // Submission status
+    var _statusText = "";
+    var _statusColor = c_white;
+    switch (gameController.submissionStatus) {
+        case "submitting":
+            _statusText = "Submitting...";
+            _statusColor = c_yellow;
+            break;
+        case "success":
+            _statusText = "Time submitted!";
+            _statusColor = c_lime;
+            break;
+        case "failed":
+            _statusText = "Submission failed";
+            _statusColor = c_red;
+            break;
+    }
+    
+    if (_statusText != "") {
+        draw_set_color(_statusColor);
+        draw_text(_popupX, _popupY + 20, _statusText);
+    }
+
     
     // Restart button
     var _btnLeft = restartBtnX - restartBtnWidth/2;

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import initRoute from './init';
 import boardDataRoute from './board-data';
 import submitScore from './submit-score';
+import submitTime from './submit-time';
 import leaderboard from './leaderboard';
 import deleteScore from './delete-score';
 import trackPlayer from './track-player';
@@ -25,5 +26,6 @@ router.use(createPuzzle);
 
 // Coin game routes
 router.use(getPostDate);
+router.use(submitTime);
 
 export default router;
