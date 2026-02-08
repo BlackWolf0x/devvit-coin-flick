@@ -1,5 +1,10 @@
 /// @description Initialize game controller
 
+// Load volume settings
+if (!variable_global_exists("volume_muted")) {
+    volumeSettings_load();
+}
+
 // Currently selected coin
 selectedCoin = noone;
 
