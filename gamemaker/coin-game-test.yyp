@@ -10,9 +10,10 @@
   },
   "defaultScriptType":1,
   "Folders":[
-    {"$GMFolder":"","%Name":"Sounds","folderPath":"folders/Sounds.yy","name":"Sounds","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Fonts","folderPath":"folders/Fonts.yy","name":"Fonts","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Objects","folderPath":"folders/Objects.yy","name":"Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Sounds","folderPath":"folders/Sounds.yy","name":"Sounds","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sprites","folderPath":"folders/Sprites.yy","name":"Sprites","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
@@ -25,6 +26,7 @@
   "name":"coin-game-test",
   "resources":[
     {"id":{"name":"arial_big","path":"fonts/arial_big/arial_big.yy",},},
+    {"id":{"name":"saira_regular","path":"fonts/saira_regular/saira_regular.yy",},},
     {"id":{"name":"oBtnFlick","path":"objects/oBtnFlick/oBtnFlick.yy",},},
     {"id":{"name":"oBtnLockAim","path":"objects/oBtnLockAim/oBtnLockAim.yy",},},
     {"id":{"name":"oBtnUnselect","path":"objects/oBtnUnselect/oBtnUnselect.yy",},},

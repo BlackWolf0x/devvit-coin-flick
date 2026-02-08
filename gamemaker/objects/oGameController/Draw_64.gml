@@ -173,36 +173,22 @@ if (powerMeterActive && aimLocked) {
     draw_set_valign(fa_top);
 }
 
-// Draw instructions at top
-draw_set_color(c_white);
-draw_set_alpha(0.8);
-if (aimLocked) {
-    draw_text(10, 10, "Aim LOCKED! Press SHOOT to fire at current power.");
-} else if (selectedCoin != noone) {
-    draw_text(10, 10, "Aim by moving mouse. LEFT CLICK to lock aim.");
-} else {
-    draw_text(10, 10, "Click a coin to select it.");
-}
-draw_set_alpha(1);
+// Draw timer (always visible, shows 0:00 before first shot)
+var _seconds = elapsedTime / 1000;
+var _minutes = floor(_seconds / 60);
+var _secs = floor(_seconds mod 60);
 
-// Draw timer
-if (timerRunning || gameState == "won") {
-    var _seconds = elapsedTime / 1000;
-    var _minutes = floor(_seconds / 60);
-    var _secs = floor(_seconds mod 60);
-    var _ms = floor((_seconds - floor(_seconds)) * 100);
-    
-    var _timeStr = string(_minutes) + ":" + 
-                   ((_secs < 10) ? "0" : "") + string(_secs) + "." +
-                   ((_ms < 10) ? "0" : "") + string(_ms);
-    
-    draw_set_color(c_white);
-    draw_set_alpha(0.9);
-    draw_set_halign(fa_right);
-    draw_set_valign(fa_top);
-    draw_text(room_width - 10, 10, "Time: " + _timeStr);
-    draw_set_halign(fa_left);
-}
+var _timeStr = string(_minutes) + ":" + 
+               ((_secs < 10) ? "0" : "") + string(_secs);
+
+draw_set_font(saira_regular);
+draw_set_color(c_white);
+draw_set_alpha(0.9);
+draw_set_halign(fa_center);
+draw_set_valign(fa_top);
+draw_text(room_width / 2, 80, _timeStr);
+draw_set_halign(fa_left);
+draw_set_font(-1);
 
 // Draw "Select a coin" message when no coin is selected (only on first shot)
 if (selectedCoin == noone && isFirstShot) {
@@ -219,13 +205,5 @@ if (selectedCoin == noone && isFirstShot) {
     draw_set_valign(fa_top);
 	draw_set_font(-1);
 
-}
-
-// Debug: Display last shot force
-if (lastShotForce > 0) {
-    draw_set_color(c_lime);
-    draw_set_alpha(1);
-    draw_text(10, 40, "DEBUG - Last Shot Force: " + string(round(lastShotForce)));
-    draw_text(10, 60, "Min: " + string(minShotForce) + " | Max: " + string(maxShotForce));
 }
 

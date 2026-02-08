@@ -1,6 +1,6 @@
 {
   "$GMFont":"",
-  "%Name":"arial_big",
+  "%Name":"arial_big_1",
   "AntiAlias":1,
   "applyKerning":0,
   "ascender":39,
@@ -237,7 +237,7 @@
   "last":0,
   "lineHeight":49,
   "maintainGms1Font":false,
-  "name":"arial_big",
+  "name":"arial_big_1",
   "parent":{
     "name":"Fonts",
     "path":"folders/Fonts.yy",
