@@ -19,61 +19,6 @@ if (!variable_global_exists("volume_muted")) {
     volumeSettings_load();
 }
 
-debug_log("=== GAME STARTING ===");
-debug_log("Fetching post date...");
-
-// Flag to track if level is ready
-levelReady = false;
-
-// Fetch post date and use it as seed for level generation
-api_get_post_date(function(_http_status, _ok, _result, _payload) {
-    debug_log("=== POST DATE RESPONSE ===");
-    debug_log("HTTP: " + string(_http_status ?? "undef"));
-    debug_log("OK: " + string(_ok ?? "undef"));
-    
-    if (_ok && !is_undefined(_result) && _result != "") {
-        try {
-            var _data = json_parse(_result);
-            debug_log("JSON parsed OK");
-            
-            if (_data.status == "success") {
-                var _timestamp = _data.createdAtTimestamp;
-                debug_log("Post timestamp: " + string(_timestamp));
-                
-                // Use timestamp as random seed for consistent level generation
-                random_set_seed(_timestamp);
-                debug_log("Random seed set!");
-                
-                // Now spawn the level with this seed
-                spawnCoins();
-                debug_log("Level spawned!");
-                
-                // Mark level as ready
-                oGameController.levelReady = true;
-            } else {
-                debug_log("Error: " + string(_data.message));
-                // Fallback: use randomize if API fails
-                randomize();
-                spawnCoins();
-                oGameController.levelReady = true;
-            }
-        } catch(_ex) {
-            debug_log("JSON Error: " + string(_ex));
-            // Fallback: use randomize if parsing fails
-            randomize();
-            spawnCoins();
-            oGameController.levelReady = true;
-        }
-    } else {
-        debug_log("Request failed or empty");
-        // Fallback: use randomize if request fails
-        randomize();
-        spawnCoins();
-        oGameController.levelReady = true;
-    }
-    debug_log("======================");
-});
-
 // Currently selected coin
 selectedCoin = noone;
 
@@ -108,7 +53,7 @@ powerMeterActive = false; // Whether meter is oscillating
 
 // Power meter visual properties
 powerMeterX = room_width / 2;  // Centered horizontally
-powerMeterY = room_height * 0.76;  // Slightly below mid-screen (60% down)
+powerMeterY = room_height * 0.76;  // Slightly below mid-screen (76% down)
 powerMeterWidth = 50;
 powerMeterHeight = 300;
 
@@ -158,14 +103,80 @@ playAreaY = (room_height - _playAreaHeight) / 2 + global.top_padding;
 playAreaWidth = _playAreaWidth;
 playAreaHeight = _playAreaHeight;
 
-
-// Coin spawning settings
-numCoins = 6;  // Total number of coins to spawn
+// Coin spawning settings (MUST be defined before spawnCoins() is called)
+numCoins = 8;  // Total number of coins to spawn
 numObstacles = 4;  // Number of obstacles to spawn
 edgeSpawnMinDist = 50;  // Minimum distance from edge for "close" spawns
 edgeSpawnMaxDist = 120;  // Maximum distance from edge for "close" spawns
 minCoinSpacing = 120;  // Minimum distance between coin/obstacle centers (increased to prevent touching)
 
-// Note: spawnCoins() is called in the API callback after setting the random seed
-// This ensures everyone playing the same post gets the same level
+// Flag to track if level is ready
+levelReady = false;
 
+debug_log("=== GAME STARTING ===");
+
+// Check if this is a Reddit build or test build
+if (is_reddit_build()) {
+    debug_log("Reddit build detected");
+    debug_log("Platform: " + (global.is_mobile ? "Mobile" : "Desktop"));
+    debug_log("Fetching post date for seeded level...");
+    
+    // REDDIT BUILD: Fetch post date and use it as seed for consistent level generation
+    api_get_post_date(function(_http_status, _ok, _result, _payload) {
+        debug_log("=== POST DATE RESPONSE ===");
+        debug_log("HTTP: " + string(_http_status ?? "undef"));
+        debug_log("OK: " + string(_ok ?? "undef"));
+        
+        if (_ok && !is_undefined(_result) && _result != "") {
+            try {
+                var _data = json_parse(_result);
+                debug_log("JSON parsed OK");
+                
+                if (_data.status == "success") {
+                    var _dailySeed = _data.dailySeed;
+                    debug_log("Daily seed: " + string(_dailySeed));
+                    
+                    // Use daily seed for consistent level generation
+                    // All posts created on the same day will have the same level
+                    random_set_seed(_dailySeed);
+                    debug_log("Random seed set!");
+                    
+                    // Now spawn the level with this seed
+                    spawnCoins();
+                    debug_log("Seeded level spawned!");
+                    
+                    // Mark level as ready
+                    oGameController.levelReady = true;
+                } else {
+                    debug_log("Error: " + string(_data.message));
+                    // Fallback: use randomize if API fails
+                    randomize();
+                    spawnCoins();
+                    oGameController.levelReady = true;
+                }
+            } catch(_ex) {
+                debug_log("JSON Error: " + string(_ex));
+                // Fallback: use randomize if parsing fails
+                randomize();
+                spawnCoins();
+                oGameController.levelReady = true;
+            }
+        } else {
+            debug_log("Request failed or empty");
+            // Fallback: use randomize if request fails
+            randomize();
+            spawnCoins();
+            oGameController.levelReady = true;
+        }
+        debug_log("======================");
+    });
+} else {
+    // TEST BUILD: Use random level generation
+    debug_log("Test build detected");
+    debug_log("Platform: " + (global.is_mobile ? "Mobile" : "Desktop"));
+    debug_log("Generating random level...");
+    randomize();
+    spawnCoins();
+    levelReady = true;
+    debug_log("Random level spawned!");
+}

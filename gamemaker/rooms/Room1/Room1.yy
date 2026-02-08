@@ -7,6 +7,7 @@
   "inheritLayers":false,
   "instanceCreationOrder":[
     {"name":"inst_61AA4805","path":"rooms/Room1/Room1.yy",},
+    {"name":"inst_37A5517E","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_GameController","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_GameOver","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_6595387E","path":"rooms/Room1/Room1.yy",},
@@ -26,7 +27,6 @@
     {"name":"inst_148CAE3B","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_6A5FC548","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_4FF604E0","path":"rooms/Room1/Room1.yy",},
-    {"name":"inst_37A5517E","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_300BDC70","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_6BD2E036","path":"rooms/Room1/Room1.yy",},
   ],
