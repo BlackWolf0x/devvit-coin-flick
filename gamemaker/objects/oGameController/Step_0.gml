@@ -131,8 +131,21 @@ if (waitingForHit && !coinsMoving) {
             startCoinShrink(lastShotCoin);
         }
         
-        // Check if only 1 coin remains - WIN!
-        if (instance_number(oCoin) == 1) {
+        // Check if only 1 non-shrinking coin remains - WIN!
+        var _nonShrinkingCoins = 0;
+        var _lastCoin = noone;
+        with (oCoin) {
+            if (!isShrinking) {
+                _nonShrinkingCoins++;
+                _lastCoin = id;
+            }
+        }
+        
+        if (_nonShrinkingCoins == 1) {
+            // Collect the last coin
+            if (instance_exists(_lastCoin)) {
+                startCoinShrink(_lastCoin);
+            }
             gameState = "won";
         } else {
             // Auto-select the hit coin for next shot
