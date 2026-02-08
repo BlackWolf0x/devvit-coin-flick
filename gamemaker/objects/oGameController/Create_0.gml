@@ -33,10 +33,10 @@ powerMeterDirection = 1; // 1 = going up, -1 = going down
 powerMeterActive = false; // Whether meter is oscillating
 
 // Power meter visual properties
-powerMeterX = room_width - 60;
-powerMeterY = room_height / 2;
-powerMeterWidth = 30;
-powerMeterHeight = 200;
+powerMeterX = room_width / 2;  // Centered horizontally
+powerMeterY = room_height * 0.76;  // Slightly below mid-screen (60% down)
+powerMeterWidth = 50;
+powerMeterHeight = 300;
 
 // Debug info
 lastShotForce = 0;

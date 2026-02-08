@@ -136,14 +136,14 @@ if (powerMeterActive && aimLocked) {
     draw_line_width(_meterLeft - 5, _fillTop, _meterRight + 5, _fillTop, 2);
     
     // Draw power percentage text
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_bottom);
-    var _powerPercent = round(powerMeterValue * 100);
-    draw_text(powerMeterX, _meterTop - 8, string(_powerPercent) + "%");
+    //draw_set_halign(fa_center);
+    //draw_set_valign(fa_bottom);
+    //var _powerPercent = round(powerMeterValue * 100);
+    //draw_text(powerMeterX, _meterTop - 8, string(_powerPercent) + "%");
     
     // Draw "POWER" label
-    draw_set_valign(fa_top);
-    draw_text(powerMeterX, _meterBottom + 8, "POWER");
+    //draw_set_valign(fa_top);
+    //draw_text(powerMeterX, _meterBottom + 8, "POWER");
     
     // Reset
     draw_set_halign(fa_left);
