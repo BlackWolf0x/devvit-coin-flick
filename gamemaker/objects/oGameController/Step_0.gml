@@ -318,6 +318,7 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
     
     // Reset collision info
     hitCoin = noone;
+    hitObstacle = noone;
     var _maxDist = max(room_width, room_height) * 1.5;
     
     // Use a temporary instance variable so it can be accessed in with() block
@@ -420,6 +421,7 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
                 if (_intersectDist > 0 && _intersectDist < other.tempHitDist) {
                     other.tempHitDist = _intersectDist;
                     other.hitCoin = noone; // Clear hitCoin since we hit an obstacle
+                    other.hitObstacle = id; // Store which obstacle we hit
                 }
             }
         }
@@ -430,6 +432,66 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
     collisionY = _coinY + _dirY * tempHitDist;
     guideEndX = collisionX;
     guideEndY = collisionY;
+    
+    // Calculate bounce direction
+    if (hitCoin != noone && instance_exists(hitCoin)) {
+        // Bouncing off another coin - calculate reflection based on collision normal
+        // Normal vector from hit coin center to collision point
+        var _normalX = collisionX - hitCoin.x;
+        var _normalY = collisionY - hitCoin.y;
+        var _normalLen = sqrt(_normalX * _normalX + _normalY * _normalY);
+        
+        if (_normalLen > 0) {
+            _normalX /= _normalLen;
+            _normalY /= _normalLen;
+            
+            // Reflect the incoming direction vector across the normal
+            // Formula: reflected = incoming - 2 * (incoming · normal) * normal
+            var _dotProduct = _dirX * _normalX + _dirY * _normalY;
+            var _reflectX = _dirX - 2 * _dotProduct * _normalX;
+            var _reflectY = _dirY - 2 * _dotProduct * _normalY;
+            
+            bounceDirection = point_direction(0, 0, _reflectX, _reflectY);
+        } else {
+            bounceDirection = aimDirection + 180;  // Fallback: reverse direction
+        }
+    } else if (hitObstacle != noone && instance_exists(hitObstacle)) {
+        // Bouncing off obstacle - calculate reflection based on collision normal
+        var _normalX = collisionX - hitObstacle.x;
+        var _normalY = collisionY - hitObstacle.y;
+        var _normalLen = sqrt(_normalX * _normalX + _normalY * _normalY);
+        
+        if (_normalLen > 0) {
+            _normalX /= _normalLen;
+            _normalY /= _normalLen;
+            
+            // Reflect the incoming direction vector across the normal
+            var _dotProduct = _dirX * _normalX + _dirY * _normalY;
+            var _reflectX = _dirX - 2 * _dotProduct * _normalX;
+            var _reflectY = _dirY - 2 * _dotProduct * _normalY;
+            
+            bounceDirection = point_direction(0, 0, _reflectX, _reflectY);
+        } else {
+            bounceDirection = aimDirection + 180;  // Fallback: reverse direction
+        }
+    } else {
+        // Hit a wall - simple reflection
+        // Determine which wall we hit
+        var _hitLeft = (collisionX <= _coinRadius + 5);
+        var _hitRight = (collisionX >= room_width - _coinRadius - 5);
+        var _hitTop = (collisionY <= _coinRadius + 5);
+        var _hitBottom = (collisionY >= room_height - _coinRadius - 5);
+        
+        if (_hitLeft || _hitRight) {
+            // Reflect horizontally
+            bounceDirection = 180 - aimDirection;
+        } else if (_hitTop || _hitBottom) {
+            // Reflect vertically
+            bounceDirection = -aimDirection;
+        } else {
+            bounceDirection = aimDirection + 180;  // Fallback
+        }
+    }
 }
 
 // Power meter oscillation

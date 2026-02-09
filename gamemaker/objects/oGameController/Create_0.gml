@@ -36,8 +36,11 @@ guideDotRadius = 4;
 collisionX = 0;
 collisionY = 0;
 hitCoin = noone;
+hitObstacle = noone;  // Track if we hit an obstacle
 guideEndX = 0;
 guideEndY = 0;
+bounceDirection = 0;  // Direction after bounce
+bounceLength = 150;   // Length of bounce indicator line
 
 // Touch/mouse input
 inputX = 0;
@@ -53,7 +56,7 @@ powerMeterActive = false; // Whether meter is oscillating
 
 // Power meter visual properties
 powerMeterX = room_width / 2;  // Centered horizontally
-powerMeterY = room_height * 0.76;  // Slightly below mid-screen (76% down)
+powerMeterY = global.is_mobile ? room_height * 0.76 : room_height * 0.7; 
 powerMeterWidth = 50;
 powerMeterHeight = 300;
 
@@ -74,6 +77,7 @@ waitingForHit = false;  // Waiting to see if shot coin hits another
 startTime = 0;
 elapsedTime = 0;
 timerRunning = false;
+
 
 // Score submission state
 timeSubmitted = false;
@@ -123,57 +127,87 @@ debug_log("=== GAME STARTING ===");
 if (is_reddit_build()) {
     debug_log("Reddit build detected");
     debug_log("Platform: " + (global.is_mobile ? "Mobile" : "Desktop"));
-    debug_log("Fetching post date for seeded level...");
     
-    // REDDIT BUILD: Fetch post date and use it as seed for consistent level generation
-    api_get_post_date(function(_http_status, _ok, _result, _payload) {
-        debug_log("=== POST DATE RESPONSE ===");
-        debug_log("HTTP: " + string(_http_status ?? "undef"));
-        debug_log("OK: " + string(_ok ?? "undef"));
+    // Initialize cache if it doesn't exist
+    if (!variable_global_exists("level_cache_valid")) {
+        global.cached_level_seed = undefined;
+        global.level_cache_valid = false;
+        global.level_cache_timestamp = undefined;
+    }
+    
+    // Check if we have valid cached seed
+    if (is_level_cache_valid()) {
+        var _cachedSeed = get_cached_level_seed();
+        debug_log("Using cached seed: " + string(_cachedSeed));
+        debug_log("Cache age: " + string(get_cache_age_minutes()) + " minutes");
         
-        if (_ok && !is_undefined(_result) && _result != "") {
-            try {
-                var _data = json_parse(_result);
-                debug_log("JSON parsed OK");
-                
-                if (_data.status == "success") {
-                    var _dailySeed = _data.dailySeed;
-                    debug_log("Daily seed: " + string(_dailySeed));
+        // Use cached seed
+        random_set_seed(_cachedSeed);
+        spawnCoins();
+        levelReady = true;
+        audio_play_sound(sndStart, 1, false);
+        debug_log("Level spawned from cache!");
+    } else {
+        // No valid cache, fetch from server
+        debug_log("Fetching post date for seeded level...");
+        
+        // REDDIT BUILD: Fetch post date and use it as seed for consistent level generation
+        api_get_post_date(function(_http_status, _ok, _result, _payload) {
+            debug_log("=== POST DATE RESPONSE ===");
+            debug_log("HTTP: " + string(_http_status ?? "undef"));
+            debug_log("OK: " + string(_ok ?? "undef"));
+            
+            if (_ok && !is_undefined(_result) && _result != "") {
+                try {
+                    var _data = json_parse(_result);
+                    debug_log("JSON parsed OK");
                     
-                    // Use daily seed for consistent level generation
-                    // All posts created on the same day will have the same level
-                    random_set_seed(_dailySeed);
-                    debug_log("Random seed set!");
-                    
-                    // Now spawn the level with this seed
-                    spawnCoins();
-                    debug_log("Seeded level spawned!");
-                    
-                    // Mark level as ready
-                    oGameController.levelReady = true;
-                } else {
-                    debug_log("Error: " + string(_data.message));
-                    // Fallback: use randomize if API fails
+                    if (_data.status == "success") {
+                        var _dailySeed = _data.dailySeed;
+                        debug_log("Daily seed: " + string(_dailySeed));
+                        
+                        // Cache the seed for future restarts
+                        cache_level_seed(_dailySeed);
+                        
+                        // Use daily seed for consistent level generation
+                        // All posts created on the same day will have the same level
+                        random_set_seed(_dailySeed);
+                        debug_log("Random seed set!");
+                        
+                        // Now spawn the level with this seed
+                        spawnCoins();
+                        debug_log("Seeded level spawned!");
+                        
+                        // Mark level as ready
+                        oGameController.levelReady = true;
+                        audio_play_sound(sndStart, 1, false);
+                    } else {
+                        debug_log("Error: " + string(_data.message));
+                        // Fallback: use randomize if API fails
+                        randomize();
+                        spawnCoins();
+                        oGameController.levelReady = true;
+                        audio_play_sound(sndStart, 1, false);
+                    }
+                } catch(_ex) {
+                    debug_log("JSON Error: " + string(_ex));
+                    // Fallback: use randomize if parsing fails
                     randomize();
                     spawnCoins();
                     oGameController.levelReady = true;
+                    audio_play_sound(sndStart, 1, false);
                 }
-            } catch(_ex) {
-                debug_log("JSON Error: " + string(_ex));
-                // Fallback: use randomize if parsing fails
+            } else {
+                debug_log("Request failed or empty");
+                // Fallback: use randomize if request fails
                 randomize();
                 spawnCoins();
                 oGameController.levelReady = true;
+                audio_play_sound(sndStart, 1, false);
             }
-        } else {
-            debug_log("Request failed or empty");
-            // Fallback: use randomize if request fails
-            randomize();
-            spawnCoins();
-            oGameController.levelReady = true;
-        }
-        debug_log("======================");
-    });
+            debug_log("======================");
+        });
+    }
 } else {
     // TEST BUILD: Use random level generation
     debug_log("Test build detected");
@@ -182,5 +216,6 @@ if (is_reddit_build()) {
     randomize();
     spawnCoins();
     levelReady = true;
+    audio_play_sound(sndStart, 1, false);
     debug_log("Random level spawned!");
 }

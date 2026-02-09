@@ -239,8 +239,8 @@
   "maintainGms1Font":false,
   "name":"arial_big",
   "parent":{
-    "name":"coin-game-test",
-    "path":"coin-game-test.yyp",
+    "name":"Fonts",
+    "path":"folders/Fonts.yy",
   },
   "pointRounding":0,
   "ranges":[

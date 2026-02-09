@@ -85,6 +85,22 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
         draw_primitive_end();
     }
     
+    // Draw bounce direction indicator (only for obstacles)
+    if (hitObstacle != noone && instance_exists(hitObstacle)) {
+        draw_set_color(c_white);
+        
+        // Draw dotted line in the same style as the main guide
+        for (var i = 0; i < bounceLength; i += guideDotSpacing) {
+            var _dotX = guideEndX + lengthdir_x(i, bounceDirection);
+            var _dotY = guideEndY + lengthdir_y(i, bounceDirection);
+            
+            // Fade dots slightly as they go further
+            var _alpha = 0.9 - (i / bounceLength) * 0.4;
+            draw_set_alpha(_alpha);
+            draw_circle(_dotX, _dotY, guideDotRadius, false);
+        }
+    }
+    
     draw_set_alpha(1);
     draw_set_color(c_white);
 }
@@ -186,19 +202,19 @@ draw_set_color(c_white);
 draw_set_alpha(0.9);
 draw_set_halign(fa_center);
 draw_set_valign(fa_top);
-draw_text(room_width / 2, 80, _timeStr);
+draw_text(room_width / 2, global.is_mobile? 80 : 32, _timeStr);
 draw_set_halign(fa_left);
 draw_set_font(-1);
 
 // Draw "Select a coin" message when no coin is selected (only on first shot)
 if (selectedCoin == noone && isFirstShot) {
     draw_set_color(c_white);
-	draw_set_font(arial_big);
+	draw_set_font(saira_regular);
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
     
     // Draw in the button area (bottom center of screen)
-    var _textY = room_height - 140;
+    var _textY = global.is_mobile ? room_height - 140 : room_height - 90;
     draw_text(room_width / 2, _textY, "Select a coin");
     
     draw_set_halign(fa_left);
