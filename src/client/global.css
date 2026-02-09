@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import 'tailwindcss';
 
 @plugin "tailwindcss-animate";
@@ -14,10 +14,7 @@
 	--breakpoint-xl: 1280px;
 	--breakpoint-2xl: 1536px;
 
-	--font-sans: Arial, Helvetica, sans-serif;
-	--font-title: 'Delius Swash Caps', system-ui, sans-serif;
-	--font-serif: Georgia, serif;
-	--font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	--font-sans: 'Saira', system-ui, sans-serif;
 
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -101,10 +98,7 @@
 	--sidebar-border: oklch(0.65 0.13 81.66);
 	--sidebar-ring: oklch(0.75 0.15 84.05);
 
-	--font-sans: Arial, Helvetica, sans-serif;
-	--font-title: Delius Swash Caps;
-	--font-serif: Georgia, serif;
-	--font-mono: monospace;
+	--font-sans: 'Saira', system-ui, sans-serif;
 
 	--radius: 0.625rem;
 
@@ -129,7 +123,7 @@
 	}
 
 	body {
-		@apply bg-black text-foreground;
+		@apply bg-radial from-[#008ac3] to-[#0014ff] text-white;
 		font-family: var(--font-sans);
 	}
 }
