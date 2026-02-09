@@ -1,6 +1,6 @@
 global.is_mobile = display_get_height() > display_get_width();
 
-global.is_mobile = !global.is_mobile;
+//global.is_mobile = !global.is_mobile;
 
 if (global.is_mobile) {
     // Mobile: Keep default size (750x1168 - set in room properties)
@@ -49,6 +49,4 @@ if (global.is_mobile) {
     // Center the view at 0,0
     camera_set_view_pos(cam, 0, 0);
     
-    show_debug_message("Desktop detected - Room size set to " + string(_width) + "x" + string(_height));
-    show_debug_message("Window centered at " + string(_window_x) + "," + string(_window_y));
 }

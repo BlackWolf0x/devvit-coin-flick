@@ -4,6 +4,12 @@
 image_xscale = global.play_scale * 0.5;
 image_yscale = global.play_scale * 0.5;
 
+// Random rotation for visual variety
+image_angle = random(360);
+
+// Store initial rotation for physics
+initialRotation = image_angle;
+
 // Obstacle radius for collision calculations (after scaling)
 // Use sprite_get_width to get base size, then apply the same scaling
 var _baseRadius = sprite_get_width(sprite_index) / 2;
