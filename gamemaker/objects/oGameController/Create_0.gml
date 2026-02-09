@@ -142,6 +142,7 @@ if (is_reddit_build()) {
         random_set_seed(_cachedSeed);
         spawnCoins();
         levelReady = true;
+        audio_play_sound(sndStart, 1, false);
         debug_log("Level spawned from cache!");
     } else {
         // No valid cache, fetch from server
@@ -176,12 +177,14 @@ if (is_reddit_build()) {
                         
                         // Mark level as ready
                         oGameController.levelReady = true;
+                        audio_play_sound(sndStart, 1, false);
                     } else {
                         debug_log("Error: " + string(_data.message));
                         // Fallback: use randomize if API fails
                         randomize();
                         spawnCoins();
                         oGameController.levelReady = true;
+                        audio_play_sound(sndStart, 1, false);
                     }
                 } catch(_ex) {
                     debug_log("JSON Error: " + string(_ex));
@@ -189,6 +192,7 @@ if (is_reddit_build()) {
                     randomize();
                     spawnCoins();
                     oGameController.levelReady = true;
+                    audio_play_sound(sndStart, 1, false);
                 }
             } else {
                 debug_log("Request failed or empty");
@@ -196,6 +200,7 @@ if (is_reddit_build()) {
                 randomize();
                 spawnCoins();
                 oGameController.levelReady = true;
+                audio_play_sound(sndStart, 1, false);
             }
             debug_log("======================");
         });
@@ -208,5 +213,6 @@ if (is_reddit_build()) {
     randomize();
     spawnCoins();
     levelReady = true;
+    audio_play_sound(sndStart, 1, false);
     debug_log("Random level spawned!");
 }
