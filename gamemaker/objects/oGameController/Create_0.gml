@@ -36,8 +36,11 @@ guideDotRadius = 4;
 collisionX = 0;
 collisionY = 0;
 hitCoin = noone;
+hitObstacle = noone;  // Track if we hit an obstacle
 guideEndX = 0;
 guideEndY = 0;
+bounceDirection = 0;  // Direction after bounce
+bounceLength = 150;   // Length of bounce indicator line
 
 // Touch/mouse input
 inputX = 0;

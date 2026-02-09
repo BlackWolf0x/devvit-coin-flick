@@ -85,6 +85,22 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
         draw_primitive_end();
     }
     
+    // Draw bounce direction indicator (only for obstacles)
+    if (hitObstacle != noone && instance_exists(hitObstacle)) {
+        draw_set_color(c_white);
+        
+        // Draw dotted line in the same style as the main guide
+        for (var i = 0; i < bounceLength; i += guideDotSpacing) {
+            var _dotX = guideEndX + lengthdir_x(i, bounceDirection);
+            var _dotY = guideEndY + lengthdir_y(i, bounceDirection);
+            
+            // Fade dots slightly as they go further
+            var _alpha = 0.9 - (i / bounceLength) * 0.4;
+            draw_set_alpha(_alpha);
+            draw_circle(_dotX, _dotY, guideDotRadius, false);
+        }
+    }
+    
     draw_set_alpha(1);
     draw_set_color(c_white);
 }
