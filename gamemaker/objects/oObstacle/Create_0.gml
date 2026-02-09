@@ -1,12 +1,17 @@
 /// @description Initialize obstacle properties
 
-// Apply scale
-image_xscale = global.play_scale;
-image_yscale = global.play_scale;
+// Apply scale (2x smaller than before)
+image_xscale = global.play_scale * 0.5;
+image_yscale = global.play_scale * 0.5;
+
+// Obstacle radius for collision calculations (after scaling)
+// Use sprite_get_width to get base size, then apply the same scaling
+var _baseRadius = sprite_get_width(sprite_index) / 2;
+obstacleRadius = _baseRadius * global.play_scale * 0.5;
 
 // Create scaled physics fixture
 var fix = physics_fixture_create();
-physics_fixture_set_circle_shape(fix, 48 * global.play_scale);
+physics_fixture_set_circle_shape(fix, obstacleRadius);
 physics_fixture_set_density(fix, 10.0);
 physics_fixture_set_restitution(fix, 0.8);
 physics_fixture_set_friction(fix, 0.3);
@@ -20,9 +25,6 @@ phy_fixed_rotation = true;
 // Store initial position
 startX = x;
 startY = y;
-
-// Obstacle radius for collision calculations (after scaling)
-obstacleRadius = 48 * global.play_scale;
 
 // Kinematic physics object - doesn't move but coins can bounce off it
 // Physics properties are set in the object definition

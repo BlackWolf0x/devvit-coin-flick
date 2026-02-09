@@ -62,6 +62,7 @@
     {"id":{"name":"sBackground","path":"sprites/sBackground/sBackground.yy",},},
     {"id":{"name":"sCoin","path":"sprites/sCoin/sCoin.yy",},},
     {"id":{"name":"sCoinShadow","path":"sprites/sCoinShadow/sCoinShadow.yy",},},
+    {"id":{"name":"sCupShadow","path":"sprites/sCupShadow/sCupShadow.yy",},},
     {"id":{"name":"sFlickButton","path":"sprites/sFlickButton/sFlickButton.yy",},},
     {"id":{"name":"sLockAimButton","path":"sprites/sLockAimButton/sLockAimButton.yy",},},
     {"id":{"name":"sObstacle","path":"sprites/sObstacle/sObstacle.yy",},},

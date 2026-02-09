@@ -10,7 +10,14 @@ function spawnCoins() {
     
     // Array to track spawned positions (both coins and obstacles)
     var _spawnedPositions = [];
+    var _obstaclePositions = []; // Track obstacles separately for stricter spacing
     var _numSpawned = 0;
+    
+    // Calculate obstacle spacing requirement (6x radius)
+    // Base sprite width is used, scaled by play_scale * 0.5
+    var _obstacleBaseRadius = sprite_get_width(sObstacle) / 2;
+    var _obstacleRadius = _obstacleBaseRadius * global.play_scale * 0.5;
+    var _minObstacleSpacing = _obstacleRadius * 6;
     
     // Calculate total objects to spawn
     var _totalObjects = numCoins + numObstacles;
@@ -58,6 +65,7 @@ function spawnCoins() {
         // Reset for this attempt
         _numSpawned = 0;
         _spawnedPositions = [];
+        _obstaclePositions = [];
         
         // Clear any objects from previous attempt
         with (oCoin) {
@@ -312,6 +320,18 @@ function spawnCoins() {
                 }
             }
             
+            // If spawning an obstacle, check stricter spacing against other obstacles
+            if (_valid && _obstaclesSpawned < numObstacles && _coinsSpawned >= numCoins) {
+                for (var i = 0; i < array_length(_obstaclePositions); i++) {
+                    var _existing = _obstaclePositions[i];
+                    var _dist = point_distance(_x, _y, _existing.x, _existing.y);
+                    if (_dist < _minObstacleSpacing) {
+                        _valid = false;
+                        break;
+                    }
+                }
+            }
+            
             if (_valid) {
                 // For desktop, swap x and y to achieve -90 deg rotation
                 var _finalX, _finalY;
@@ -332,6 +352,7 @@ function spawnCoins() {
                     _coinsSpawned++;
                 } else if (_obstaclesSpawned < numObstacles) {
                     var _obstacle = instance_create_layer(_finalX, _finalY, "Instances", oObstacle);
+                    array_push(_obstaclePositions, {x: _x, y: _y});
                     _obstaclesSpawned++;
                 }
                 array_push(_spawnedPositions, {x: _x, y: _y});
