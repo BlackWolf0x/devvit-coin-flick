@@ -75,24 +75,45 @@ export default function Splash() {
 	// Use realtime balance if available, otherwise use fetched balance
 	const displayBalance = realtimeBalance !== null ? realtimeBalance : parseInt(balance);
 
-
 	const handleStartGame = (e: React.MouseEvent<HTMLButtonElement>) => {
 		requestExpandedMode(e.nativeEvent, 'game');
 	};
 	return (
-		<div className="relative h-screen bg-background pt-6 flex flex-col justify-center items-center gap-6">
-			<div className="text-center space-y-4">
-				<h1 className="text-2xl font-bold">Your Balance</h1>
-				<div className="text-4xl font-bold text-primary">{displayBalance} coins</div>
-			</div>
+		<div className="relative h-screen overflow-hidden">
+			<img
+				src="/misc/fx.png"
+				width={540}
+				height={960}
+				className="w-full h-full absolute z-10 top-0 left-0 inset-0 mix-blend-overlay"
+			/>
 
-			<Button onClick={handleReward} disabled={rewardMutation.isPending}>
-				<Trophy /> {rewardMutation.isPending ? 'Rewarding...' : 'Get Reward'}
-			</Button>
+			{/* Video Background */}
+			<video
+				autoPlay
+				loop
+				muted
+				playsInline
+				poster="/misc/splash-bg.png"
+				className="absolute top-0 left-0 w-full h-[112%] object-cover opacity-40"
+			>
+				<source src="/misc/splash-bg.mp4" type="video/mp4" />
+			</video>
+
+			{/* Content Overlay */}
+			<div className="relative z-10 h-full pt-6 flex flex-col justify-center items-center gap-6">
+				<div className="text-center space-y-4">
+					<h1 className="text-2xl font-bold">Your Balance</h1>
+					<div className="text-4xl font-bold text-primary">{displayBalance} coins</div>
+				</div>
+
+				<Button onClick={handleReward} disabled={rewardMutation.isPending}>
+					<Trophy /> {rewardMutation.isPending ? 'Rewarding...' : 'Get Reward'}
+				</Button>
 
 				<Button onClick={handleStartGame} className="mt-1">
 					Play Game <MoveRight />
 				</Button>
+			</div>
 		</div>
 	);
 }
