@@ -206,6 +206,25 @@ draw_text(room_width / 2, global.is_mobile? 80 : 32, _timeStr);
 draw_set_halign(fa_left);
 draw_set_font(-1);
 
+// Draw error message if level failed to load
+if (gameState == "error") {
+    draw_set_color(c_red);
+    draw_set_font(saira_regular);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    
+    draw_text(room_width / 2, room_height / 2 - 40, "ERROR");
+    
+    draw_set_color(c_white);
+    draw_text(room_width / 2, room_height / 2, "Failed to load level");
+    draw_text(room_width / 2, room_height / 2 + 40, "Please refresh the page");
+    
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    draw_set_font(-1);
+    return; // Don't draw anything else
+}
+
 // Draw "Select a coin" message when no coin is selected (only on first shot)
 if (selectedCoin == noone && isFirstShot) {
     draw_set_color(c_white);

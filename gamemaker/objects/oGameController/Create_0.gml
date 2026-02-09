@@ -183,27 +183,21 @@ if (is_reddit_build()) {
                         audio_play_sound(sndStart, 1, false);
                     } else {
                         debug_log("Error: " + string(_data.message));
-                        // Fallback: use randomize if API fails
-                        randomize();
-                        spawnCoins();
-                        oGameController.levelReady = true;
-                        audio_play_sound(sndStart, 1, false);
+                        // ERROR: Do not allow playing with random spawns
+                        oGameController.gameState = "error";
+                        oGameController.levelReady = false;
                     }
                 } catch(_ex) {
                     debug_log("JSON Error: " + string(_ex));
-                    // Fallback: use randomize if parsing fails
-                    randomize();
-                    spawnCoins();
-                    oGameController.levelReady = true;
-                    audio_play_sound(sndStart, 1, false);
+                    // ERROR: Do not allow playing with random spawns
+                    oGameController.gameState = "error";
+                    oGameController.levelReady = false;
                 }
             } else {
                 debug_log("Request failed or empty");
-                // Fallback: use randomize if request fails
-                randomize();
-                spawnCoins();
-                oGameController.levelReady = true;
-                audio_play_sound(sndStart, 1, false);
+                // ERROR: Do not allow playing with random spawns
+                oGameController.gameState = "error";
+                oGameController.levelReady = false;
             }
             debug_log("======================");
         });
