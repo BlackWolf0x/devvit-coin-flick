@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { connectRealtime } from '@devvit/web/client';
+import { connectRealtime, requestExpandedMode } from '@devvit/web/client';
 import { context } from '@devvit/web/client';
 import { Button } from '@/components/ui/button';
-import { Trophy } from 'lucide-react';
+import { MoveRight, Trophy } from 'lucide-react';
 
 // API functions
 const fetchUserData = async () => {
@@ -75,6 +75,10 @@ export default function Splash() {
 	// Use realtime balance if available, otherwise use fetched balance
 	const displayBalance = realtimeBalance !== null ? realtimeBalance : parseInt(balance);
 
+
+	const handleStartGame = (e: React.MouseEvent<HTMLButtonElement>) => {
+		requestExpandedMode(e.nativeEvent, 'game');
+	};
 	return (
 		<div className="relative h-screen bg-background pt-6 flex flex-col justify-center items-center gap-6">
 			<div className="text-center space-y-4">
@@ -85,6 +89,10 @@ export default function Splash() {
 			<Button onClick={handleReward} disabled={rewardMutation.isPending}>
 				<Trophy /> {rewardMutation.isPending ? 'Rewarding...' : 'Get Reward'}
 			</Button>
+
+				<Button onClick={handleStartGame} className="mt-1">
+					Play Game <MoveRight />
+				</Button>
 		</div>
 	);
 }
