@@ -29,6 +29,10 @@ if (((_pressed && _onButton) || _spacePressed) && !_controller.coinsMoving &&
             // Calculate shot force from power meter
             var _shotForce = lerp(_controller.minShotForce, _controller.maxShotForce, _controller.powerMeterValue);
             
+            // Scale force by play_scale to maintain consistent physics across platforms
+            // Desktop (0.9 scale) should shoot with 90% force for same travel distance
+            _shotForce *= global.play_scale;
+            
             // Store for debug display
             _controller.lastShotForce = _shotForce;
             

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"level_cache_manager",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"level_cache_manager",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

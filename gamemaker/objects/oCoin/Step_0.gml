@@ -18,7 +18,8 @@ var _speed = sqrt(phy_linear_velocity_x * phy_linear_velocity_x + phy_linear_vel
 // Apply additional velocity reduction when moving (simulates table friction)
 if (_speed > 0) {
     // Calculate damping factor based on speed (more damping at lower speeds)
-    var _maxSpeed = 600;  // Reference speed for damping calculation
+    // Scale the reference speed by play_scale for consistent feel
+    var _maxSpeed = 600 * global.play_scale;  // Reference speed for damping calculation
     var _speedRatio = clamp(_speed / _maxSpeed, 0, 1);
     
     // Damping increases as speed decreases (inverse relationship)
@@ -32,7 +33,8 @@ if (_speed > 0) {
 }
 
 // Stop coin completely if velocity is very low (prevents endless drifting)
-var _stopThreshold = 25;  // Threshold for complete stop
+// Scale threshold by play_scale for consistent stopping behavior
+var _stopThreshold = 25 * global.play_scale;  // Threshold for complete stop
 
 if (_speed < _stopThreshold && _speed > 0) {
     phy_linear_velocity_x = 0;

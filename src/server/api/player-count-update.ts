@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { context, redis, reddit } from '@devvit/web/server';
+import { context, redis, realtime } from '@devvit/web/server';
 
 const router = Router();
 
@@ -9,9 +9,9 @@ const router = Router();
  * Uses Redis Sorted Set to ensure uniqueness per post
  * Score is set to timestamp for potential future use (e.g., first play time)
  */
-router.post('/api/track-player', async (_req, res): Promise<void> => {
+router.post('/api/player-count-update', async (_req, res): Promise<void> => {
 	try {
-		const { postId } = context;
+		const { postId, userId } = context;
 
 		if (!postId) {
 			res.status(400).json({
@@ -21,9 +21,7 @@ router.post('/api/track-player', async (_req, res): Promise<void> => {
 			return;
 		}
 
-		const username = await reddit.getCurrentUsername();
-
-		if (!username) {
+		if (!userId) {
 			res.status(401).json({
 				status: 'error',
 				message: 'User must be logged in',
@@ -32,20 +30,23 @@ router.post('/api/track-player', async (_req, res): Promise<void> => {
 		}
 
 		// Add username to the sorted set of players for this post
-		// Using timestamp as score (could be useful for tracking first play time)
 		// zAdd automatically handles uniqueness - if username exists, it just updates the score
 		const key = `players:${postId}`;
 		await redis.zAdd(key, {
-			member: username,
+			member: userId,
 			score: Date.now(),
 		});
 
 		// Get the total count of unique players
 		const count = await redis.zCard(key);
 
+		// Send real-time update
+		await realtime.send(`players_${postId}`, {
+			count,
+		});
+
 		res.json({
 			status: 'success',
-			playerCount: count,
 		});
 	} catch (error) {
 		console.error('Error tracking player:', error);
