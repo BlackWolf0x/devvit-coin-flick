@@ -8,6 +8,13 @@ import { connectRealtime, context } from '@devvit/web/client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
+interface SplashProps {
+	onShowLeaderboard: () => void;
+	onShowHowTo: () => void;
+	onShowChest: () => void;
+	onShowMyCollection: () => void;
+}
+
 // API functions
 const fetchUserData = async () => {
 	const response = await fetch('/api/user-data');
@@ -18,7 +25,12 @@ const fetchUserData = async () => {
 	return data;
 };
 
-export default function Splash() {
+export default function Splash({
+	onShowLeaderboard,
+	onShowHowTo,
+	onShowChest,
+	onShowMyCollection,
+}: SplashProps) {
 	const queryClient = useQueryClient();
 
 	const [realtimeBalance, setRealtimeBalance] = useState<number | null>(null);
@@ -68,15 +80,15 @@ export default function Splash() {
 			</div>
 
 			<div className="absolute top-14 left-2 scale-75">
-				<OpenChestSplash displayBalance={displayBalance} />
+				<OpenChestSplash displayBalance={displayBalance} onOpenChest={onShowChest} />
 			</div>
 
 			<div className="absolute top-2 right-2 space-y-2 scale-90">
-				<TopRightButtons />
+				<TopRightButtons onShowLeaderboard={onShowLeaderboard} onShowHowTo={onShowHowTo} />
 			</div>
 
 			<div className="mt-auto mb-8 flex flex-col justify-center items-center">
-				<MyCoins />
+				<MyCoins onShowMyCollection={onShowMyCollection} />
 			</div>
 
 			<div className="mb-6 w-3/4 mx-auto space-y-2">

@@ -22,7 +22,7 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
 	});
 
 	return (
-		<div className="relative h-screen bg-background pt-4 gap-4 px-4">
+		<div className="relative h-screen pt-4 gap-4 px-4">
 			{/* Header */}
 			<header className="mb-6 flex items-center justify-center gap-4">
 				<Button onClick={onBack} variant="outline" size={'icon'}>

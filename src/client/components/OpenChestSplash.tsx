@@ -1,11 +1,12 @@
 interface OpenChestSplashProps {
 	displayBalance: number;
+	onOpenChest: () => void;
 }
 
-export function OpenChestSplash({ displayBalance }: OpenChestSplashProps) {
+export function OpenChestSplash({ displayBalance, onOpenChest }: OpenChestSplashProps) {
 	return (
 		<>
-			<button className="">
+			<button className="relative cursor-pointer" onClick={onOpenChest}>
 				<img
 					src="/misc/chest-splash.png"
 					width={106}

@@ -1,9 +1,17 @@
 import { ChartColumnDecreasing, GraduationCap } from 'lucide-react';
 
-export function TopRightButtons() {
+interface TopRightButtonsProps {
+	onShowLeaderboard: () => void;
+	onShowHowTo: () => void;
+}
+
+export function TopRightButtons({ onShowLeaderboard, onShowHowTo }: TopRightButtonsProps) {
 	return (
 		<>
-			<button className="cursor-pointer relative w-16 flex flex-col items-center justify-center">
+			<button
+				onClick={onShowLeaderboard}
+				className="cursor-pointer relative w-16 flex flex-col items-center justify-center"
+			>
 				<div className="size-10 rounded-full flex justify-center items-center bg-[#634B47] border border-black text-white">
 					<ChartColumnDecreasing size={20} className="mb-1" />
 				</div>
@@ -13,7 +21,10 @@ export function TopRightButtons() {
 				</div>
 			</button>
 
-			<button className="cursor-pointer relative w-16 flex flex-col items-center justify-center">
+			<button
+				onClick={onShowHowTo}
+				className="cursor-pointer relative w-16 flex flex-col items-center justify-center"
+			>
 				<div className="size-10 rounded-full flex justify-center items-center bg-[#634B47] border border-black text-white">
 					<GraduationCap size={20} className="mb-1" />
 				</div>
