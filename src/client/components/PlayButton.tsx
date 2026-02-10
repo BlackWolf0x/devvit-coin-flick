@@ -33,7 +33,7 @@ export function PlayButton() {
 	});
 
 	// Player count update mutation
-	const updateMutation = useMutation({
+	const updatePlayerCountMutation = useMutation({
 		mutationFn: updatePlayerCount,
 	});
 
@@ -67,7 +67,7 @@ export function PlayButton() {
 	// Start game and track player
 	const handleStartGame = (e: React.MouseEvent<HTMLButtonElement>) => {
 		requestExpandedMode(e.nativeEvent, 'game');
-		updateMutation.mutate();
+		updatePlayerCountMutation.mutate();
 	};
 
 	// Use realtime count if available, otherwise use fetched count
@@ -77,9 +77,17 @@ export function PlayButton() {
 		<>
 			<button
 				onClick={handleStartGame}
-				className="cursor-pointer transition-transform scale-100 hover:scale-110"
+				onContextMenu={(e) => e.preventDefault()}
+				onTouchStart={(e) => e.preventDefault()}
+				className="cursor-pointer transition-transform scale-100 hover:scale-110 active:scale-95 select-none"
 			>
-				<img src="/misc/btn-play.png" width={212} height={77} className="w-32" />
+				<img
+					src="/misc/btn-play.png"
+					width={212}
+					height={77}
+					className="w-32 pointer-events-none"
+					draggable={false}
+				/>
 			</button>
 
 			<p className="flex items-center gap-1 text-sm font-medium text-[#634B47]">
