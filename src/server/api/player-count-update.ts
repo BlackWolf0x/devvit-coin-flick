@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { context, redis, reddit, realtime } from '@devvit/web/server';
+import { context, redis, realtime } from '@devvit/web/server';
 
 const router = Router();
 
