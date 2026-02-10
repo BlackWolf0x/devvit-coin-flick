@@ -1,15 +1,25 @@
-import { ChartColumnDecreasing } from 'lucide-react';
+import { ChartColumnDecreasing, GraduationCap } from 'lucide-react';
 
 export function TopRightButtons() {
 	return (
 		<>
-			<button className="relative w-14 flex justify-center">
-				<div className="size-10 rounded-full bg-[#634B47] border border-black text-white">
-					<ChartColumnDecreasing size={28} />
+			<button className="cursor-pointer relative w-15 flex flex-col items-center justify-center">
+				<div className="size-10 rounded-full flex justify-center items-center bg-[#634B47] border border-black text-white">
+					<ChartColumnDecreasing size={20} className="mb-1" />
 				</div>
 
-				<div className="relative z-10 -top-2 px-2 py-1 rounded-full bg-white border border-black text-xs text-black uppercase">
+				<div className="relative z-10 -top-2 px-2 h-4 flex items-center rounded-full bg-white border border-black text-[0.63rem] font-semibold text-black uppercase">
 					Ranks
+				</div>
+			</button>
+
+			<button className="cursor-pointer relative w-15 flex flex-col items-center justify-center">
+				<div className="size-10 rounded-full flex justify-center items-center bg-[#634B47] border border-black text-white">
+					<GraduationCap size={20} className="mb-1" />
+				</div>
+
+				<div className="relative z-10 -top-2 px-2 h-4 flex items-center rounded-full bg-white border border-black text-[0.63rem] font-semibold text-black uppercase">
+					How to
 				</div>
 			</button>
 		</>

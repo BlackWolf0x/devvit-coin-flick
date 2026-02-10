@@ -1,6 +1,6 @@
 export function MyBalance() {
 	return (
-		<div className="absolute top-4 left-4">
+		<div className="absolute top-6 left-4">
 			<img
 				src="/misc/currency.png"
 				width={80}
