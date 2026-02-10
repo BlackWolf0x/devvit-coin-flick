@@ -79,13 +79,13 @@ export function PlayButton() {
 				onClick={handleStartGame}
 				onContextMenu={(e) => e.preventDefault()}
 				onTouchStart={(e) => e.preventDefault()}
-				className="cursor-pointer transition-transform scale-100 hover:scale-110 active:scale-95 select-none"
+				className="cursor-pointer transition-transform scale-100 active:scale-95 select-none"
 			>
 				<img
 					src="/misc/btn-play.png"
 					width={212}
 					height={77}
-					className="w-32 pointer-events-none"
+					className="w-38 pointer-events-none"
 					draggable={false}
 				/>
 			</button>

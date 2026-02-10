@@ -4,7 +4,7 @@ interface MyBalanceProps {
 
 export function MyBalance({ displayBalance }: MyBalanceProps) {
 	return (
-		<div className="absolute top-6 left-4">
+		<>
 			<img
 				src="/misc/currency.png"
 				width={80}
@@ -17,6 +17,6 @@ export function MyBalance({ displayBalance }: MyBalanceProps) {
 					{displayBalance ? displayBalance : 0}
 				</span>
 			</div>
-		</div>
+		</>
 	);
 }

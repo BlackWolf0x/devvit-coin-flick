@@ -63,17 +63,19 @@ export default function Splash() {
 
 	return (
 		<div className="relative h-screen overflow-hidden flex flex-col justify-between">
-			<MyBalance displayBalance={displayBalance} />
+			<div className="absolute top-4 left-2 scale-90">
+				<MyBalance displayBalance={displayBalance} />
+			</div>
 
-			<div className="absolute top-20 left-2">
+			<div className="absolute top-14 left-2 scale-75">
 				<OpenChestSplash displayBalance={displayBalance} />
 			</div>
 
-			<div className="absolute top-2 right-2 space-y-2">
+			<div className="absolute top-2 right-2 space-y-2 scale-90">
 				<TopRightButtons />
 			</div>
 
-			<div className="mt-auto mb-4 flex flex-col justify-center items-center space-y-2">
+			<div className="mt-auto mb-8 flex flex-col justify-center items-center">
 				<MyCoins />
 			</div>
 
@@ -81,7 +83,7 @@ export default function Splash() {
 				<DailyChallenges />
 			</div>
 
-			<div className="pb-3 flex flex-col items-center justify-center gap-1">
+			<div className="pb-4 flex flex-col items-center justify-center gap-3">
 				<PlayButton />
 			</div>
 		</div>
