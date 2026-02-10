@@ -47,8 +47,8 @@ inputX = 0;
 inputY = 0;
 
 // Power meter settings
-minShotForce = 500;      // Minimum shot power
-maxShotForce = 8000;     // Maximum shot power
+minShotForce = 500 * global.play_scale;      // Minimum shot power
+maxShotForce = 8000 * global.play_scale;     // Maximum shot power
 powerMeterSpeed = 1;     // How fast the meter oscillates (higher = faster)
 powerMeterValue = 0;     // Current position (0 to 1)
 powerMeterDirection = 1; // 1 = going up, -1 = going down
@@ -65,7 +65,7 @@ lastShotForce = 0;
 
 // Movement control
 coinsMoving = false;  // Track if any coins are moving
-movementThreshold = 25;  // Speed threshold to consider coins "moving" (matches coin stop threshold)
+movementThreshold = 25 * global.play_scale;  // Speed threshold to consider coins "moving" (scaled for consistency)
 
 // Game state
 gameState = "start";  // "start", "playing", "lost", "won"
