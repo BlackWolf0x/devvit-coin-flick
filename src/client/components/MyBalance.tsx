@@ -1,4 +1,8 @@
-export function MyBalance() {
+interface MyBalanceProps {
+	displayBalance: number;
+}
+
+export function MyBalance({ displayBalance }: MyBalanceProps) {
 	return (
 		<div className="absolute top-6 left-4">
 			<img
@@ -9,7 +13,9 @@ export function MyBalance() {
 			/>
 
 			<div className="ml-3 pl-10 pr-4 h-6 flex items-center rounded-md bg-[#3E3525]">
-				<span className="font-semibold text-white">10</span>
+				<span className="font-semibold text-white">
+					{displayBalance ? displayBalance : 0}
+				</span>
 			</div>
 		</div>
 	);

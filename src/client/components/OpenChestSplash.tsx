@@ -1,4 +1,8 @@
-export function OpenChestSplash() {
+interface OpenChestSplashProps {
+	displayBalance: number;
+}
+
+export function OpenChestSplash({ displayBalance }: OpenChestSplashProps) {
 	return (
 		<>
 			<button>
@@ -6,7 +10,9 @@ export function OpenChestSplash() {
 					src="/misc/chest-splash.png"
 					width={106}
 					height={92}
-					className="w-[53px] h-[46px] absolute z-10 top-0 left-1/2 -translate-x-1/2"
+					className={`w-[53px] h-[46px] absolute z-10 top-0 left-1/2 -translate-x-1/2 ${
+						displayBalance >= 15 ? 'animate-pulse' : ''
+					}`}
 				/>
 				<img
 					src="/misc/btn-open-splash.png"

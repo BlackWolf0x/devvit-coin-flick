@@ -15,11 +15,9 @@ router.get('/api/user-data', async (req: Request, res: Response): Promise<void> 
 		return;
 	}
 
-	const challengeKey = `challenge:${userId}:${postId}`;
-
 	try {
 		const balance = await redis.get(`wallet:${userId}`);
-		const allChallenges = await redis.hGetAll(challengeKey);
+		const allChallenges = await redis.hGetAll(`challenge:${userId}:${postId}`);
 
 		res.json({
 			status: 'success',
