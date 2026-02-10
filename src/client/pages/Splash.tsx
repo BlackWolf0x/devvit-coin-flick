@@ -1,24 +1,16 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { DailyChallenges } from '@/components/DailyChallenges';
+import { MyBalance } from '@/components/MyBalance';
+import { MyCoins } from '@/components/MyCoins';
+import { OpenChestSplash } from '@/components/OpenChestSplash';
+import { PlayButton } from '@/components/PlayButton';
+import { TopRightButtons } from '@/components/TopRightButtons';
+import { connectRealtime, context } from '@devvit/web/client';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { connectRealtime, requestExpandedMode } from '@devvit/web/client';
-import { context } from '@devvit/web/client';
-import { Button } from '@/components/ui/button';
-import { MoveRight, Trophy } from 'lucide-react';
 
 // API functions
 const fetchUserData = async () => {
 	const response = await fetch('/api/user-data');
-	if (!response.ok) {
-		throw new Error(`HTTP error! status: ${response.status}`);
-	}
-	const data = await response.json();
-	return data.balance || '0';
-};
-
-const rewardUser = async () => {
-	const response = await fetch('/api/reward', {
-		method: 'POST',
-	});
 	if (!response.ok) {
 		throw new Error(`HTTP error! status: ${response.status}`);
 	}
@@ -28,18 +20,16 @@ const rewardUser = async () => {
 
 export default function Splash() {
 	const queryClient = useQueryClient();
+
 	const [realtimeBalance, setRealtimeBalance] = useState<number | null>(null);
 
-	// Fetch user balance
-	const { data: balance = '0' } = useQuery({
-		queryKey: ['userBalance'],
+	// Fetch user data
+	const { data: userData } = useQuery({
+		queryKey: ['userData'],
 		queryFn: fetchUserData,
 	});
 
-	// Reward mutation
-	const rewardMutation = useMutation({
-		mutationFn: rewardUser,
-	});
+	console.log(userData);
 
 	// Connect to realtime channel for balance updates
 	useEffect(() => {
@@ -68,31 +58,34 @@ export default function Splash() {
 		};
 	}, [queryClient]);
 
-	const handleReward = () => {
-		rewardMutation.mutate();
-	};
-
 	// Use realtime balance if available, otherwise use fetched balance
-	const displayBalance = realtimeBalance !== null ? realtimeBalance : parseInt(balance);
+	const displayBalance = realtimeBalance !== null ? realtimeBalance : parseInt(userData?.balance);
 
-
-	const handleStartGame = (e: React.MouseEvent<HTMLButtonElement>) => {
-		requestExpandedMode(e.nativeEvent, 'game');
-	};
 	return (
-		<div className="relative h-screen bg-background pt-6 flex flex-col justify-center items-center gap-6">
-			<div className="text-center space-y-4">
-				<h1 className="text-2xl font-bold">Your Balance</h1>
-				<div className="text-4xl font-bold text-primary">{displayBalance} coins</div>
+		<div className="relative h-screen overflow-hidden flex flex-col justify-between">
+			<div className="absolute top-4 left-2 scale-90">
+				<MyBalance displayBalance={displayBalance} />
 			</div>
 
-			<Button onClick={handleReward} disabled={rewardMutation.isPending}>
-				<Trophy /> {rewardMutation.isPending ? 'Rewarding...' : 'Get Reward'}
-			</Button>
+			<div className="absolute top-14 left-2 scale-75">
+				<OpenChestSplash displayBalance={displayBalance} />
+			</div>
 
-				<Button onClick={handleStartGame} className="mt-1">
-					Play Game <MoveRight />
-				</Button>
+			<div className="absolute top-2 right-2 space-y-2 scale-90">
+				<TopRightButtons />
+			</div>
+
+			<div className="mt-auto mb-8 flex flex-col justify-center items-center">
+				<MyCoins />
+			</div>
+
+			<div className="mb-6 w-3/4 mx-auto space-y-2">
+				<DailyChallenges />
+			</div>
+
+			<div className="pb-4 flex flex-col items-center justify-center gap-3">
+				<PlayButton />
+			</div>
 		</div>
 	);
 }

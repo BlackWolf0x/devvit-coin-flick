@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import 'tailwindcss';
 
 @plugin "tailwindcss-animate";
@@ -14,10 +14,7 @@
 	--breakpoint-xl: 1280px;
 	--breakpoint-2xl: 1536px;
 
-	--font-sans: Arial, Helvetica, sans-serif;
-	--font-title: 'Delius Swash Caps', system-ui, sans-serif;
-	--font-serif: Georgia, serif;
-	--font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	--font-sans: 'Saira', system-ui, sans-serif;
 
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -67,8 +64,7 @@
 }
 
 :root {
-	/* --background: oklch(0.9369 0.0247 91.62); */
-	--background: oklch(0.888 0.0442 71.66);
+	--background: oklch(0.7877 0.1257 60.87);
 
 	--foreground: oklch(0% 0 0);
 	--card: oklch(0.98 0.04 97.73);
@@ -101,10 +97,7 @@
 	--sidebar-border: oklch(0.65 0.13 81.66);
 	--sidebar-ring: oklch(0.75 0.15 84.05);
 
-	--font-sans: Arial, Helvetica, sans-serif;
-	--font-title: Delius Swash Caps;
-	--font-serif: Georgia, serif;
-	--font-mono: monospace;
+	--font-sans: 'Saira', system-ui, sans-serif;
 
 	--radius: 0.625rem;
 
@@ -129,8 +122,28 @@
 	}
 
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-background;
+		position: relative;
 		font-family: var(--font-sans);
+		background-image: url('/misc/bg-gradient.png');
+		background-position: bottom center;
+		background-size: cover;
+		background-repeat: no-repeat;
+	}
+
+	body::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-image: url('/misc/bg-duotone.png');
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
 	}
 }
 
@@ -207,5 +220,27 @@
 
 	100% {
 		transform: scaleX(1);
+	}
+}
+
+@keyframes shake {
+	0%,
+	100% {
+		transform: translateX(0) rotate(0deg);
+	}
+
+	10%,
+	30%,
+	50%,
+	70%,
+	90% {
+		transform: translateX(-2px) rotate(-2deg);
+	}
+
+	20%,
+	40%,
+	60%,
+	80% {
+		transform: translateX(2px) rotate(2deg);
 	}
 }

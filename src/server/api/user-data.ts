@@ -5,7 +5,7 @@ import { context, redis, realtime } from '@devvit/web/server';
 const router = Router();
 
 router.get('/api/user-data', async (req: Request, res: Response): Promise<void> => {
-	const { userId } = context;
+	const { userId, postId } = context;
 
 	if (!userId) {
 		res.status(400).json({
@@ -17,10 +17,12 @@ router.get('/api/user-data', async (req: Request, res: Response): Promise<void> 
 
 	try {
 		const balance = await redis.get(`wallet:${userId}`);
+		const allChallenges = await redis.hGetAll(`challenge:${userId}:${postId}`);
 
 		res.json({
 			status: 'success',
 			balance: balance || '0',
+			allChallenges,
 		});
 	} catch (error) {
 		console.log(error);

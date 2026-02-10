@@ -1,13 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, LoaderCircle } from 'lucide-react';
-
-interface LeaderboardProps {
-	onBack: () => void;
-}
+import { useNavigationStore } from '@/stores/navigationStore';
 
 // API function
-const fetchLeaderboard = async () => {
+const fetchRanks = async () => {
 	const response = await fetch('/api/leaderboard');
 	if (!response.ok) {
 		throw new Error(`HTTP error! status: ${response.status}`);
@@ -15,21 +12,22 @@ const fetchLeaderboard = async () => {
 	return response.json();
 };
 
-export default function Leaderboard({ onBack }: LeaderboardProps) {
+export default function Ranks() {
+	const goBack = useNavigationStore((state) => state.goBack);
 	const { data, isLoading, error } = useQuery({
 		queryKey: ['leaderboard'],
-		queryFn: fetchLeaderboard,
+		queryFn: fetchRanks,
 	});
 
 	return (
-		<div className="relative h-screen bg-background pt-4 gap-4 px-4">
+		<div className="relative h-screen pt-4 gap-4 px-4">
 			{/* Header */}
 			<header className="mb-6 flex items-center justify-center gap-4">
-				<Button onClick={onBack} variant="outline" size={'icon'}>
+				<Button onClick={goBack} variant="outline" size={'icon'}>
 					<ArrowLeft />
 				</Button>
 				<div className="sm:space-y-1">
-					<h1 className="h-6 text-xl font-bold font-title">Leaderboard</h1>
+					<h1 className="h-6 text-xl font-bold font-title">Ranks</h1>
 					<p className="text-xs text-muted-foreground">Top 5 players by fewest moves</p>
 				</div>
 			</header>
@@ -43,7 +41,7 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
 				{isLoading ? (
 					<LoaderCircle size={24} className="animate-spin" />
 				) : error ? (
-					<div className="text-center text-destructive">Error loading leaderboard</div>
+					<div className="text-center text-destructive">Error loading ranks</div>
 				) : !data || data.length === 0 ? (
 					<div className="text-center text-muted-foreground">
 						No plays yet. Be the first!

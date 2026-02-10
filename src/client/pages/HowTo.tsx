@@ -1,16 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { useNavigationStore } from '@/stores/navigationStore';
 
-interface RulesProps {
-	onBack: () => void;
-}
+export default function Rules() {
+	const goBack = useNavigationStore((state) => state.goBack);
 
-export default function Rules({ onBack }: RulesProps) {
 	return (
 		<div className="relative h-screen bg-background pt-4 gap-4 px-4">
 			{/* Header */}
 			<header className="mb-6 flex items-center justify-center gap-4">
-				<Button onClick={onBack} variant="outline" size={'icon'}>
+				<Button onClick={goBack} variant="outline" size={'icon'}>
 					<ArrowLeft />
 				</Button>
 				<div className="sm:space-y-1">

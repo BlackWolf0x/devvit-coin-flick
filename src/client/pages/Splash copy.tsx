@@ -1,135 +1,143 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { context, requestExpandedMode } from '@devvit/web/client';
+import { useEffect, useState } from 'react';
+import { connectRealtime, requestExpandedMode } from '@devvit/web/client';
+import { context } from '@devvit/web/client';
 import { Button } from '@/components/ui/button';
-import ChessboardPreview from '@/components/ChessboardPreview';
-import DevBox from '@/components/DevBox';
-import { ArrowUp, BookOpenText, ChessQueen, Crown, MoveRight, Trophy, Users } from 'lucide-react';
-
-interface SplashProps {
-	onShowLeaderboard: () => void;
-	onShowRules: () => void;
-}
+import { Calendar, MoveRight, Trophy } from 'lucide-react';
 
 // API functions
-const fetchPlayerCount = async () => {
-	const response = await fetch('/api/player-count');
+const fetchUserData = async () => {
+	const response = await fetch('/api/user-data');
 	if (!response.ok) {
 		throw new Error(`HTTP error! status: ${response.status}`);
 	}
 	const data = await response.json();
-	return data.playerCount;
+	return data.balance || '0';
 };
 
-const fetchTopPlayer = async () => {
-	const response = await fetch('/api/top-player');
-	if (!response.ok) {
-		throw new Error(`HTTP error! status: ${response.status}`);
-	}
-	const data = await response.json();
-	return data.topPlayer;
-};
-
-const trackPlayer = async () => {
-	const response = await fetch('/api/track-player', {
+const rewardUser = async () => {
+	const response = await fetch('/api/reward', {
 		method: 'POST',
 	});
 	if (!response.ok) {
 		throw new Error(`HTTP error! status: ${response.status}`);
 	}
 	const data = await response.json();
-	return data.playerCount;
+	return data;
 };
 
-export default function Splash({ onShowLeaderboard, onShowRules }: SplashProps) {
+export default function Splash() {
 	const queryClient = useQueryClient();
+	const [realtimeBalance, setRealtimeBalance] = useState<number | null>(null);
 
-	// Fetch player count
-	const { data: playerCount = 0 } = useQuery({
-		queryKey: ['playerCount'],
-		queryFn: fetchPlayerCount,
+	// Fetch user balance
+	const { data: balance = '0' } = useQuery({
+		queryKey: ['userBalance'],
+		queryFn: fetchUserData,
 	});
 
-	// Fetch top player
-	const { data: topPlayer } = useQuery({
-		queryKey: ['topPlayer'],
-		queryFn: fetchTopPlayer,
+	// Reward mutation
+	const rewardMutation = useMutation({
+		mutationFn: rewardUser,
 	});
 
-	// Track player mutation
-	const trackPlayerMutation = useMutation({
-		mutationFn: trackPlayer,
-		onSuccess: (newCount) => {
-			// Update the player count in cache
-			queryClient.setQueryData(['playerCount'], newCount);
-		},
-	});
+	// Connect to realtime channel for balance updates
+	useEffect(() => {
+		const { userId } = context;
+		if (!userId) return;
 
-	const handleStartGame = (e: React.MouseEvent<HTMLButtonElement>) => {
-		// Track the player
-		trackPlayerMutation.mutate();
+		let connection: any;
 
-		// Expand to game mode
-		requestExpandedMode(e.nativeEvent, 'game');
+		const setupRealtime = async () => {
+			connection = await connectRealtime({
+				channel: `wallet_${userId}`,
+				onMessage: (data: any) => {
+					if (data.type === 'balance-update') {
+						setRealtimeBalance(data.balance);
+					}
+				},
+			});
+		};
+
+		setupRealtime();
+
+		return () => {
+			if (connection) {
+				connection.disconnect();
+			}
+		};
+	}, [queryClient]);
+
+	const handleReward = () => {
+		rewardMutation.mutate();
 	};
 
+	// Use realtime balance if available, otherwise use fetched balance
+	const displayBalance = realtimeBalance !== null ? realtimeBalance : parseInt(balance);
+
+	const handleStartGame = (e: React.MouseEvent<HTMLButtonElement>) => {
+		requestExpandedMode(e.nativeEvent, 'game');
+	};
 	return (
-		<div className="relative h-screen bg-background pt-6 flex flex-col justify-between items-center gap-3">
-			{/* Header */}
-			<header className="px-4 space-y-1 text-center">
-				<h1 className="text-xl font-bold font-title leading-6">
-					Can you beat this in fewer moves?
+		<div className="relative h-screen overflow-hidden flex flex-col justify-between">
+			<div>
+				{/* <div className="text-center space-y-4">
+				<h1 className="text-3xl font-medium ">
+					Did you collect your <span className="text-primary">gold</span> today?
 				</h1>
-				{topPlayer && topPlayer.totalMoves ? (
-					<div className="text-xs font-medium text-primary">
-						Best: {topPlayer.totalMoves} {topPlayer.totalMoves === 1 ? 'move' : 'moves'}{' '}
-						by u/{topPlayer.username}
-					</div>
-				) : (
-					<div className="text-xs font-medium text-muted-foreground">
-						Be the first to complete this puzzle!
-					</div>
-				)}
-			</header>
+				<div className="text-4xl font-bold text-primary">{displayBalance} coins</div>
+			</div> */}
 
-			{/* Content */}
-			<div className="flex flex-col items-center gap-2 px-4">
-				
+				{/* <Button onClick={handleReward} disabled={rewardMutation.isPending}>
+					<Trophy /> {rewardMutation.isPending ? 'Rewarding...' : 'Get Reward'}
+					</Button> */}
+				<img src="misc/coin.png" width={96} height={96} className="size-24" />
 
-				<Button onClick={handleStartGame} className="mt-1">
-					Play <MoveRight />
-				</Button>
+				<div className="mt-20 px-6 grid grid-cols-3 gap-4 text-[#3fe7a7]">
+					<div className="relative rounded-md flex flex-col justify-center items-center p-2 border-2 border-[#7ce0ff] bg-linear-to-t from-[#1c284f] to-[#213469] shadow-[0px_7px_0px_-4px_#7ce0ff]">
+						<div className="absolute inset-0 w-full h-full flex justify-center items-center opacity-10">
+							<img
+								src="/misc/pentagon.svg"
+								width={72}
+								height={72}
+								className="size-16"
+							/>
+						</div>
+
+						<span className="text-xs font-medium">Daily</span>
+						<Calendar size={32} />
+						<span className="font-bold text-sm text-amber-400">+10 Gold</span>
+					</div>
+				</div>
 			</div>
 
-			{/* Footer */}
-			<footer className="w-full p-2 pl-4 border-t flex justify-between items-center">
-				<p className="flex items-center gap-1 text-xs font-bold text-primary">
-					<Users size={14} className="-mt-0.5" /> {playerCount.toLocaleString()}{' '}
-					{playerCount === 1 ? 'Player' : 'Players'}
-				</p>
+			<div className="p-1">
+				<div className="w-full h-24 relative overflow-hidden rounded-md bg-black">
+					<img
+						src="/misc/fx.png"
+						width={540}
+						height={960}
+						className="w-full h-full absolute z-10 top-0 left-0 inset-0 mix-blend-overlay"
+					/>
 
-				<div className="flex items-center gap-2">
-					<Button
-						onClick={onShowRules}
-						variant="outline"
-						size={'sm'}
-						className="text-[0.8rem]"
+					<video
+						autoPlay
+						loop
+						muted
+						playsInline
+						poster="/misc/splash-bg.png"
+						className="absolute top-0 left-0 w-full h-full object-cover scale-125"
 					>
-						<BookOpenText /> Rules
-					</Button>
+						<source src="/misc/splash-bg-hor.mp4" type="video/mp4" />
+					</video>
 
-					<Button
-						onClick={onShowLeaderboard}
-						variant="outline"
-						size={'sm'}
-						className="text-[0.8rem]"
-					>
-						<Trophy /> Leaderboard
-					</Button>
+					<div className="relative z-20 w-full h-full flex justify-center items-center">
+						<Button onClick={handleStartGame} className="mt-1">
+							Play Game <MoveRight />
+						</Button>
+					</div>
 				</div>
-			</footer>
-
-			{/* Dev Tools */}
-			<DevBox />
+			</div>
 		</div>
 	);
 }
