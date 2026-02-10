@@ -1,7 +1,7 @@
 import Splash from '@/pages/Splash';
 import Ranks from '@/pages/Ranks';
 import HowTo from '@/pages/HowTo';
-import ChestOpen from '@/pages/Chest';
+import ChestOpen from '@/pages/ChestOpen';
 import MyCollection from '@/pages/MyCollection';
 
 export const routes = {
