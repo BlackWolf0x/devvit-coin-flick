@@ -64,8 +64,7 @@
 }
 
 :root {
-	/* --background: oklch(0.9369 0.0247 91.62); */
-	--background: oklch(0.888 0.0442 71.66);
+	--background: oklch(0.7877 0.1257 60.87);
 
 	--foreground: oklch(0% 0 0);
 	--card: oklch(0.98 0.04 97.73);
@@ -123,7 +122,7 @@
 	}
 
 	body {
-		@apply bg-radial from-[#008ac3] to-[#0014ff] text-white;
+		@apply bg-background;
 		font-family: var(--font-sans);
 	}
 }
