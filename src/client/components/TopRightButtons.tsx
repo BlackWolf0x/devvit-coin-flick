@@ -7,7 +7,7 @@ export function TopRightButtons() {
 	return (
 		<>
 			<button
-				onClick={() => navigate('leaderboard')}
+				onClick={() => navigate('pageRanks')}
 				className="cursor-pointer relative w-16 flex flex-col items-center justify-center"
 			>
 				<div className="size-10 rounded-full flex justify-center items-center bg-[#634B47] border border-black text-white">
@@ -20,7 +20,7 @@ export function TopRightButtons() {
 			</button>
 
 			<button
-				onClick={() => navigate('howto')}
+				onClick={() => navigate('pageHowTo')}
 				className="cursor-pointer relative w-16 flex flex-col items-center justify-center"
 			>
 				<div className="size-10 rounded-full flex justify-center items-center bg-[#634B47] border border-black text-white">

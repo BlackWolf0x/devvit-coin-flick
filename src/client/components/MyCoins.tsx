@@ -11,7 +11,7 @@ export function MyCoins() {
 			<p className="mb-2 text-sm font-semibold">5/100 Coins Collected</p>
 
 			<button
-				onClick={() => navigate('collection')}
+				onClick={() => navigate('pageMyCollection')}
 				className="cursor-pointer flex justify-between items-center rounded-full px-3 py-1 uppercase text-xs font-medium bg-[#F9DA67] border border-[#C2A744] text-[#634B47]"
 			>
 				My Collection

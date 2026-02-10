@@ -1,16 +1,16 @@
 import Splash from '@/pages/Splash';
-import Leaderboard from '@/pages/Leaderboard';
+import Ranks from '@/pages/Ranks';
 import HowTo from '@/pages/HowTo';
 import ChestOpen from '@/pages/Chest';
 import MyCollection from '@/pages/MyCollection';
 
 export const routes = {
-	splash: Splash,
-	leaderboard: Leaderboard,
-	howto: HowTo,
-	chest: ChestOpen,
-	collection: MyCollection,
+	pageSplash: Splash,
+	pageRanks: Ranks,
+	pageHowTo: HowTo,
+	pageChestOpen: ChestOpen,
+	pageMyCollection: MyCollection,
 } as const;
 
 export type Page = keyof typeof routes;
-export const DEFAULT_PAGE: Page = 'splash';
+export const DEFAULT_PAGE: Page = 'pageSplash';

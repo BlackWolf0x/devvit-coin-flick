@@ -5,7 +5,7 @@ export function OpenChestSplash({ displayBalance }: { displayBalance: number }) 
 
 	return (
 		<>
-			<button className="relative cursor-pointer" onClick={() => navigate('chest')}>
+			<button className="relative cursor-pointer" onClick={() => navigate('pageChestOpen')}>
 				<img
 					src="/misc/chest-splash.png"
 					width={106}
