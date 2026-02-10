@@ -241,21 +241,3 @@ if (selectedCoin == noone && isFirstShot) {
 	draw_set_font(-1);
 
 }
-
-
-// Draw debug logs on screen
-if (variable_global_exists("debug_logs") && is_array(global.debug_logs)) {
-    draw_set_color(c_white);
-    draw_set_alpha(0.9);
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_top);
-    draw_set_font(-1);
-    
-    var _y = 10;
-    for (var i = 0; i < array_length(global.debug_logs); i++) {
-        draw_text(10, _y, global.debug_logs[i]);
-        _y += 20;
-    }
-    
-    draw_set_alpha(1);
-}

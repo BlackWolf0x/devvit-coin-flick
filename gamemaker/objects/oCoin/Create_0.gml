@@ -18,12 +18,13 @@ var _scaledDensity = 1.0 * global.play_scale;
 var _scaledLinearDamping = 0.1 / global.play_scale;  // Inverse scale - smaller coins need MORE damping
 var _scaledAngularDamping = 0.8 / global.play_scale;  // Inverse scale
 var _scaledFriction = 0.2 / global.play_scale;  // Inverse scale - more friction for smaller coins
+var _bounciness = 0.7;
 
 // Create scaled physics fixture
 var fix = physics_fixture_create();
 physics_fixture_set_circle_shape(fix, coinRadius);
 physics_fixture_set_density(fix, _scaledDensity);
-physics_fixture_set_restitution(fix, 0.5);  // Bounciness doesn't need scaling
+physics_fixture_set_restitution(fix, _bounciness);  // Bounciness doesn't need scaling
 physics_fixture_set_linear_damping(fix, _scaledLinearDamping);
 physics_fixture_set_angular_damping(fix, _scaledAngularDamping);
 physics_fixture_set_friction(fix, _scaledFriction);
