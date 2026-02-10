@@ -74,7 +74,7 @@ export function PlayButton() {
 	const displayCount = realtimePlayerCount !== null ? realtimePlayerCount : playerCount;
 
 	return (
-		<div>
+		<>
 			<button
 				onClick={handleStartGame}
 				className="cursor-pointer transition-transform scale-100 hover:scale-110"
@@ -82,10 +82,10 @@ export function PlayButton() {
 				<img src="/misc/btn-play.png" width={212} height={77} className="w-32" />
 			</button>
 
-			<p className="flex items-center gap-1 text-xs font-bold text-primary">
+			<p className="flex items-center gap-1 text-sm font-medium text-[#634B47]">
 				<Users size={14} className="-mt-0.5" /> {displayCount.toLocaleString()}{' '}
 				{displayCount === 1 ? 'Player' : 'Players'}
 			</p>
-		</div>
+		</>
 	);
 }
