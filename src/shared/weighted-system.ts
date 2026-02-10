@@ -1,27 +1,34 @@
+import { coins } from './coins';
+
+type CoinType = (typeof coins)[number];
+
 /**
- * A weighted random system for selecting items based on their weights
+ * A weighted random system for selecting coins based on their weights
  * 
  * @example
  * const coinWeightSystem = new WeightedSystem({
- *   "star-coin": 10,
- *   "heart-coin": 5,
- *   "normal-coin": 85
+ *   "club": 10,
+ *   "spade": 5,
+ *   "diamond": 85
  * });
  * 
- * const randomCoin = coinWeightSystem.getRandomItem(); // Returns "star-coin", "heart-coin", or "normal-coin"
+ * const randomCoin = coinWeightSystem.getRandomItem(); // Returns "club", "spade", or "diamond"
  */
-export class WeightedSystem<T extends string = string> {
-	private items: Map<T, number>;
+export class WeightedSystem {
+	private items: Map<CoinType, number>;
 	private totalWeight: number;
 
-	constructor(weights: Record<T, number>) {
+	constructor(weights: Partial<Record<CoinType, number>>) {
 		this.items = new Map();
 		this.totalWeight = 0;
 
 		// Populate the map and calculate total weight
-		for (const [key, weight] of Object.entries(weights) as [T, number][]) {
+		for (const [key, weight] of Object.entries(weights) as [CoinType, number][]) {
 			if (weight < 0) {
 				throw new Error(`Weight for "${key}" must be non-negative`);
+			}
+			if (!coins.includes(key as CoinType)) {
+				throw new Error(`Invalid coin type: "${key}". Must be one of: ${coins.join(', ')}`);
 			}
 			this.items.set(key, weight);
 			this.totalWeight += weight;
@@ -36,7 +43,7 @@ export class WeightedSystem<T extends string = string> {
 	 * Get a random item based on weights
 	 * @returns The key of the randomly selected item
 	 */
-	getRandomItem(): T {
+	getRandomItem(): CoinType {
 		const random = Math.random() * this.totalWeight;
 		let cumulative = 0;
 
@@ -58,15 +65,15 @@ export class WeightedSystem<T extends string = string> {
 	/**
 	 * Get the weight of a specific item
 	 */
-	getWeight(key: T): number | undefined {
+	getWeight(key: CoinType): number | undefined {
 		return this.items.get(key);
 	}
 
 	/**
 	 * Get all items and their weights
 	 */
-	getItems(): Record<T, number> {
-		return Object.fromEntries(this.items) as Record<T, number>;
+	getItems(): Partial<Record<CoinType, number>> {
+		return Object.fromEntries(this.items) as Partial<Record<CoinType, number>>;
 	}
 
 	/**
@@ -79,7 +86,7 @@ export class WeightedSystem<T extends string = string> {
 	/**
 	 * Get the percentage chance of an item being selected
 	 */
-	getPercentage(key: T): number | undefined {
+	getPercentage(key: CoinType): number | undefined {
 		const weight = this.items.get(key);
 		if (weight === undefined) return undefined;
 		return (weight / this.totalWeight) * 100;
