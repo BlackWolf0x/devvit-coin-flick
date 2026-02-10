@@ -1,12 +1,12 @@
-interface ChestOpenProps {
-	onBack: () => void;
-}
+import { useNavigationStore } from '@/stores/navigationStore';
 
-export default function ChestOpen({ onBack }: ChestOpenProps) {
+export default function ChestOpen() {
+	const goBack = useNavigationStore((state) => state.goBack);
+
 	return (
 		<div className="relative h-screen bg-background pt-6 flex flex-col gap-4 px-4 pb-4">
 			<button
-				onClick={onBack}
+				onClick={goBack}
 				className="absolute top-4 left-4 text-white hover:opacity-80 transition-opacity"
 			>
 				← Back

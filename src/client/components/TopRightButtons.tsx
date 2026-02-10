@@ -1,15 +1,13 @@
 import { ChartColumnDecreasing, GraduationCap } from 'lucide-react';
+import { useNavigationStore } from '@/stores/navigationStore';
 
-interface TopRightButtonsProps {
-	onShowLeaderboard: () => void;
-	onShowHowTo: () => void;
-}
+export function TopRightButtons() {
+	const navigate = useNavigationStore((state) => state.navigate);
 
-export function TopRightButtons({ onShowLeaderboard, onShowHowTo }: TopRightButtonsProps) {
 	return (
 		<>
 			<button
-				onClick={onShowLeaderboard}
+				onClick={() => navigate('leaderboard')}
 				className="cursor-pointer relative w-16 flex flex-col items-center justify-center"
 			>
 				<div className="size-10 rounded-full flex justify-center items-center bg-[#634B47] border border-black text-white">
@@ -22,7 +20,7 @@ export function TopRightButtons({ onShowLeaderboard, onShowHowTo }: TopRightButt
 			</button>
 
 			<button
-				onClick={onShowHowTo}
+				onClick={() => navigate('howto')}
 				className="cursor-pointer relative w-16 flex flex-col items-center justify-center"
 			>
 				<div className="size-10 rounded-full flex justify-center items-center bg-[#634B47] border border-black text-white">

@@ -1,12 +1,11 @@
-interface OpenChestSplashProps {
-	displayBalance: number;
-	onOpenChest: () => void;
-}
+import { useNavigationStore } from '@/stores/navigationStore';
 
-export function OpenChestSplash({ displayBalance, onOpenChest }: OpenChestSplashProps) {
+export function OpenChestSplash({ displayBalance }: { displayBalance: number }) {
+	const navigate = useNavigationStore((state) => state.navigate);
+
 	return (
 		<>
-			<button className="relative cursor-pointer" onClick={onOpenChest}>
+			<button className="relative cursor-pointer" onClick={() => navigate('chest')}>
 				<img
 					src="/misc/chest-splash.png"
 					width={106}
