@@ -47,8 +47,14 @@ inputX = 0;
 inputY = 0;
 
 // Power meter settings
-minShotForce = 500;      // Minimum shot power
-maxShotForce = 8000;     // Maximum shot power
+minShotForce = 500 * global.play_scale;      // Minimum shot power
+maxShotForce = 8000 * global.play_scale;     // Maximum shot power
+
+if (!global.is_mobile) {
+	minShotForce *= global.play_scale;
+	maxShotForce *= global.play_scale;
+}
+
 powerMeterSpeed = 1;     // How fast the meter oscillates (higher = faster)
 powerMeterValue = 0;     // Current position (0 to 1)
 powerMeterDirection = 1; // 1 = going up, -1 = going down
@@ -65,7 +71,7 @@ lastShotForce = 0;
 
 // Movement control
 coinsMoving = false;  // Track if any coins are moving
-movementThreshold = 25;  // Speed threshold to consider coins "moving" (matches coin stop threshold)
+movementThreshold = 25 * global.play_scale;  // Speed threshold to consider coins "moving" (scaled for consistency)
 
 // Game state
 gameState = "start";  // "start", "playing", "lost", "won"
@@ -183,27 +189,21 @@ if (is_reddit_build()) {
                         audio_play_sound(sndStart, 1, false);
                     } else {
                         debug_log("Error: " + string(_data.message));
-                        // Fallback: use randomize if API fails
-                        randomize();
-                        spawnCoins();
-                        oGameController.levelReady = true;
-                        audio_play_sound(sndStart, 1, false);
+                        // ERROR: Do not allow playing with random spawns
+                        oGameController.gameState = "error";
+                        oGameController.levelReady = false;
                     }
                 } catch(_ex) {
                     debug_log("JSON Error: " + string(_ex));
-                    // Fallback: use randomize if parsing fails
-                    randomize();
-                    spawnCoins();
-                    oGameController.levelReady = true;
-                    audio_play_sound(sndStart, 1, false);
+                    // ERROR: Do not allow playing with random spawns
+                    oGameController.gameState = "error";
+                    oGameController.levelReady = false;
                 }
             } else {
                 debug_log("Request failed or empty");
-                // Fallback: use randomize if request fails
-                randomize();
-                spawnCoins();
-                oGameController.levelReady = true;
-                audio_play_sound(sndStart, 1, false);
+                // ERROR: Do not allow playing with random spawns
+                oGameController.gameState = "error";
+                oGameController.levelReady = false;
             }
             debug_log("======================");
         });

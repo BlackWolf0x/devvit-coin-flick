@@ -1,16 +1,9 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { context, redis } from '@devvit/web/server';
-import { WeightedSystem } from '../../utils/weighted-system';
+import { coinWeightedSystem } from '../../../shared/coins';
 
 const router = Router();
-
-// Define coin types and their weights
-const coinWeightSystem = new WeightedSystem({
-	'normal-coin': 70,
-	'star-coin': 20,
-	'heart-coin': 10,
-});
 
 /**
  * POST /api/open-chest
@@ -55,14 +48,18 @@ router.post('/api/open-chest', async (req: Request, res: Response): Promise<void
 		const newBalance = await redis.incrBy(`wallet:${userId}`, -chestCost);
 
 		// Get a random coin based on weights
-		const randomCoin = coinWeightSystem.getRandomItem();
-        console.log(randomCoin)
+		const randomCoinId = coinWeightedSystem.getRandomItem();
+        // console.log(randomCoinId)
 
         // TODO: Unlock in user profile ⚠️⚠️⚠️
+		const userCollectionKey = `collection:${userId}`
+
+		// Add 1 coin
+		await redis.hIncrBy(userCollectionKey, randomCoinId, 1);
 
 		res.json({
 			status: 'success',
-			coin: randomCoin,
+			coinId: randomCoinId,
 			balance: newBalance,
 		});
 	} catch (error) {
