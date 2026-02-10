@@ -1,6 +1,7 @@
 import { DailyChallenges } from '@/components/DailyChallenges';
 import { MyBalance } from '@/components/MyBalance';
 import { MyCoins } from '@/components/MyCoins';
+import { OpenChestSplash } from '@/components/OpenChestSplash';
 import { PlayButton } from '@/components/PlayButton';
 import { TopRightButtons } from '@/components/TopRightButtons';
 
@@ -8,6 +9,10 @@ export default function Splash() {
 	return (
 		<div className="relative h-screen overflow-hidden flex flex-col justify-between">
 			<MyBalance />
+
+			<div className="absolute top-20 left-2">
+				<OpenChestSplash />
+			</div>
 
 			<div className="absolute top-2 right-2 space-y-2">
 				<TopRightButtons />
