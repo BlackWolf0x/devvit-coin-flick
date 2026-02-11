@@ -99,7 +99,12 @@ if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
     
     // Draw bounce direction indicator (only for obstacles)
     if (hitObstacle != noone && instance_exists(hitObstacle)) {
-        draw_set_color(c_white);
+        // Use same color as main guide line (green when locked, white when aiming)
+        if (aimLocked) {
+            draw_set_color(c_lime);  // Green when locked
+        } else {
+            draw_set_color(c_white);  // White when aiming
+        }
         
         // Draw dotted line in the same style as the main guide
         for (var i = 0; i < bounceLength; i += guideDotSpacing) {
