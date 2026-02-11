@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { context, redis } from '@devvit/web/server';
-import { coins } from '../../shared/coins';
+import { coins } from '../../shared/coins/coins';
 
 const router = Router();
 
