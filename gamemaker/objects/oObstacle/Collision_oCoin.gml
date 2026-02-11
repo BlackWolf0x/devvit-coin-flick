@@ -19,9 +19,8 @@ if (_coinSpeed > _speedThreshold) {
     // Calculate bounce direction (away from obstacle center)
     var _bounceDir = point_direction(x, y, other.x, other.y);
     
-    // Boost the velocity by 100% (effectively making restitution = 1.0 instead of 0.5)
-    // This doubles the bounce effect for obstacles only
-    var _boostFactor = 0.3;  // 100% boost = 2x total velocity after collision
+    // This gives a % boost to the bounce effect for obstacles only e.g 0.1 means 10%
+    var _boostFactor = 0.2;
     var _boostX = lengthdir_x(_coinSpeed * _boostFactor, _bounceDir);
     var _boostY = lengthdir_y(_coinSpeed * _boostFactor, _bounceDir);
     
