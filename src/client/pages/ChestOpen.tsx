@@ -140,8 +140,8 @@ export default function ChestOpen() {
 				>
 					<img
 						src="/misc/btn-back.png"
-						width={76}
-						height={77}
+						width={152}
+						height={154}
 						className="w-14 pointer-events-none"
 						draggable={false}
 					/>
@@ -155,8 +155,8 @@ export default function ChestOpen() {
 				>
 					<img
 						src="/chest/btn-open-chest.png"
-						width={212}
-						height={77}
+						width={424}
+						height={154}
 						className="w-38 pointer-events-none"
 						draggable={false}
 					/>

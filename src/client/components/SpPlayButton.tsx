@@ -83,8 +83,8 @@ export function SpPlayButton() {
 			>
 				<img
 					src="/misc/btn-play.png"
-					width={212}
-					height={77}
+					width={424}
+					height={154}
 					className="w-38 pointer-events-none"
 					draggable={false}
 				/>
