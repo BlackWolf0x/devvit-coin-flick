@@ -12,7 +12,7 @@ const router = Router();
 router.post('/api/open-chest', async (req: Request, res: Response): Promise<void> => {
 	try {
 		const { postId, userId } = context;
-		const chestCost = 15;
+		const chestCost = 1;
 
 		if (!postId) {
 			res.status(400).json({

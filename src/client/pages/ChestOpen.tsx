@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -41,12 +40,11 @@ export default function ChestOpen() {
 		openChestMutation
 			.mutateAsync()
 			.then((data) => {
-				console.log(data);
+				setCoinName(data.coinId);
 				setTimeout(() => {
 					setShake(false);
 					setShowChestOpened(true);
-					setCoinName(data.coinId);
-				}, 1800);
+				}, 2000);
 			})
 			.catch((error) => {
 				console.error('Error:', error);
@@ -64,14 +62,9 @@ export default function ChestOpen() {
 			</button>
 
 			<SpMyBalance />
-			{/* <div className="flex-1 flex items-center justify-center">
-				<h1 className="text-2xl text-white">Chest Open Page</h1>
-
-				<button onClick={() => openChestMutation.mutate()}>Open Chest</button>
-			</div> */}
 
 			<div className="relative mt-34 mb-6 w-[190px] h-[190px]">
-				{coinName && (
+				{showChestOpened && coinName && (
 					<div className="absolute -top-34 left-1/2 -translate-x-1/2 w-50 font-bold text-center capitalize">
 						{formatCoinName(coinName)} Coin
 					</div>
@@ -82,8 +75,10 @@ export default function ChestOpen() {
 						src={`/coins/${coinName}.png`}
 						width={192}
 						height={192}
-						className={`absolute z-20 left-1/2 -translate-x-1/2 transition-all delay-10 animate-[flip-horizontal_2s_ease-in-out_infinite] ${
-							showChestOpened ? '-top-24 opacity-100 w-20' : 'top-0 opacity-0 w-10'
+						className={`absolute z-20 left-1/2 -translate-x-1/2 transition-all delay-75 ${
+							showChestOpened
+								? '-top-24 opacity-100 w-20 animate-[flip-horizontal_2s_ease-in-out_infinite]'
+								: 'top-0 opacity-0 w-10'
 						}`}
 					/>
 				)}
