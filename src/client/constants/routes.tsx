@@ -13,4 +13,4 @@ export const routes = {
 } as const;
 
 export type Page = keyof typeof routes;
-export const DEFAULT_PAGE: Page = 'pageSplash';
+export const DEFAULT_PAGE: Page = 'pageMyCollection';
