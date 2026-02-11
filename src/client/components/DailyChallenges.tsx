@@ -43,9 +43,7 @@ export function DailyChallenges({ allChallenges }: DailyChallengesProps) {
 							{isCompleted && <Check size={20} className="text-lime-400" />}
 						</div>
 
-						<span className={`text-white ${isCompleted && 'line-through'}`}>
-							{challenge.label}
-						</span>
+						<span className={`text-white`}>{challenge.label}</span>
 
 						<span
 							className={`ml-auto font-extrabold text-amber-500 ${
