@@ -1,10 +1,9 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { context, realtime, redis } from '@devvit/web/server';
+import type { ChallengeId, ChallengeUpdateMessage } from '../../shared/types/api';
 
 const router = Router();
-
-type ChallengeId = 'completion' | 'under60s' | 'under30s';
 
 /**
  * POST /api/submit-time
@@ -31,10 +30,7 @@ router.post('/api/submit-time', async (req: Request, res: Response): Promise<voi
 			return;
 		}
 
-		if (
-			typeof completionTime !== 'number' ||
-			completionTime < 0
-		) {
+		if (typeof completionTime !== 'number' || completionTime < 0) {
 			res.status(400).json({
 				status: 'error',
 				message: 'Invalid time data',
@@ -114,15 +110,14 @@ router.post('/api/submit-time', async (req: Request, res: Response): Promise<voi
 			await realtime.send(`challenges_${userId}_${postId}`, {
 				type: 'challenge-update',
 				challenges: challengesCompleted,
-				newBalance
-			});
+				newBalance,
+			} satisfies ChallengeUpdateMessage);
 		}
 
 		res.json({
 			status: 'success',
 			accepted,
 		});
-
 	} catch (error) {
 		let errorMessage = 'Unknown error submitting time';
 		if (error instanceof Error) {

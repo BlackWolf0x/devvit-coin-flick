@@ -1,8 +1,7 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
-import { context, redis, realtime } from '@devvit/web/server';
-import { coins } from '../../shared/coins/coins';
-import type { UserDataResponse, ApiErrorResponse } from '../../shared/types/api';
+import { context, redis } from '@devvit/web/server';
+import type { UserDataResponse, ApiErrorResponse, ChallengeId } from '../../shared/types/api';
 
 const router = Router();
 
@@ -28,7 +27,14 @@ router.get('/api/user-data', async (req: Request, res: Response): Promise<void> 
 		}
 
 		const balance = await redis.get(`wallet:${userId}`);
-		const allChallenges = await redis.hGetAll(`challenge:${userId}:${postId}`);
+		const allChallengesRaw = await redis.hGetAll(`challenge:${userId}:${postId}`);
+
+		// Convert challenge strings to booleans
+		const allChallenges: Record<ChallengeId, boolean> = {
+			completion: allChallengesRaw['completion'] === 'true',
+			under60s: allChallengesRaw['under60s'] === 'true',
+			under30s: allChallengesRaw['under30s'] === 'true',
+		};
 
 		// Get user's unique coins in collection (number of keys in the hash)
 		const collection = await redis.hGetAll(userCollectionKey);

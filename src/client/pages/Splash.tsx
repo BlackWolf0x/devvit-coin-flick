@@ -83,7 +83,7 @@ export default function Splash() {
 			</div>
 
 			<div className="mb-6 w-3/4 mx-auto space-y-2">
-				<DailyChallenges />
+				<DailyChallenges allChallenges={userData?.allChallenges} />
 			</div>
 
 			<div className="pb-4 flex flex-col items-center justify-center gap-3">
