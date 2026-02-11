@@ -54,13 +54,6 @@ export default function ChestOpen() {
 
 	return (
 		<div className="relative h-screen pt-6 flex flex-col justify-center items-center gap-4 px-4 pb-4">
-			<button
-				onClick={goBack}
-				className="absolute top-4 left-4 text-white hover:opacity-80 transition-opacity"
-			>
-				← Back
-			</button>
-
 			<SpMyBalance />
 
 			<div className="relative mt-34 mb-6 w-[190px] h-[190px]">
@@ -116,21 +109,38 @@ export default function ChestOpen() {
 				/>
 			</div>
 
-			<button
-				onClick={handleOpenChest}
-				disabled={shake}
-				onContextMenu={(e) => e.preventDefault()}
-				onTouchStart={(e) => e.preventDefault()}
-				className="cursor-pointer transition-transform scale-100 active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed"
-			>
-				<img
-					src="/chest/btn-open-chest.png"
-					width={212}
-					height={77}
-					className="w-38 pointer-events-none"
-					draggable={false}
-				/>
-			</button>
+			<div className="flex items-center gap-2">
+				<button
+					onClick={goBack}
+					disabled={shake}
+					onContextMenu={(e) => e.preventDefault()}
+					onTouchStart={(e) => e.preventDefault()}
+					className="cursor-pointer transition-transform scale-100 active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					<img
+						src="/misc/btn-back.png"
+						width={76}
+						height={77}
+						className="w-14 pointer-events-none"
+						draggable={false}
+					/>
+				</button>
+				<button
+					onClick={handleOpenChest}
+					disabled={shake}
+					onContextMenu={(e) => e.preventDefault()}
+					onTouchStart={(e) => e.preventDefault()}
+					className="cursor-pointer transition-transform scale-100 active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					<img
+						src="/chest/btn-open-chest.png"
+						width={212}
+						height={77}
+						className="w-38 pointer-events-none"
+						draggable={false}
+					/>
+				</button>
+			</div>
 		</div>
 	);
 }
