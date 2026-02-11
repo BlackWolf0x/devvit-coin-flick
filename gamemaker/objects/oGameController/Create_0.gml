@@ -1,3 +1,6 @@
+/// ⚠⚠⚠ this object really needs cleaning up and a lot of logic here should be handled elsewhere.
+
+
 /// @description Initialize game controller
 
 // Visual debug log for mobile/browser (can't see console there)
@@ -174,8 +177,8 @@ if (is_reddit_build()) {
                         debug_log("Daily seed: " + string(_dailySeed));
                         debug_log("Active coin: " + string(_activeCoin));
                         
-                        // Store active coin globally
-                        global.active_coin = _activeCoin;
+                        // Get the sprite for the active coin and store globally
+                        global.active_coin_sprite = getCoinSprite(_activeCoin);
                         
                         // Cache the seed for future restarts
                         cache_level_seed(_dailySeed);

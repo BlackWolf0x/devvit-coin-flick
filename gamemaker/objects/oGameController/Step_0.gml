@@ -1,15 +1,67 @@
+/// ⚠⚠⚠ this object really needs cleaning up and a lot of logic here should be handled elsewhere.
+
 /// @description Handle input, selection, and shooting
 
 // Get input position (works for both mouse and touch)
 inputX = device_mouse_x(0);
 inputY = device_mouse_y(0);
 
+// Update cursor based on hover state
+var _hoveringSelectableCoin = false;
+var _hoveringButton = false;
+
+// Check if hovering over buttons
+with (oBtnVolume) {
+    if (point_in_rectangle(other.inputX, other.inputY, bbox_left, bbox_top, bbox_right, bbox_bottom)) {
+        _hoveringButton = true;
+    }
+}
+with (oBtnRestartIcon) {
+    if (point_in_rectangle(other.inputX, other.inputY, bbox_left, bbox_top, bbox_right, bbox_bottom)) {
+        _hoveringButton = true;
+    }
+}
+
+if (!coinsMoving && !waitingForHit && (gameState != "lost" && gameState != "won")) {
+    // Only show hand cursor on first shot when no coin is selected yet
+    if (isFirstShot && selectedCoin == noone) {
+        var _hoveredCoin = instance_position(inputX, inputY, oCoin);
+        if (_hoveredCoin != noone) {
+            _hoveringSelectableCoin = true;
+        }
+    }
+}
+
+// Set cursor based on hover state
+if (_hoveringButton || _hoveringSelectableCoin) {
+    window_set_cursor(cr_handpoint);
+} else {
+    window_set_cursor(cr_default);
+}
+
 // Check for press (works for touch and mouse)
 var _pressed = device_mouse_check_button_pressed(0, mb_left);
 var _released = device_mouse_check_button_released(0, mb_left);
+var _rightPressed = device_mouse_check_button_pressed(0, mb_right);
 
 // Check for spacebar press
 var _spacePressed = keyboard_check_pressed(vk_space);
+
+// Handle right-click behavior
+if (_rightPressed && !coinsMoving && !waitingForHit) {
+    // If aim is locked, unlock it (don't unselect)
+    if (aimLocked) {
+        aimLocked = false;
+        powerMeterActive = false;
+        powerMeterValue = 0;
+    }
+    // If aim is not locked but on first shot with coin selected, unselect
+    else if (isFirstShot && selectedCoin != noone) {
+        selectedCoin.isSelected = false;
+        selectedCoin = noone;
+        isAiming = false;
+    }
+}
 
 // Check if any coin has fallen off the table (more than half outside play area)
 var _anyOutOfBounds = false;
@@ -230,12 +282,63 @@ if (_pressed && !_onShootBtn && !_onUnselectBtn && !_onLockAimBtn && !coinsMovin
         exit;
     }
     
-    // If aim is locked, any click cancels the lock
-    if (aimLocked) {
+    // MOBILE: If aim is locked, unlock it and redirect aim to click position
+    if (global.is_mobile && aimLocked && selectedCoin != noone && instance_exists(selectedCoin)) {
+        // Unlock aim
         aimLocked = false;
         powerMeterActive = false;
         powerMeterValue = 0;
-        // Keep the coin selected and aiming active
+        
+        // Redirect aim to where we clicked
+        var _dx = inputX - selectedCoin.x;
+        var _dy = inputY - selectedCoin.y;
+        
+        if (abs(_dx) > 5 || abs(_dy) > 5) {
+            aimDirection = point_direction(selectedCoin.x, selectedCoin.y, inputX, inputY);
+        }
+        
+        // Keep coin selected and aiming active
+    }
+    // DESKTOP: If aim is locked, shoot!
+    else if (!global.is_mobile && aimLocked && selectedCoin != noone && instance_exists(selectedCoin)) {
+        // Calculate shot force from power meter
+        var _shotForce = lerp(minShotForce, maxShotForce, powerMeterValue);
+        
+        // Scale force by play_scale to maintain consistent physics across platforms
+        _shotForce *= global.play_scale;
+        
+        // Store for debug display
+        lastShotForce = _shotForce;
+        
+        // Use the locked aim direction with power meter force
+        var _forceX = lengthdir_x(_shotForce, aimDirection);
+        var _forceY = lengthdir_y(_shotForce, aimDirection);
+        
+        // Apply impulse to the coin
+        with (selectedCoin) {
+            physics_apply_impulse(x, y, _forceX, _forceY);
+        }
+        
+        // Play flick sound
+        audio_play_sound(sndFlick, 1, false);
+        
+        // Track this shot
+        lastShotCoin = selectedCoin;
+        waitingForHit = true;
+        isFirstShot = false;
+        
+        // Start timer on first shot
+        if (!timerRunning) {
+            timerRunning = true;
+            startTime = current_time;
+        }
+        
+        // Deselect immediately
+        selectedCoin.isSelected = false;
+        selectedCoin = noone;
+        isAiming = false;
+        aimLocked = false;
+        powerMeterActive = false;
     }
     // Otherwise, handle normal selection/locking
     else {
