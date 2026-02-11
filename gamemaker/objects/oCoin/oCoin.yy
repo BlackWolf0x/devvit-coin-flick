@@ -36,8 +36,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"sCoin",
-    "path":"sprites/sCoin/sCoin.yy",
+    "name":"sCoinClover",
+    "path":"sprites/sCoinClover/sCoinClover.yy",
   },
   "spriteMaskId":null,
   "visible":true,

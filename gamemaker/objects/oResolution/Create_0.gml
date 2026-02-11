@@ -12,7 +12,7 @@ if (global.is_mobile) {
     var _width = 1448;
     var _height = 1168;
     
-    room_width = _width
+    room_width = _width;
     room_height = _height;
     
     // Enable views if not already enabled

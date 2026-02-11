@@ -60,7 +60,7 @@
     {"id":{"name":"sndStart","path":"sounds/sndStart/sndStart.yy",},},
     {"id":{"name":"sndWin","path":"sounds/sndWin/sndWin.yy",},},
     {"id":{"name":"sBackground","path":"sprites/sBackground/sBackground.yy",},},
-    {"id":{"name":"sCoin","path":"sprites/sCoin/sCoin.yy",},},
+    {"id":{"name":"sCoinClover","path":"sprites/sCoinClover/sCoinClover.yy",},},
     {"id":{"name":"sCoinShadow","path":"sprites/sCoinShadow/sCoinShadow.yy",},},
     {"id":{"name":"sCupShadow","path":"sprites/sCupShadow/sCupShadow.yy",},},
     {"id":{"name":"sFlickButton","path":"sprites/sFlickButton/sFlickButton.yy",},},
