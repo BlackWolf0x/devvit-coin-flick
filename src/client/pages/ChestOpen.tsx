@@ -3,6 +3,7 @@ import { useNavigationStore } from '@/stores/navigationStore';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { formatCoinName } from '@/lib/formatCoinName';
+import { SpMyBalance } from '@/components/SpMyBalance';
 
 const openChest = async () => {
 	const response = await fetch('/api/open-chest', {
@@ -61,6 +62,8 @@ export default function ChestOpen() {
 			>
 				← Back
 			</button>
+
+			<SpMyBalance />
 			{/* <div className="flex-1 flex items-center justify-center">
 				<h1 className="text-2xl text-white">Chest Open Page</h1>
 

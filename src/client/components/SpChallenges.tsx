@@ -1,9 +1,6 @@
 import { ChallengeId } from '@shared/types/api';
 import { Check } from 'lucide-react';
-
-interface SpChallengesProps {
-	allChallenges: Record<ChallengeId, boolean> | undefined;
-}
+import { useUserDataStore } from '@/stores/userDataStore';
 
 const challenges = [
 	{
@@ -23,7 +20,9 @@ const challenges = [
 	},
 ];
 
-export function SpChallenges({ allChallenges }: SpChallengesProps) {
+export function SpChallenges() {
+	const allChallenges = useUserDataStore((state) => state.allChallenges);
+
 	return (
 		<>
 			{challenges.map((challenge) => {

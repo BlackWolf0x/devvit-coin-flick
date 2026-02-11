@@ -1,14 +1,12 @@
 import { MoveRight } from 'lucide-react';
 import { useNavigationStore } from '@/stores/navigationStore';
+import { useUserDataStore } from '@/stores/userDataStore';
 import { coins } from '../../shared/coins/coins';
 
-interface SpCoinsCollectedProps {
-	activeCoin: string | undefined;
-	uniqueCoins: number | undefined;
-}
-
-export function SpCoinsCollected({ activeCoin, uniqueCoins }: SpCoinsCollectedProps) {
+export function SpCoinsCollected() {
 	const navigate = useNavigationStore((state) => state.navigate);
+	const activeCoin = useUserDataStore((state) => state.activeCoin);
+	const uniqueCoins = useUserDataStore((state) => state.uniqueCoins);
 
 	return (
 		<>
@@ -25,7 +23,7 @@ export function SpCoinsCollected({ activeCoin, uniqueCoins }: SpCoinsCollectedPr
 			)}
 
 			<p className="mb-2 text-sm font-semibold">
-				{uniqueCoins ? uniqueCoins : 0}/{coins.length} Coins Collected
+				{uniqueCoins ?? 0}/{coins.length} Coins Collected
 			</p>
 
 			<button

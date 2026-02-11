@@ -1,10 +1,10 @@
-interface SpMyBalanceProps {
-	displayBalance: number | undefined;
-}
+import { useUserDataStore } from '@/stores/userDataStore';
 
-export function SpMyBalance({ displayBalance }: SpMyBalanceProps) {
+export function SpMyBalance() {
+	const balance = useUserDataStore((state) => state.balance);
+
 	return (
-		<>
+		<div className="absolute top-4 left-2 notmobile:top-6 notmobile:left-4 scale-90 notmobile:scale-100">
 			<img
 				src="/misc/currency.png"
 				width={80}
@@ -13,10 +13,8 @@ export function SpMyBalance({ displayBalance }: SpMyBalanceProps) {
 			/>
 
 			<div className="ml-3 pl-10 pr-4 h-6 flex items-center rounded-md bg-[#3E3525]">
-				<span className="font-semibold text-white">
-					{displayBalance ? displayBalance : 0}
-				</span>
+				<span className="font-semibold text-white">{balance ?? 0}</span>
 			</div>
-		</>
+		</div>
 	);
 }
