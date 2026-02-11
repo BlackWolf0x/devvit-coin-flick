@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { context, redis, realtime } from '@devvit/web/server';
+import { coins } from '../../shared/coins/coins';
 
 const router = Router();
 
@@ -29,10 +30,15 @@ router.get('/api/user-data', async (req: Request, res: Response): Promise<void> 
 		const balance = await redis.get(`wallet:${userId}`);
 		const allChallenges = await redis.hGetAll(`challenge:${userId}:${postId}`);
 
+		// Get user's unique coins in collection (number of keys in the hash)
+		const collection = await redis.hGetAll(userCollectionKey);
+		const uniqueCoins = Object.keys(collection).length;
+
 		res.json({
 			status: 'success',
 			balance: balance || '0',
 			allChallenges,
+			uniqueCoins,
 		});
 	} catch (error) {
 		console.log(error);
