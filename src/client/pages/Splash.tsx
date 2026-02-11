@@ -1,21 +1,21 @@
 import { DailyChallenges } from '@/components/DailyChallenges';
 import { MyBalance } from '@/components/MyBalance';
-import { MyCoins } from '@/components/MyCoins';
+import { SplashCoinsCollected } from '@/components/SplashCoinsCollected';
 import { OpenChestSplash } from '@/components/OpenChestSplash';
 import { PlayButton } from '@/components/PlayButton';
 import { TopRightButtons } from '@/components/TopRightButtons';
 import { connectRealtime, context } from '@devvit/web/client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import type { UserDataResponse } from '../../shared/types/api';
 
 // API functions
-const fetchUserData = async () => {
+const fetchUserData = async (): Promise<UserDataResponse> => {
 	const response = await fetch('/api/user-data');
 	if (!response.ok) {
 		throw new Error(`HTTP error! status: ${response.status}`);
 	}
-	const data = await response.json();
-	return data;
+	return response.json();
 };
 
 export default function Splash() {
@@ -24,7 +24,7 @@ export default function Splash() {
 	const [realtimeBalance, setRealtimeBalance] = useState<number | null>(null);
 
 	// Fetch user data
-	const { data: userData } = useQuery({
+	const { data: userData } = useQuery<UserDataResponse>({
 		queryKey: ['userData'],
 		queryFn: fetchUserData,
 	});
@@ -59,7 +59,7 @@ export default function Splash() {
 	}, [queryClient]);
 
 	// Use realtime balance if available, otherwise use fetched balance
-	const displayBalance = realtimeBalance !== null ? realtimeBalance : parseInt(userData?.balance);
+	const displayBalance = realtimeBalance !== null ? realtimeBalance : userData?.balance;
 
 	return (
 		<div className="relative h-screen overflow-hidden flex flex-col justify-between">
@@ -76,7 +76,10 @@ export default function Splash() {
 			</div>
 
 			<div className="mt-auto mb-8 flex flex-col justify-center items-center">
-				<MyCoins />
+				<SplashCoinsCollected
+					activeCoin={userData?.activeCoin}
+					uniqueCoins={userData?.uniqueCoins}
+				/>
 			</div>
 
 			<div className="mb-6 w-3/4 mx-auto space-y-2">

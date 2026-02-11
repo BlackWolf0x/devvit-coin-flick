@@ -1,5 +1,5 @@
 interface MyBalanceProps {
-	displayBalance: number;
+	displayBalance: number | undefined;
 }
 
 export function MyBalance({ displayBalance }: MyBalanceProps) {

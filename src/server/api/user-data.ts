@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { context, redis, realtime } from '@devvit/web/server';
 import { coins } from '../../shared/coins/coins';
+import type { UserDataResponse, ApiErrorResponse } from '../../shared/types/api';
 
 const router = Router();
 
@@ -10,18 +11,17 @@ router.get('/api/user-data', async (req: Request, res: Response): Promise<void> 
 
 	if (!userId) {
 		res.status(400).json({
-			status: 'error',
 			message: 'User must be logged in',
-		});
+		} satisfies ApiErrorResponse);
 		return;
 	}
 
 	try {
 		const userCollectionKey = `collection:${userId}`;
-		
+
 		// Gift user a 'clover' coin only once (if collection doesn't exist yet)
 		const collectionExists = await redis.exists(userCollectionKey);
-		
+
 		if (!collectionExists) {
 			// Gift the user 1 clover coin
 			await redis.hIncrBy(userCollectionKey, 'clover', 1);
@@ -34,18 +34,21 @@ router.get('/api/user-data', async (req: Request, res: Response): Promise<void> 
 		const collection = await redis.hGetAll(userCollectionKey);
 		const uniqueCoins = Object.keys(collection).length;
 
+		// Get user's active coin
+		const activeCoinKey = `activecoin:${userId}`;
+		const activeCoin = await redis.get(activeCoinKey);
+
 		res.json({
-			status: 'success',
-			balance: balance || '0',
+			balance: parseInt(balance || '0', 10),
 			allChallenges,
 			uniqueCoins,
-		});
+			activeCoin: activeCoin || 'clover',
+		} satisfies UserDataResponse);
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({
-			status: 'error',
 			message: 'Failed to get user balance',
-		});
+		} satisfies ApiErrorResponse);
 	}
 });
 

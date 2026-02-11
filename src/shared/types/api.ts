@@ -1,16 +1,10 @@
-export type InitResponse = {
-	type: 'init';
-	postId: string;
-	username: string;
-};
+export interface UserDataResponse {
+	balance: number;
+	allChallenges: Record<string, string>;
+	uniqueCoins: number;
+	activeCoin: string;
+}
 
-export type CreatePuzzleRequest = {
-	board: number[][];
-};
-
-export type CreatePuzzleResponse = {
-	success: boolean;
-	postId: string;
-	postUrl?: string;
+export interface ApiErrorResponse {
 	message: string;
-};
+}
