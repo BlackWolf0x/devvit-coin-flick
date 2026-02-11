@@ -1,24 +1,6 @@
+/// ⚠⚠⚠ this object really needs cleaning up and a lot of logic here should be handled elsewhere.
+
 /// @description Draw aiming guide and UI
-
-// Draw active coin display (top-left corner)
-if (variable_global_exists("active_coin_name")) {
-    draw_set_color(c_white);
-    draw_set_alpha(0.9);
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_top);
-    draw_set_font(saira_regular);
-    draw_text(10, 10, "Active Coin: " + string(global.active_coin_name));
-    draw_set_font(-1);
-    draw_set_alpha(1);
-}
-
-// Draw play area boundary
-//draw_set_color(c_white);
-//draw_set_alpha(0.3); // 0.3
-//draw_rectangle(playAreaX, playAreaY, playAreaX + playAreaWidth, playAreaY + playAreaHeight, true);
-//draw_set_alpha(0.1); // 0.1
-//draw_rectangle(playAreaX + 1, playAreaY + 1, playAreaX + playAreaWidth - 1, playAreaY + playAreaHeight - 1, true);
-//draw_set_alpha(1);
 
 // Draw the aiming guide line if we have a selected coin
 if (isAiming && selectedCoin != noone && instance_exists(selectedCoin)) {
@@ -190,16 +172,6 @@ if (powerMeterActive && aimLocked) {
     draw_set_color(c_white);
     draw_set_alpha(1);
     draw_line_width(_meterLeft - 5, _fillTop, _meterRight + 5, _fillTop, 2);
-    
-    // Draw power percentage text
-    //draw_set_halign(fa_center);
-    //draw_set_valign(fa_bottom);
-    //var _powerPercent = round(powerMeterValue * 100);
-    //draw_text(powerMeterX, _meterTop - 8, string(_powerPercent) + "%");
-    
-    // Draw "POWER" label
-    //draw_set_valign(fa_top);
-    //draw_text(powerMeterX, _meterBottom + 8, "POWER");
     
     // Reset
     draw_set_halign(fa_left);

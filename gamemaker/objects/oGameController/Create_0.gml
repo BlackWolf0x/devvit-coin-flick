@@ -1,3 +1,6 @@
+/// ⚠⚠⚠ this object really needs cleaning up and a lot of logic here should be handled elsewhere.
+
+
 /// @description Initialize game controller
 
 // Visual debug log for mobile/browser (can't see console there)

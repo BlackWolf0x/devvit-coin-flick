@@ -1,8 +1,43 @@
+/// ⚠⚠⚠ this object really needs cleaning up and a lot of logic here should be handled elsewhere.
+
 /// @description Handle input, selection, and shooting
 
 // Get input position (works for both mouse and touch)
 inputX = device_mouse_x(0);
 inputY = device_mouse_y(0);
+
+// Update cursor based on hover state
+var _hoveringSelectableCoin = false;
+var _hoveringButton = false;
+
+// Check if hovering over buttons
+with (oBtnVolume) {
+    if (point_in_rectangle(other.inputX, other.inputY, bbox_left, bbox_top, bbox_right, bbox_bottom)) {
+        _hoveringButton = true;
+    }
+}
+with (oBtnRestartIcon) {
+    if (point_in_rectangle(other.inputX, other.inputY, bbox_left, bbox_top, bbox_right, bbox_bottom)) {
+        _hoveringButton = true;
+    }
+}
+
+if (!coinsMoving && !waitingForHit && (gameState != "lost" && gameState != "won")) {
+    // Only show hand cursor on first shot when no coin is selected yet
+    if (isFirstShot && selectedCoin == noone) {
+        var _hoveredCoin = instance_position(inputX, inputY, oCoin);
+        if (_hoveredCoin != noone) {
+            _hoveringSelectableCoin = true;
+        }
+    }
+}
+
+// Set cursor based on hover state
+if (_hoveringButton || _hoveringSelectableCoin) {
+    window_set_cursor(cr_handpoint);
+} else {
+    window_set_cursor(cr_default);
+}
 
 // Check for press (works for touch and mouse)
 var _pressed = device_mouse_check_button_pressed(0, mb_left);
