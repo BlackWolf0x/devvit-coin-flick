@@ -7,12 +7,14 @@
 
 @theme {
 	/* Responsive breakpoints */
-	--breakpoint-xs: 350px;
+	/* --breakpoint-xs: 350px;
 	--breakpoint-sm: 400px;
 	--breakpoint-md: 768px;
 	--breakpoint-lg: 1024px;
 	--breakpoint-xl: 1280px;
-	--breakpoint-2xl: 1536px;
+	--breakpoint-2xl: 1536px; */
+
+	--breakpoint-notmobile: 600px;
 
 	--font-sans: 'Saira', system-ui, sans-serif;
 
@@ -131,19 +133,29 @@
 		background-repeat: no-repeat;
 	}
 
-	body::before {
+	body::before,
+	body::after {
 		content: '';
 		position: absolute;
+		z-index: -10;
 		top: 0;
 		right: 0;
 		bottom: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-image: url('/misc/bg-duotone.png');
-		background-size: cover;
-		background-position: center;
+		background-size: contain;
 		background-repeat: no-repeat;
+	}
+
+	body::before {
+		background-image: url('/misc/bg-duotone-left.png');
+		background-position: left;
+	}
+
+	body::after {
+		background-image: url('/misc/bg-duotone-right.png');
+		background-position: right;
 	}
 }
 

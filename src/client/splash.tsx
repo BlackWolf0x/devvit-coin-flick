@@ -4,6 +4,7 @@ import '@/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { routes } from '@/constants/routes';
+import { UserDataProvider } from '@/components/UserDataProvider';
 
 const queryClient = new QueryClient();
 
@@ -13,7 +14,9 @@ function App() {
 
 	return (
 		<QueryClientProvider client={queryClient}>
-			<PageComponent />
+			<UserDataProvider>
+				<PageComponent />
+			</UserDataProvider>
 		</QueryClientProvider>
 	);
 }

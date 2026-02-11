@@ -39,7 +39,7 @@ router.get('/api/get-user-coin-data', async (_req: Request, res: Response): Prom
 		res.json({
 			status: 'success',
 			collection: collection || {},
-			activeCoin: activeCoin || 'none',
+			activeCoin: activeCoin || 'clover',
 		});
 	} catch (error) {
 		let errorMessage = 'Unknown error fetching user coin data';

@@ -1,16 +1,24 @@
-export type InitResponse = {
-	type: 'init';
-	postId: string;
-	username: string;
-};
+export type ChallengeId = 'completion' | 'under30s' | 'under15s';
 
-export type CreatePuzzleRequest = {
-	board: number[][];
-};
+export interface UserDataResponse {
+	balance: number;
+	allChallenges: Record<ChallengeId, boolean>;
+	uniqueCoins: number;
+	activeCoin: string;
+}
 
-export type CreatePuzzleResponse = {
-	success: boolean;
-	postId: string;
-	postUrl?: string;
+export interface ApiErrorResponse {
 	message: string;
-};
+}
+
+export interface ChallengeUpdateMessage {
+	type: 'challenge-update';
+	challenges: ChallengeId[];
+	newBalance: number;
+}
+export interface BalanceUpdateMessage {
+	type: 'balance-update';
+	balance: number;
+	uniqueCoins?: number;
+	timestamp: number;
+}

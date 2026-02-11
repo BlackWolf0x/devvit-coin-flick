@@ -1,7 +1,9 @@
 import { useNavigationStore } from '@/stores/navigationStore';
+import { useUserDataStore } from '@/stores/userDataStore';
 
-export function OpenChestSplash({ displayBalance }: { displayBalance: number }) {
+export function SpOpenChest() {
 	const navigate = useNavigationStore((state) => state.navigate);
+	const balance = useUserDataStore((state) => state.balance);
 
 	return (
 		<>
@@ -11,7 +13,7 @@ export function OpenChestSplash({ displayBalance }: { displayBalance: number }) 
 					width={106}
 					height={92}
 					className={`w-[53px] h-[46px] absolute z-10 top-0 left-1/2 -translate-x-1/2 ${
-						displayBalance >= 15 ? 'animate-[shake_0.8s_ease-in-out_infinite]' : ''
+						balance && balance >= 15 ? 'animate-[shake_0.8s_ease-in-out_infinite]' : ''
 					}`}
 				/>
 				<img

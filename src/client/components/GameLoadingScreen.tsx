@@ -8,7 +8,7 @@ interface LoadingScreenProps {
 	progressHidden: boolean;
 }
 
-const LoadingScreen = forwardRef<HTMLDivElement, LoadingScreenProps>(
+const GameLoadingScreen = forwardRef<HTMLDivElement, LoadingScreenProps>(
 	({ isVisible, statusText, progressValue, progressMax, progressHidden }, ref) => {
 		return (
 			<div
@@ -49,6 +49,6 @@ const LoadingScreen = forwardRef<HTMLDivElement, LoadingScreenProps>(
 	}
 );
 
-LoadingScreen.displayName = 'LoadingScreen';
+GameLoadingScreen.displayName = 'LoadingScreen';
 
-export default LoadingScreen;
+export default GameLoadingScreen;
