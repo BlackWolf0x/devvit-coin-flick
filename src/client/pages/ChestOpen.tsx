@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { formatCoinName } from '@/lib/formatCoinName';
 import { SpMyBalance } from '@/components/SpMyBalance';
 import { CHEST_COST } from '../../shared/config';
+import { useUserDataStore } from '@/stores/userDataStore';
 
 const openChest = async () => {
 	const response = await fetch('/api/open-chest', {
@@ -19,11 +20,14 @@ const openChest = async () => {
 
 export default function ChestOpen() {
 	const goBack = useNavigationStore((state) => state.goBack);
+	const balance = useUserDataStore((state) => state.balance);
 
 	const [shake, setShake] = useState(false);
 	const [showChestOpened, setShowChestOpened] = useState(false);
 	const [coinName, setCoinName] = useState<string | null>(null);
 	const [showCostLabel, setShowCostLabel] = useState(true);
+
+	const hasEnoughBalance = (balance ?? 0) >= CHEST_COST;
 
 	// Player count update mutation
 	const openChestMutation = useMutation({
@@ -63,8 +67,14 @@ export default function ChestOpen() {
 
 			<div className="relative mt-34 mb-6 w-[190px] h-[190px]">
 				{showCostLabel && (
-					<div className="absolute -top-4 left-1/2 -translate-x-1/2 w-43 bg-white rounded-xl text-center border border-black animate-bounce">
-						Cost {CHEST_COST} Gold / Chest
+					<div
+						className={`absolute -top-8 left-1/2 -translate-x-1/2 w-43 rounded-xl text-center border px-2 py-1 animate-bounce ${
+							hasEnoughBalance
+								? 'bg-white border-black'
+								: 'bg-red-100 border-red-500 text-red-700'
+						}`}
+					>
+						{hasEnoughBalance ? `Cost ${CHEST_COST} Gold / Chest` : 'Not Enough Gold!'}
 					</div>
 				)}
 
@@ -138,7 +148,7 @@ export default function ChestOpen() {
 				</button>
 				<button
 					onClick={handleOpenChest}
-					disabled={shake}
+					disabled={shake || !hasEnoughBalance}
 					onContextMenu={(e) => e.preventDefault()}
 					onTouchStart={(e) => e.preventDefault()}
 					className="cursor-pointer transition-transform scale-100 active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed"
