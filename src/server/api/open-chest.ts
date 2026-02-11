@@ -56,10 +56,15 @@ router.post('/api/open-chest', async (req: Request, res: Response): Promise<void
 		// Add 1 coin
 		await redis.hIncrBy(userCollectionKey, randomCoinId, 1);
 
+		// Get user's unique coins count
+		const collection = await redis.hGetAll(userCollectionKey);
+		const uniqueCoins = Object.keys(collection).length;
+
 		// Send real-time update to user's wallet channel
 		await realtime.send(`wallet_${userId}`, {
 			type: 'balance-update',
 			balance: newBalance,
+			uniqueCoins,
 			timestamp: Date.now(),
 		});
 

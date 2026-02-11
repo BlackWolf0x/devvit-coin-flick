@@ -16,3 +16,9 @@ export interface ChallengeUpdateMessage {
 	challenges: ChallengeId[];
 	newBalance: number;
 }
+export interface BalanceUpdateMessage {
+	type: 'balance-update';
+	balance: number;
+	uniqueCoins?: number;
+	timestamp: number;
+}

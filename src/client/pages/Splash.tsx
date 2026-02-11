@@ -7,7 +7,12 @@ import { SpTopRightButtons } from '@/components/SpTopRightButtons';
 import { connectRealtime, context } from '@devvit/web/client';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import type { UserDataResponse, ChallengeUpdateMessage, ChallengeId } from '../../shared/types/api';
+import type {
+	UserDataResponse,
+	ChallengeUpdateMessage,
+	ChallengeId,
+	BalanceUpdateMessage,
+} from '../../shared/types/api';
 
 // API functions
 const fetchUserData = async (): Promise<UserDataResponse> => {
@@ -20,6 +25,7 @@ const fetchUserData = async (): Promise<UserDataResponse> => {
 
 export default function Splash() {
 	const [realtimeBalance, setRealtimeBalance] = useState<number | null>(null);
+	const [realtimeUniqueCoins, setRealtimeUniqueCoins] = useState<number | null>(null);
 	const [realtimeChallenges, setRealtimeChallenges] = useState<Record<
 		ChallengeId,
 		boolean
@@ -44,8 +50,12 @@ export default function Splash() {
 			connection = await connectRealtime({
 				channel: `wallet_${userId}`,
 				onMessage: (data: any) => {
-					if (data.type === 'balance-update') {
-						setRealtimeBalance(data.balance);
+					const message = data as BalanceUpdateMessage;
+					if (message.type === 'balance-update') {
+						setRealtimeBalance(message.balance);
+						if (message.uniqueCoins !== undefined) {
+							setRealtimeUniqueCoins(message.uniqueCoins);
+						}
 					}
 				},
 			});
@@ -103,6 +113,8 @@ export default function Splash() {
 
 	// Use realtime balance if available, otherwise use fetched balance
 	const displayBalance = realtimeBalance !== null ? realtimeBalance : userData?.balance;
+	const displayUniqueCoins =
+		realtimeUniqueCoins !== null ? realtimeUniqueCoins : userData?.uniqueCoins;
 	const displayChallenges = realtimeChallenges || userData?.allChallenges;
 
 	return (
@@ -122,7 +134,7 @@ export default function Splash() {
 			<div className="mt-auto mb-8 flex flex-col justify-center items-center">
 				<SpCoinsCollected
 					activeCoin={userData?.activeCoin}
-					uniqueCoins={userData?.uniqueCoins}
+					uniqueCoins={displayUniqueCoins}
 				/>
 			</div>
 
