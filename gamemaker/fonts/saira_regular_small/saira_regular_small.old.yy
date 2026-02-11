@@ -1,6 +1,6 @@
 {
   "$GMFont":"",
-  "%Name":"saira_regular",
+  "%Name":"saira_regular_small",
   "AntiAlias":1,
   "applyKerning":0,
   "ascender":48,
@@ -117,7 +117,7 @@
   "last":0,
   "lineHeight":67,
   "maintainGms1Font":false,
-  "name":"saira_regular",
+  "name":"saira_regular_small",
   "parent":{
     "name":"Fonts",
     "path":"folders/Fonts.yy",

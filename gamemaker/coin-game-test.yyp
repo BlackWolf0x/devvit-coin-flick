@@ -27,6 +27,7 @@
   "name":"coin-game-test",
   "resources":[
     {"id":{"name":"arial_big","path":"fonts/arial_big/arial_big.yy",},},
+    {"id":{"name":"saira_regular_small","path":"fonts/saira_regular_small/saira_regular_small.yy",},},
     {"id":{"name":"saira_regular","path":"fonts/saira_regular/saira_regular.yy",},},
     {"id":{"name":"oBackground","path":"objects/oBackground/oBackground.yy",},},
     {"id":{"name":"obj_http_manager","path":"objects/obj_http_manager/obj_http_manager.yy",},},
@@ -38,6 +39,7 @@
     {"id":{"name":"oCoin","path":"objects/oCoin/oCoin.yy",},},
     {"id":{"name":"oGameController","path":"objects/oGameController/oGameController.yy",},},
     {"id":{"name":"oGameOver","path":"objects/oGameOver/oGameOver.yy",},},
+    {"id":{"name":"oInfoClickAnywhereToUnlock","path":"objects/oInfoClickAnywhereToUnlock/oInfoClickAnywhereToUnlock.yy",},},
     {"id":{"name":"oInfoFlick","path":"objects/oInfoFlick/oInfoFlick.yy",},},
     {"id":{"name":"oInfoLockAim","path":"objects/oInfoLockAim/oInfoLockAim.yy",},},
     {"id":{"name":"oInfoUnlockAim","path":"objects/oInfoUnlockAim/oInfoUnlockAim.yy",},},
