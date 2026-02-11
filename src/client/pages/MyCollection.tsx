@@ -5,7 +5,6 @@ import { coins } from '../../shared/coins/coins';
 import { useQuery } from '@tanstack/react-query';
 import { Check } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@/components/ui/popover';
-import { useState } from 'react';
 import { formatCoinName } from '@/lib/formatCoinName';
 
 const fetchUserCoinData = async () => {
@@ -20,9 +19,6 @@ const fetchUserCoinData = async () => {
 export default function MyCollection() {
 	const goBack = useNavigationStore((state) => state.goBack);
 	const uniqueCoins = useUserDataStore((state) => state.uniqueCoins);
-
-	const [open, setOpen] = useState<string | false>(false);
-	const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
 
@@ -40,21 +36,6 @@ export default function MyCollection() {
 	for (let i = 0; i < coins.length; i += coinsPerPage) {
 		pages.push(coins.slice(i, i + coinsPerPage));
 	}
-
-	const handleMouseEnter = (coinId: string) => {
-		if (closeTimeout) {
-			clearTimeout(closeTimeout);
-			setCloseTimeout(null);
-		}
-		setOpen(coinId);
-	};
-
-	const handleMouseLeave = () => {
-		const timeout = setTimeout(() => {
-			setOpen(false);
-		}, 200);
-		setCloseTimeout(timeout);
-	};
 
 	return (
 		<div className="relative h-screen p-2 notmobile:p-4 flex flex-col">
@@ -88,7 +69,7 @@ export default function MyCollection() {
 						{pages.map((pageCoins, pageIndex) => (
 							<div
 								key={pageIndex}
-								className="flex-none basis-full min-w-0 grid grid-cols-4 auto-rows-fr gap-4 content-evenly items-center"
+								className="flex-none basis-full min-w-0 grid grid-cols-4 auto-rows-fr gap-2 content-evenly items-center"
 							>
 								{pageCoins.map((coin) => {
 									const count = collection[coin]
@@ -98,12 +79,8 @@ export default function MyCollection() {
 									const isActive = activeCoin === coin;
 
 									return (
-										<Popover key={coin} open={open === coin}>
-											<PopoverTrigger
-												onMouseEnter={() => handleMouseEnter(coin)}
-												onMouseLeave={handleMouseLeave}
-												asChild
-											>
+										<Popover key={coin}>
+											<PopoverTrigger asChild>
 												<div className="relative flex flex-col items-center justify-center cursor-pointer">
 													<div className="relative">
 														<img
@@ -130,12 +107,7 @@ export default function MyCollection() {
 													)}
 												</div>
 											</PopoverTrigger>
-											<PopoverContent
-												onMouseEnter={() => handleMouseEnter(coin)}
-												onMouseLeave={handleMouseLeave}
-												className="w-auto"
-												side="top"
-											>
+											<PopoverContent className="w-auto" side="top">
 												<PopoverTitle className="capitalize">
 													{formatCoinName(coin)}
 												</PopoverTitle>
