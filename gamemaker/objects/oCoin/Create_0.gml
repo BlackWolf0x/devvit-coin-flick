@@ -1,5 +1,10 @@
 /// @description Initialize coin properties
 
+// Set sprite based on active coin (if available)
+if (variable_global_exists("active_coin_sprite")) {
+    sprite_index = global.active_coin_sprite;
+}
+
 // Apply scale
 image_xscale = global.play_scale * 0.5;
 image_yscale = global.play_scale * 0.5;
