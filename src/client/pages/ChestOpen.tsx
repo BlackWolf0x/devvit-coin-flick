@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { formatCoinName } from '@/lib/formatCoinName';
 import { SpMyBalance } from '@/components/SpMyBalance';
+import { CHEST_COST } from '../../shared/config';
 
 const openChest = async () => {
 	const response = await fetch('/api/open-chest', {
@@ -22,6 +23,7 @@ export default function ChestOpen() {
 	const [shake, setShake] = useState(false);
 	const [showChestOpened, setShowChestOpened] = useState(false);
 	const [coinName, setCoinName] = useState<string | null>(null);
+	const [showCostLabel, setShowCostLabel] = useState(true);
 
 	// Player count update mutation
 	const openChestMutation = useMutation({
@@ -29,6 +31,9 @@ export default function ChestOpen() {
 	});
 
 	function handleOpenChest() {
+		// Hide cost label on first click
+		setShowCostLabel(false);
+
 		// Reset states if chest was already opened
 		if (showChestOpened) {
 			setShowChestOpened(false);
@@ -57,6 +62,12 @@ export default function ChestOpen() {
 			<SpMyBalance />
 
 			<div className="relative mt-34 mb-6 w-[190px] h-[190px]">
+				{showCostLabel && (
+					<div className="absolute -top-4 left-1/2 -translate-x-1/2 w-43 bg-white rounded-xl text-center border border-black animate-bounce">
+						Cost {CHEST_COST} Gold / Chest
+					</div>
+				)}
+
 				{showChestOpened && coinName && (
 					<div className="absolute -top-34 left-1/2 -translate-x-1/2 w-50 font-bold text-center capitalize">
 						{formatCoinName(coinName)} Coin

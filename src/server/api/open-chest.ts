@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { context, realtime, redis } from '@devvit/web/server';
 import { coinWeightedSystem } from '../../shared/coins/coins';
+import { CHEST_COST } from '../../shared/config';
 
 const router = Router();
 
@@ -12,7 +13,6 @@ const router = Router();
 router.post('/api/open-chest', async (req: Request, res: Response): Promise<void> => {
 	try {
 		const { postId, userId } = context;
-		const chestCost = 1;
 
 		if (!postId) {
 			res.status(400).json({
@@ -34,18 +34,18 @@ router.post('/api/open-chest', async (req: Request, res: Response): Promise<void
 		const balanceStr = await redis.get(`wallet:${userId}`);
 		const currentBalance = parseInt(balanceStr || '0', 10);
 
-		if (currentBalance < chestCost) {
+		if (currentBalance < CHEST_COST) {
 			res.status(400).json({
 				status: 'error',
 				message: 'Insufficient balance',
 				balance: currentBalance,
-				required: chestCost,
+				required: CHEST_COST,
 			});
 			return;
 		}
 
 		// Deduct chest cost from balance atomically
-		const newBalance = await redis.incrBy(`wallet:${userId}`, -chestCost);
+		const newBalance = await redis.incrBy(`wallet:${userId}`, -CHEST_COST);
 
 		// Get a random coin based on weights
 		const randomCoinId = coinWeightedSystem.getRandomItem();
