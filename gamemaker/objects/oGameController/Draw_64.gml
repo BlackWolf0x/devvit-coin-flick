@@ -1,16 +1,16 @@
 /// @description Draw aiming guide and UI
 
 // Draw active coin display (top-left corner)
-if (variable_global_exists("active_coin")) {
-    draw_set_color(c_white);
-    draw_set_alpha(0.9);
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_top);
-    draw_set_font(saira_regular);
-    draw_text(10, 10, "Active Coin: " + string(global.active_coin));
-    draw_set_font(-1);
-    draw_set_alpha(1);
-}
+//if (variable_global_exists("active_coin")) {
+//    draw_set_color(c_white);
+//    draw_set_alpha(0.9);
+//    draw_set_halign(fa_left);
+//    draw_set_valign(fa_top);
+//    draw_set_font(saira_regular);
+//    draw_text(10, 10, "Active Coin: " + string(global.active_coin));
+//    draw_set_font(-1);
+//    draw_set_alpha(1);
+//}
 
 // Draw play area boundary
 //draw_set_color(c_white);
@@ -214,7 +214,7 @@ draw_set_color(c_white);
 draw_set_alpha(0.9);
 draw_set_halign(fa_center);
 draw_set_valign(fa_top);
-draw_text(room_width / 2, global.is_mobile? 80 : 32, _timeStr);
+draw_text(global.is_mobile ? 98: 108, global.is_mobile? 80 : 32, _timeStr);
 draw_set_halign(fa_left);
 draw_set_font(-1);
 
