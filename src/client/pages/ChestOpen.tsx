@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import { formatCoinName } from '@/lib/formatCoinName';
 
 const openChest = async () => {
 	const response = await fetch('/api/open-chest', {
@@ -28,6 +29,12 @@ export default function ChestOpen() {
 	});
 
 	function handleOpenChest() {
+		// Reset states if chest was already opened
+		if (showChestOpened) {
+			setShowChestOpened(false);
+			setCoinName(null);
+		}
+
 		setShake(true);
 
 		openChestMutation
@@ -42,6 +49,7 @@ export default function ChestOpen() {
 			})
 			.catch((error) => {
 				console.error('Error:', error);
+				setShake(false);
 			});
 	}
 
@@ -60,18 +68,22 @@ export default function ChestOpen() {
 			</div> */}
 
 			<div className="relative mt-34 mb-6 w-[190px] h-[190px]">
-				<div className="absolute -top-34 left-1/2 -translate-x-1/2 w-50 font-bold text-center">
-					{coinName}
-				</div>
+				{coinName && (
+					<div className="absolute -top-34 left-1/2 -translate-x-1/2 w-50 font-bold text-center capitalize">
+						{formatCoinName(coinName)} Coin
+					</div>
+				)}
 
-				<img
-					src={`/coins/clover.png`}
-					width={192}
-					height={192}
-					className={`absolute z-20 left-1/2 -translate-x-1/2 transition-all delay-10 animate-[flip-horizontal_2s_ease-in-out_infinite] ${
-						showChestOpened ? '-top-24 opacity-100 w-20' : 'top-0 opacity-0 w-10'
-					}`}
-				/>
+				{coinName && (
+					<img
+						src={`/coins/${coinName}.png`}
+						width={192}
+						height={192}
+						className={`absolute z-20 left-1/2 -translate-x-1/2 transition-all delay-10 animate-[flip-horizontal_2s_ease-in-out_infinite] ${
+							showChestOpened ? '-top-24 opacity-100 w-20' : 'top-0 opacity-0 w-10'
+						}`}
+					/>
+				)}
 
 				{/* Closed */}
 				<div
@@ -106,9 +118,21 @@ export default function ChestOpen() {
 				/>
 			</div>
 
-			<Button onClick={handleOpenChest} disabled={shake || showChestOpened}>
-				Open Chest
-			</Button>
+			<button
+				onClick={handleOpenChest}
+				disabled={shake}
+				onContextMenu={(e) => e.preventDefault()}
+				onTouchStart={(e) => e.preventDefault()}
+				className="cursor-pointer transition-transform scale-100 active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed"
+			>
+				<img
+					src="/chest/btn-open-chest.png"
+					width={212}
+					height={77}
+					className="w-38 pointer-events-none"
+					draggable={false}
+				/>
+			</button>
 		</div>
 	);
 }

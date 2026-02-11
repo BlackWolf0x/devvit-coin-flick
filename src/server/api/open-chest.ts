@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
-import { context, redis } from '@devvit/web/server';
+import { context, realtime, redis } from '@devvit/web/server';
 import { coinWeightedSystem } from '../../shared/coins/coins';
 
 const router = Router();
@@ -55,6 +55,13 @@ router.post('/api/open-chest', async (req: Request, res: Response): Promise<void
 
 		// Add 1 coin
 		await redis.hIncrBy(userCollectionKey, randomCoinId, 1);
+
+		// Send real-time update to user's wallet channel
+		await realtime.send(`wallet_${userId}`, {
+			type: 'balance-update',
+			balance: newBalance,
+			timestamp: Date.now(),
+		});
 
 		res.json({
 			status: 'success',
