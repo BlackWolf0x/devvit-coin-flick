@@ -29,6 +29,8 @@ export default function ChestOpen() {
 
 	const hasEnoughBalance = (balance ?? 0) >= CHEST_COST;
 
+	const audio = new Audio('/chest/chest-open.mp3');
+
 	// Player count update mutation
 	const openChestMutation = useMutation({
 		mutationFn: openChest,
@@ -53,6 +55,7 @@ export default function ChestOpen() {
 				setTimeout(() => {
 					setShake(false);
 					setShowChestOpened(true);
+					audio.play().catch((error) => console.error('Error playing sound:', error));
 				}, 2000);
 			})
 			.catch((error) => {

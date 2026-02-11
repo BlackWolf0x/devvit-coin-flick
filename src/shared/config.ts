@@ -1,1 +1,1 @@
-export const CHEST_COST = 15;
+export const CHEST_COST = 1;
