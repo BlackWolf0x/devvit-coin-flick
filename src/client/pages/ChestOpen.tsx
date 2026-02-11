@@ -1,5 +1,7 @@
+import { Button } from '@/components/ui/button';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 
 const openChest = async () => {
 	const response = await fetch('/api/open-chest', {
@@ -16,24 +18,97 @@ const openChest = async () => {
 export default function ChestOpen() {
 	const goBack = useNavigationStore((state) => state.goBack);
 
+	const [shake, setShake] = useState(false);
+	const [showChestOpened, setShowChestOpened] = useState(false);
+	const [coinName, setCoinName] = useState<string | null>(null);
+
 	// Player count update mutation
 	const openChestMutation = useMutation({
 		mutationFn: openChest,
 	});
 
+	function handleOpenChest() {
+		setShake(true);
+
+		openChestMutation
+			.mutateAsync()
+			.then((data) => {
+				console.log(data);
+				setTimeout(() => {
+					setShake(false);
+					setShowChestOpened(true);
+					setCoinName(data.coinId);
+				}, 1800);
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	}
+
 	return (
-		<div className="relative h-screen pt-6 flex flex-col gap-4 px-4 pb-4">
+		<div className="relative h-screen pt-6 flex flex-col justify-center items-center gap-4 px-4 pb-4">
 			<button
 				onClick={goBack}
 				className="absolute top-4 left-4 text-white hover:opacity-80 transition-opacity"
 			>
 				← Back
 			</button>
-			<div className="flex-1 flex items-center justify-center">
+			{/* <div className="flex-1 flex items-center justify-center">
 				<h1 className="text-2xl text-white">Chest Open Page</h1>
 
 				<button onClick={() => openChestMutation.mutate()}>Open Chest</button>
+			</div> */}
+
+			<div className="relative mt-34 mb-6 w-[190px] h-[190px]">
+				<div className="absolute -top-34 left-1/2 -translate-x-1/2 w-50 font-bold text-center">
+					{coinName}
+				</div>
+
+				<img
+					src={`/coins/clover.png`}
+					width={192}
+					height={192}
+					className={`absolute z-20 left-1/2 -translate-x-1/2 transition-all delay-10 animate-[flip-horizontal_2s_ease-in-out_infinite] ${
+						showChestOpened ? '-top-24 opacity-100 w-20' : 'top-0 opacity-0 w-10'
+					}`}
+				/>
+
+				{/* Closed */}
+				<div
+					className={`chest-closed absolute z-10 top-0 left-0
+						${shake ? 'animate-[shake_0.8s_ease-in-out_infinite]' : ''}
+						${showChestOpened ? 'hidden' : ''}
+					`}
+				>
+					<img src="/chest/chest-closed.png" width={190} height={190} />
+				</div>
+
+				{/* Open */}
+				<div className={`chest-open relative ${showChestOpened ? '' : 'hidden'}`}>
+					<img src="/chest/chest-open-lid.png" width={190} height={190} className="" />
+
+					<img
+						src="/chest/chest-open.png"
+						width={190}
+						height={190}
+						className="absolute top-0 left-0 z-10"
+					/>
+				</div>
+
+				{/* Light */}
+				<img
+					src="/chest/chest-light.png"
+					width={190}
+					height={190}
+					className={`absolute z-20 -top-[30px] left-0 scale-125 animate-spin duration-10000 ${
+						showChestOpened ? '' : 'hidden'
+					}`}
+				/>
 			</div>
+
+			<Button onClick={handleOpenChest} disabled={shake || showChestOpened}>
+				Open Chest
+			</Button>
 		</div>
 	);
 }
