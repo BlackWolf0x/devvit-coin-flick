@@ -4,16 +4,9 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { coins } from '../../shared/coins/coins';
 import { useQuery } from '@tanstack/react-query';
 import { Check } from 'lucide-react';
-import {
-	Popover,
-	PopoverContent,
-	PopoverDescription,
-	PopoverHeader,
-	PopoverTitle,
-	PopoverTrigger,
-} from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@/components/ui/popover';
 import { useState } from 'react';
+import { formatCoinName } from '@/lib/formatCoinName';
 
 const fetchUserCoinData = async () => {
 	const response = await fetch('/api/get-user-coin-data');
@@ -28,7 +21,7 @@ export default function MyCollection() {
 	const goBack = useNavigationStore((state) => state.goBack);
 	const uniqueCoins = useUserDataStore((state) => state.uniqueCoins);
 
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState<string | false>(false);
 	const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
@@ -48,12 +41,12 @@ export default function MyCollection() {
 		pages.push(coins.slice(i, i + coinsPerPage));
 	}
 
-	const handleMouseEnter = () => {
+	const handleMouseEnter = (coinId: string) => {
 		if (closeTimeout) {
 			clearTimeout(closeTimeout);
 			setCloseTimeout(null);
 		}
-		setOpen(true);
+		setOpen(coinId);
 	};
 
 	const handleMouseLeave = () => {
@@ -105,31 +98,49 @@ export default function MyCollection() {
 									const isActive = activeCoin === coin;
 
 									return (
-										<div
-											key={coin}
-											className="relative flex flex-col items-center justify-center"
-										>
-											<div className="relative">
-												<img
-													src={`/coins/${coin}.png`}
-													width={64}
-													height={64}
-													className={`size-16 object-contain ${
-														!isOwned ? 'opacity-10' : ''
-													}`}
-												/>
-												{isActive && (
-													<div className="absolute -top-1 -right-1 bg-green-500 rounded-full border-2 border-white p-0.5">
-														<Check size={16} className="text-white" />
+										<Popover key={coin} open={open === coin}>
+											<PopoverTrigger
+												onMouseEnter={() => handleMouseEnter(coin)}
+												onMouseLeave={handleMouseLeave}
+												asChild
+											>
+												<div className="relative flex flex-col items-center justify-center cursor-pointer">
+													<div className="relative">
+														<img
+															src={`/coins/${coin}.png`}
+															width={64}
+															height={64}
+															className={`size-16 object-contain ${
+																!isOwned ? 'opacity-10' : ''
+															}`}
+														/>
+														{isActive && (
+															<div className="absolute -top-1 -right-1 bg-green-500 rounded-full border-2 border-white p-0.5">
+																<Check
+																	size={16}
+																	className="text-white"
+																/>
+															</div>
+														)}
 													</div>
-												)}
-											</div>
-											{isOwned && (
-												<span className="text-sm font-semibold text-gray-700 mt-1">
-													x{count}
-												</span>
-											)}
-										</div>
+													{isOwned && (
+														<span className="text-sm font-semibold text-gray-700 mt-1">
+															x{count}
+														</span>
+													)}
+												</div>
+											</PopoverTrigger>
+											<PopoverContent
+												onMouseEnter={() => handleMouseEnter(coin)}
+												onMouseLeave={handleMouseLeave}
+												className="w-auto"
+												side="top"
+											>
+												<PopoverTitle className="capitalize">
+													{formatCoinName(coin)}
+												</PopoverTitle>
+											</PopoverContent>
+										</Popover>
 									);
 								})}
 							</div>
@@ -151,24 +162,6 @@ export default function MyCollection() {
 						>
 							Next →
 						</button>
-						<Popover open={open}>
-							<PopoverTrigger
-								onMouseEnter={handleMouseEnter}
-								onMouseLeave={handleMouseLeave}
-								asChild
-							>
-								<Button variant="outline">Open Popover</Button>
-							</PopoverTrigger>
-							<PopoverContent
-								onMouseEnter={handleMouseEnter}
-								onMouseLeave={handleMouseLeave}
-							>
-								<PopoverHeader>
-									<PopoverTitle>Title</PopoverTitle>
-									<PopoverDescription>Description text here.</PopoverDescription>
-								</PopoverHeader>
-							</PopoverContent>
-						</Popover>
 					</div>
 				)}
 			</div>
