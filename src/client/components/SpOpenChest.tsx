@@ -1,10 +1,10 @@
 import { useNavigationStore } from '@/stores/navigationStore';
 
-interface OpenChestSplashProps {
+interface SpOpenChestProps {
 	displayBalance: number | undefined;
 }
 
-export function OpenChestSplash({ displayBalance }: OpenChestSplashProps) {
+export function SpOpenChest({ displayBalance }: SpOpenChestProps) {
 	const navigate = useNavigationStore((state) => state.navigate);
 
 	return (

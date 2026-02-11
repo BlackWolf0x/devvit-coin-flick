@@ -1,8 +1,8 @@
-interface MyBalanceProps {
+interface SpMyBalanceProps {
 	displayBalance: number | undefined;
 }
 
-export function MyBalance({ displayBalance }: MyBalanceProps) {
+export function SpMyBalance({ displayBalance }: SpMyBalanceProps) {
 	return (
 		<>
 			<img

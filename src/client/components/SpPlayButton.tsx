@@ -23,7 +23,7 @@ const updatePlayerCount = async () => {
 	return data;
 };
 
-export function PlayButton() {
+export function SpPlayButton() {
 	const [realtimePlayerCount, setRealtimePlayerCount] = useState<number | null>(null);
 
 	// Initial player counter

@@ -1,7 +1,7 @@
 import { ChartColumnDecreasing, GraduationCap } from 'lucide-react';
 import { useNavigationStore } from '@/stores/navigationStore';
 
-export function TopRightButtons() {
+export function SpTopRightButtons() {
 	const navigate = useNavigationStore((state) => state.navigate);
 
 	return (

@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import LoadingScreen from './LoadingScreen';
+import GameLoadingScreen from './GameLoadingScreen.tsx';
 import { useGameMakerGlobals } from '../hooks/useGameMakerGlobals';
 import { useGameLoader } from '../hooks/useGameLoader';
 import { useGameModule } from '../hooks/useGameModule';
@@ -118,7 +118,7 @@ const GameCanvas = () => {
 				onClick={handleCanvasClick}
 				tabIndex={-1}
 			/>
-			<LoadingScreen
+			<GameLoadingScreen
 				isVisible={isLoading}
 				statusText={statusText}
 				progressValue={progressValue}

@@ -1,7 +1,7 @@
 import { ChallengeId } from '@shared/types/api';
 import { Check } from 'lucide-react';
 
-interface DailyChallengesProps {
+interface SpChallengesProps {
 	allChallenges: Record<ChallengeId, boolean> | undefined;
 }
 
@@ -23,7 +23,7 @@ const challenges = [
 	},
 ];
 
-export function DailyChallenges({ allChallenges }: DailyChallengesProps) {
+export function SpChallenges({ allChallenges }: SpChallengesProps) {
 	return (
 		<>
 			{challenges.map((challenge) => {

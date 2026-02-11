@@ -2,12 +2,12 @@ import { MoveRight } from 'lucide-react';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { coins } from '../../shared/coins/coins';
 
-interface SplashCoinsCollectedProps {
+interface SpCoinsCollectedProps {
 	activeCoin: string | undefined;
 	uniqueCoins: number | undefined;
 }
 
-export function SplashCoinsCollected({ activeCoin, uniqueCoins }: SplashCoinsCollectedProps) {
+export function SpCoinsCollected({ activeCoin, uniqueCoins }: SpCoinsCollectedProps) {
 	const navigate = useNavigationStore((state) => state.navigate);
 
 	return (
