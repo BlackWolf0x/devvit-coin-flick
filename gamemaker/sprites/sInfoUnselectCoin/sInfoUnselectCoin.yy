@@ -23,7 +23,7 @@
   ],
   "name":"sInfoUnselectCoin",
   "nineSlice":null,
-  "origin":3,
+  "origin":4,
   "parent":{
     "name":"Sprites",
     "path":"folders/Sprites.yy",
@@ -75,7 +75,7 @@
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":0,
+    "xorigin":276,
     "yorigin":56,
   },
   "swatchColours":null,
