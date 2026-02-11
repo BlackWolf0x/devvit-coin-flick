@@ -67,7 +67,7 @@ export default function MyCollection() {
 						{pages.map((pageCoins, pageIndex) => (
 							<div
 								key={pageIndex}
-								className="flex-none basis-full min-w-0 grid grid-cols-4 gap-2 content-start"
+								className="flex-none basis-full min-w-0 grid grid-cols-4 auto-rows-fr gap-4 content-evenly items-center"
 							>
 								{pageCoins.map((coin) => {
 									const count = collection[coin]
@@ -79,14 +79,14 @@ export default function MyCollection() {
 									return (
 										<div
 											key={coin}
-											className="relative flex flex-col items-center"
+											className="relative flex flex-col items-center justify-center"
 										>
 											<div className="relative">
 												<img
 													src={`/coins/${coin}.png`}
 													width={64}
 													height={64}
-													className={`size-14 object-contain ${
+													className={`size-16 object-contain ${
 														!isOwned ? 'opacity-10' : ''
 													}`}
 												/>
@@ -97,7 +97,7 @@ export default function MyCollection() {
 												)}
 											</div>
 											{isOwned && (
-												<span className="text-xs font-semibold text-gray-700">
+												<span className="text-sm font-semibold text-gray-700 mt-1">
 													x{count}
 												</span>
 											)}
