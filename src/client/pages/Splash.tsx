@@ -7,7 +7,7 @@ import { TopRightButtons } from '@/components/TopRightButtons';
 import { connectRealtime, context } from '@devvit/web/client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import type { UserDataResponse } from '../../shared/types/api';
+import type { UserDataResponse, ChallengeUpdateMessage, ChallengeId } from '../../shared/types/api';
 
 // API functions
 const fetchUserData = async (): Promise<UserDataResponse> => {
@@ -22,6 +22,10 @@ export default function Splash() {
 	const queryClient = useQueryClient();
 
 	const [realtimeBalance, setRealtimeBalance] = useState<number | null>(null);
+	const [realtimeChallenges, setRealtimeChallenges] = useState<Record<
+		ChallengeId,
+		boolean
+	> | null>(null);
 
 	// Fetch user data
 	const { data: userData } = useQuery<UserDataResponse>({
@@ -56,10 +60,52 @@ export default function Splash() {
 				connection.disconnect();
 			}
 		};
-	}, [queryClient]);
+	}, []);
+
+	// Connect to realtime channel for challenge updates
+	useEffect(() => {
+		const { userId, postId } = context;
+		if (!userId || !postId) return;
+
+		let connection: any;
+
+		const setupRealtime = async () => {
+			connection = await connectRealtime({
+				channel: `challenges_${userId}_${postId}`,
+				onMessage: (data: any) => {
+					if (data.type === 'challenge-update') {
+						const message = data as ChallengeUpdateMessage;
+						setRealtimeBalance(message.newBalance);
+
+						// Update challenges state by merging with existing
+						setRealtimeChallenges((prev) => {
+							const base =
+								prev ||
+								userData?.allChallenges ||
+								({} as Record<ChallengeId, boolean>);
+							const updated = { ...base };
+							message.challenges.forEach((challengeId) => {
+								updated[challengeId] = true;
+							});
+							return updated;
+						});
+					}
+				},
+			});
+		};
+
+		setupRealtime();
+
+		return () => {
+			if (connection) {
+				connection.disconnect();
+			}
+		};
+	}, [userData?.allChallenges]);
 
 	// Use realtime balance if available, otherwise use fetched balance
 	const displayBalance = realtimeBalance !== null ? realtimeBalance : userData?.balance;
+	const displayChallenges = realtimeChallenges || userData?.allChallenges;
 
 	return (
 		<div className="relative h-screen overflow-hidden flex flex-col justify-between">
@@ -83,7 +129,7 @@ export default function Splash() {
 			</div>
 
 			<div className="mb-6 w-3/4 mx-auto space-y-2">
-				<DailyChallenges allChallenges={userData?.allChallenges} />
+				<DailyChallenges allChallenges={displayChallenges} />
 			</div>
 
 			<div className="pb-4 flex flex-col items-center justify-center gap-3">

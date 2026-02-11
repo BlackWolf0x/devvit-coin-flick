@@ -71,8 +71,8 @@ router.post('/api/submit-time', async (req: Request, res: Response): Promise<voi
 		// Get challenges status
 		const allChallenges = await redis.hGetAll(challengeKey);
 		let dailyCompletion = allChallenges['completion'] === 'true';
-		let dailyUnder60s = allChallenges['under60s'] === 'true';
 		let dailyUnder30s = allChallenges['under30s'] === 'true';
+		let dailyUnder15s = allChallenges['under15s'] === 'true';
 		let challengesCompleted: ChallengeId[] = [];
 
 		if (!dailyCompletion) {
@@ -81,23 +81,23 @@ router.post('/api/submit-time', async (req: Request, res: Response): Promise<voi
 			challengesCompleted.push('completion');
 		}
 
-		if (!dailyUnder60s && completionTime < 60000) {
-			totalReward += 10; // Reward for under 60 seconds
-			dailyUnder60s = true;
-			challengesCompleted.push('under60s');
-		}
-
 		if (!dailyUnder30s && completionTime < 30000) {
 			totalReward += 10; // Reward for under 30 seconds
 			dailyUnder30s = true;
 			challengesCompleted.push('under30s');
 		}
 
+		if (!dailyUnder15s && completionTime < 15000) {
+			totalReward += 10; // Reward for under 15 seconds
+			dailyUnder15s = true;
+			challengesCompleted.push('under15s');
+		}
+
 		// Update challenges status
 		await redis.hSet(challengeKey, {
 			completion: dailyCompletion.toString(),
-			under60s: dailyUnder60s.toString(),
 			under30s: dailyUnder30s.toString(),
+			under15s: dailyUnder15s.toString(),
 		});
 
 		// In case challenges completed

@@ -1,4 +1,4 @@
-export type ChallengeId = 'completion' | 'under60s' | 'under30s';
+export type ChallengeId = 'completion' | 'under30s' | 'under15s';
 
 export interface UserDataResponse {
 	balance: number;

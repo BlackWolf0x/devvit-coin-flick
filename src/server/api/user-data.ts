@@ -32,8 +32,8 @@ router.get('/api/user-data', async (req: Request, res: Response): Promise<void> 
 		// Convert challenge strings to booleans
 		const allChallenges: Record<ChallengeId, boolean> = {
 			completion: allChallengesRaw['completion'] === 'true',
-			under60s: allChallengesRaw['under60s'] === 'true',
 			under30s: allChallengesRaw['under30s'] === 'true',
+			under15s: allChallengesRaw['under15s'] === 'true',
 		};
 
 		// Get user's unique coins in collection (number of keys in the hash)
