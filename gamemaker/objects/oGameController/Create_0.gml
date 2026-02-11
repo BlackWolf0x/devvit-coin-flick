@@ -155,11 +155,11 @@ if (is_reddit_build()) {
         debug_log("Level spawned from cache!");
     } else {
         // No valid cache, fetch from server
-        debug_log("Fetching post date for seeded level...");
+        debug_log("Fetching game data for seeded level...");
         
-        // REDDIT BUILD: Fetch post date and use it as seed for consistent level generation
-        api_get_post_date(function(_http_status, _ok, _result, _payload) {
-            debug_log("=== POST DATE RESPONSE ===");
+        // REDDIT BUILD: Fetch game data (post date, daily seed, active coin)
+        api_get_game_data(function(_http_status, _ok, _result, _payload) {
+            debug_log("=== GAME DATA RESPONSE ===");
             debug_log("HTTP: " + string(_http_status ?? "undef"));
             debug_log("OK: " + string(_ok ?? "undef"));
             
@@ -170,7 +170,12 @@ if (is_reddit_build()) {
                     
                     if (_data.status == "success") {
                         var _dailySeed = _data.dailySeed;
+                        var _activeCoin = _data.activeCoin;
                         debug_log("Daily seed: " + string(_dailySeed));
+                        debug_log("Active coin: " + string(_activeCoin));
+                        
+                        // Store active coin globally
+                        global.active_coin = _activeCoin;
                         
                         // Cache the seed for future restarts
                         cache_level_seed(_dailySeed);

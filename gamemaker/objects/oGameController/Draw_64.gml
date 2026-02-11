@@ -1,5 +1,17 @@
 /// @description Draw aiming guide and UI
 
+// Draw active coin display (top-left corner)
+if (variable_global_exists("active_coin")) {
+    draw_set_color(c_white);
+    draw_set_alpha(0.9);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    draw_set_font(saira_regular);
+    draw_text(10, 10, "Active Coin: " + string(global.active_coin));
+    draw_set_font(-1);
+    draw_set_alpha(1);
+}
+
 // Draw play area boundary
 //draw_set_color(c_white);
 //draw_set_alpha(0.3); // 0.3
