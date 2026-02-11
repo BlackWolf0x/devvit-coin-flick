@@ -4,6 +4,16 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { coins } from '../../shared/coins/coins';
 import { useQuery } from '@tanstack/react-query';
 import { Check } from 'lucide-react';
+import {
+	Popover,
+	PopoverContent,
+	PopoverDescription,
+	PopoverHeader,
+	PopoverTitle,
+	PopoverTrigger,
+} from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 const fetchUserCoinData = async () => {
 	const response = await fetch('/api/get-user-coin-data');
@@ -17,6 +27,9 @@ const fetchUserCoinData = async () => {
 export default function MyCollection() {
 	const goBack = useNavigationStore((state) => state.goBack);
 	const uniqueCoins = useUserDataStore((state) => state.uniqueCoins);
+
+	const [open, setOpen] = useState(false);
+	const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
 
@@ -34,6 +47,21 @@ export default function MyCollection() {
 	for (let i = 0; i < coins.length; i += coinsPerPage) {
 		pages.push(coins.slice(i, i + coinsPerPage));
 	}
+
+	const handleMouseEnter = () => {
+		if (closeTimeout) {
+			clearTimeout(closeTimeout);
+			setCloseTimeout(null);
+		}
+		setOpen(true);
+	};
+
+	const handleMouseLeave = () => {
+		const timeout = setTimeout(() => {
+			setOpen(false);
+		}, 200);
+		setCloseTimeout(timeout);
+	};
 
 	return (
 		<div className="relative h-screen p-2 notmobile:p-4 flex flex-col">
@@ -123,6 +151,24 @@ export default function MyCollection() {
 						>
 							Next →
 						</button>
+						<Popover open={open}>
+							<PopoverTrigger
+								onMouseEnter={handleMouseEnter}
+								onMouseLeave={handleMouseLeave}
+								asChild
+							>
+								<Button variant="outline">Open Popover</Button>
+							</PopoverTrigger>
+							<PopoverContent
+								onMouseEnter={handleMouseEnter}
+								onMouseLeave={handleMouseLeave}
+							>
+								<PopoverHeader>
+									<PopoverTitle>Title</PopoverTitle>
+									<PopoverDescription>Description text here.</PopoverDescription>
+								</PopoverHeader>
+							</PopoverContent>
+						</Popover>
 					</div>
 				)}
 			</div>
