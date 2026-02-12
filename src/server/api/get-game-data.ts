@@ -1,18 +1,8 @@
 import { Router } from 'express';
 import { context, reddit, redis } from '@devvit/web/server';
+import { getDailySeedFromDate } from '../utils/daily-seed';
 
 const router = Router();
-
-/**
- * Generate a daily seed from a date (same format as board-generator)
- * This ensures consistent levels for posts created on the same day
- */
-function getDailySeedFromDate(date: Date): number {
-	const year = date.getUTCFullYear();
-	const month = date.getUTCMonth() + 1; // 0-indexed
-	const day = date.getUTCDate();
-	return year * 10000 + month * 100 + day;
-}
 
 /**
  * GET /api/get-game-data

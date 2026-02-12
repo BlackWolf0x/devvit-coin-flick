@@ -1,5 +1,5 @@
 import { context, reddit, redis } from '@devvit/web/server';
-import { generateDailyBoard, getDailyBoardSeed } from '../utils/board-generator';
+import { getDailySeedFromDate } from '../utils/daily-seed';
 
 export const createDailyChallengePost = async () => {
 	const { subredditName } = context;
@@ -9,7 +9,7 @@ export const createDailyChallengePost = async () => {
 	}
 
 	// Check if we already posted today
-	const todaySeed = getDailyBoardSeed();
+	const todaySeed = getDailySeedFromDate();
 	const lastPostedSeed = await redis.get('daily-challenge:last-posted-date');
 
 	if (lastPostedSeed === todaySeed.toString()) {
@@ -24,12 +24,8 @@ export const createDailyChallengePost = async () => {
 	// Create the post
 	const post = await reddit.submitCustomPost({
 		subredditName: subredditName,
-		title: `Sweep Chess - Daily Challenge #${challengeNumber}`,
+		title: `Coin Flick - Daily Challenge #${challengeNumber}`,
 		entry: 'default',
-		postData: {
-			gameId: challengeNumber.toString(),
-			board: generateDailyBoard(),
-		},
 	});
 
 	// Store today's date to prevent duplicate posts
