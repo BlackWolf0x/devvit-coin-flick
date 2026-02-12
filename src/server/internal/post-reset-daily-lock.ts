@@ -10,18 +10,11 @@ const router = Router();
  */
 router.post('/internal/menu/dev-reset-daily-lock', async (_req, res): Promise<void> => {
 	try {
-		console.log('[DEV RESET] Resetting daily challenge lock...');
-
-		// Get current values before reset
-		const lastPostedDate = await redis.get('daily-challenge:last-posted-date');
+		// Get current counter before reset
 		const currentCounter = await redis.get('challenge:counter');
 
 		// Clear the daily post lock
 		await redis.del('daily-challenge:last-posted-date');
-
-		console.log('[DEV RESET] Reset complete');
-		console.log(`[DEV RESET] Previous last posted date: ${lastPostedDate ?? 'none'}`);
-		console.log(`[DEV RESET] Current challenge counter: ${currentCounter ?? '0'}`);
 
 		res.json({
 			showToast: {

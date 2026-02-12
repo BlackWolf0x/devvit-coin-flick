@@ -3,7 +3,7 @@ import onAppInstallRoute from './on-app-install';
 import postDailyChallengeRoute from './post-daily-challenge';
 import schedulerPostDailyChallengeRoute from './scheduler-post-daily-challenge';
 import schedulerRetryDailyChallengeRoute from './scheduler-retry-daily-challenge';
-import devResetDailyLockRoute from './dev-reset-daily-lock';
+import devResetDailyLockRoute from './post-reset-daily-lock';
 
 const router = Router();
 
