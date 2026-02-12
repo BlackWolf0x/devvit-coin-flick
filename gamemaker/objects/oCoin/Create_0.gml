@@ -1,5 +1,10 @@
 /// @description Initialize coin properties
 
+// Set sprite based on active coin (if available)
+if (variable_global_exists("active_coin_sprite")) {
+    sprite_index = global.active_coin_sprite;
+}
+
 // Apply scale
 image_xscale = global.play_scale * 0.5;
 image_yscale = global.play_scale * 0.5;
@@ -46,3 +51,16 @@ shrinkSpeed = 0.05;  // How fast to shrink (per step)
 
 // Friction/damping will slow down the coin over time
 // (configured in physics settings)
+
+// Create spark particle system for collision VFX
+global.spark_system = part_system_create();
+part_system_depth(global.spark_system, -100);
+
+global.spark_particle = part_type_create();
+part_type_shape(global.spark_particle, pt_shape_star);
+part_type_size(global.spark_particle, 0.05, 0.15, -0.01, 0);
+part_type_color2(global.spark_particle, c_yellow, c_orange);
+part_type_alpha3(global.spark_particle, 0.8, 0.6, 0);
+part_type_speed(global.spark_particle, 1, 3, -0.1, 0);
+part_type_direction(global.spark_particle, 0, 360, 0, 0);
+part_type_life(global.spark_particle, 10, 20);

@@ -7,12 +7,14 @@
 
 @theme {
 	/* Responsive breakpoints */
-	--breakpoint-xs: 350px;
+	/* --breakpoint-xs: 350px;
 	--breakpoint-sm: 400px;
 	--breakpoint-md: 768px;
 	--breakpoint-lg: 1024px;
 	--breakpoint-xl: 1280px;
-	--breakpoint-2xl: 1536px;
+	--breakpoint-2xl: 1536px; */
+
+	--breakpoint-notmobile: 600px;
 
 	--font-sans: 'Saira', system-ui, sans-serif;
 
@@ -125,26 +127,40 @@
 		@apply bg-background;
 		position: relative;
 		font-family: var(--font-sans);
-		background-image: url('/misc/bg-gradient.png');
-		background-position: bottom center;
-		background-size: cover;
-		background-repeat: no-repeat;
 	}
+}
 
-	body::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-image: url('/misc/bg-duotone.png');
-		background-size: cover;
-		background-position: center;
-		background-repeat: no-repeat;
-	}
+/* Background styling for splash page */
+/* .splash-background {
+	background-image: url('/misc/bg-gradient.png');
+	background-position: bottom center;
+	background-size: cover;
+	background-repeat: no-repeat;
+} */
+
+.splash-background::before,
+.splash-background::after {
+	content: '';
+	position: absolute;
+	z-index: -10;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.splash-background::before {
+	background-image: url('/misc/bg-duotone-left.png');
+	background-position: left;
+}
+
+.splash-background::after {
+	background-image: url('/misc/bg-duotone-right.png');
+	background-position: right;
 }
 
 @keyframes accordion-down {

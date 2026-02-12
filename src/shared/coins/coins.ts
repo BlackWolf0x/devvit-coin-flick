@@ -1,0 +1,48 @@
+import { WeightedSystem } from './weighted-system';
+
+export const coins = [
+	'clover',
+	'club',
+	'diamond',
+	'heart',
+	'spade',
+	'bell',
+	'medal',
+	'shield',
+	'music',
+	'beer',
+	'lightning',
+	'snowflake',
+	'crescent-moon',
+	'fire',
+	'skull',
+	'sun',
+	'atom',
+	'trophy',
+	'star',
+	'crown',
+] as const;
+
+// Define coin types and their weights
+export const coinWeightedSystem = new WeightedSystem({
+	clover: 10,
+	club: 100,
+	diamond: 100,
+	heart: 100,
+	spade: 100,
+	bell: 75,
+	medal: 70,
+	shield: 65,
+	music: 60,
+	beer: 55,
+	lightning: 50,
+	snowflake: 48,
+	'crescent-moon': 46,
+	fire: 44,
+	skull: 42,
+	sun: 40,
+	atom: 30,
+	trophy: 20,
+	star: 20,
+	crown: 15,
+});

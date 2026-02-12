@@ -22,4 +22,9 @@ other.wasHit = true;
 // (only play if this coin's ID is less than the other's to avoid duplicate sounds)
 if (id < other.id && (_mySpeed > _speedThreshold || _otherSpeed > _speedThreshold)) {
     audio_play_sound(sndCoinHitCoin, 1, false);
+    
+    // Create spark VFX at collision point
+    var _collisionX = (x + other.x) / 2;
+    var _collisionY = (y + other.y) / 2;
+    part_particles_create(global.spark_system, _collisionX, _collisionY, global.spark_particle, 10);
 }

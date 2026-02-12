@@ -10,12 +10,12 @@ function api_register_request(_req, _callback) {
 	_manager.register(_req, _callback);
 }
 
-/// @desc This function retrieves the post creation date from the server.
+/// @desc This function retrieves the game data (post date, daily seed, active coin) from the server.
 /// @param {Function} _callback The callback that you want to be executed upon task completion.
-function api_get_post_date(_callback) {
+function api_get_game_data(_callback) {
 	
 	// Build request url
-	var _url = reddit_get_base_url() + "/api/get-post-date";
+	var _url = reddit_get_base_url() + "/api/get-game-data";
 	
 	// Build request headers
 	var _headers = ds_map_create();

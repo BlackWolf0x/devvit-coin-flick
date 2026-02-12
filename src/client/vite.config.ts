@@ -18,7 +18,6 @@ export default defineConfig({
 			input: {
 				splash: 'splash.html',
 				game: 'index.html',
-				creator: 'creator.html',
 			},
 			output: {
 				entryFileNames: '[name].js',

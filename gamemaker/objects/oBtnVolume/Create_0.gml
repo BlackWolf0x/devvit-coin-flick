@@ -3,7 +3,7 @@
 
 // position for desktop
 if (!global.is_mobile) {
-	x = room_width - 100;
+	x = room_width - 140;
 	y = 26;
 	image_xscale = 0.4	
 	image_yscale = 0.4

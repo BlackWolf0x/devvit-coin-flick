@@ -14,14 +14,27 @@ var _gameState = gameController.gameState;
 
 // Handle lose screen
 if (_gameState == "lost") {
+    layer_set_visible("GameOverUI", true);
+    
     // Fade in popup
     losePopupAlpha = min(losePopupAlpha + 0.05, 1);
     
-    // Check restart button
+    // Check restart button hover for cursor (sprite is drawn at restartBtnY + topPadding)
+    var _spriteWidth = sprite_get_width(sPlayAgainButton) * 0.5 * uiScale;
+    var _spriteHeight = sprite_get_height(sPlayAgainButton) * 0.5 * uiScale;
+    var _btnCenterY = restartBtnY + topPadding;
     var _onRestartBtn = point_in_rectangle(inputX, inputY,
-        restartBtnX - restartBtnWidth/2, restartBtnY - restartBtnHeight/2,
-        restartBtnX + restartBtnWidth/2, restartBtnY + restartBtnHeight/2);
+        restartBtnX - _spriteWidth/2, _btnCenterY - _spriteHeight/2,
+        restartBtnX + _spriteWidth/2, _btnCenterY + _spriteHeight/2);
     
+    // Set cursor
+    if (_onRestartBtn) {
+        window_set_cursor(cr_handpoint);
+    } else {
+        window_set_cursor(cr_default);
+    }
+    
+    // Check restart button click
     if (_pressed && _onRestartBtn) {
         room_restart();
     }
@@ -29,14 +42,27 @@ if (_gameState == "lost") {
 
 // Handle win screen
 if (_gameState == "won") {
+    layer_set_visible("GameOverUI", true);
+    
     // Fade in popup
     winPopupAlpha = min(winPopupAlpha + 0.05, 1);
     
-    // Check restart button
+    // Check restart button hover for cursor (sprite is drawn at restartBtnY + topPadding)
+    var _spriteWidth = sprite_get_width(sPlayAgainButton) * 0.5 * uiScale;
+    var _spriteHeight = sprite_get_height(sPlayAgainButton) * 0.5 * uiScale;
+    var _btnCenterY = restartBtnY + topPadding;
     var _onRestartBtn = point_in_rectangle(inputX, inputY,
-        restartBtnX - restartBtnWidth/2, restartBtnY - restartBtnHeight/2,
-        restartBtnX + restartBtnWidth/2, restartBtnY + restartBtnHeight/2);
+        restartBtnX - _spriteWidth/2, _btnCenterY - _spriteHeight/2,
+        restartBtnX + _spriteWidth/2, _btnCenterY + _spriteHeight/2);
     
+    // Set cursor
+    if (_onRestartBtn) {
+        window_set_cursor(cr_handpoint);
+    } else {
+        window_set_cursor(cr_default);
+    }
+    
+    // Check restart button click
     if (_pressed && _onRestartBtn) {
         room_restart();
     }
