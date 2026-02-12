@@ -38,6 +38,7 @@ const setActiveCoin = async (coin: string) => {
 export default function MyCollection() {
 	const goBack = useNavigationStore((state) => state.goBack);
 	const uniqueCoins = useUserDataStore((state) => state.uniqueCoins);
+	const activeCoinFromStore = useUserDataStore((state) => state.activeCoin);
 	const setActiveCoinInStore = useUserDataStore((state) => state.setActiveCoin);
 	const queryClient = useQueryClient();
 
@@ -85,7 +86,8 @@ export default function MyCollection() {
 	});
 
 	const collection = userCoinData?.collection || {};
-	const activeCoin = userCoinData?.activeCoin || null;
+	// Use activeCoin from Zustand store (which gets realtime updates) instead of React Query
+	const activeCoin = activeCoinFromStore || userCoinData?.activeCoin || null;
 
 	const setActiveCoinMutation = useMutation({
 		mutationFn: setActiveCoin,
