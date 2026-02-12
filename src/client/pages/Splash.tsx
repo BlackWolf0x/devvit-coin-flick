@@ -5,10 +5,19 @@ import { SpOpenChest } from '@/components/SpOpenChest';
 import { SpPlayButton } from '@/components/SpPlayButton';
 import { SpTopRightButtons } from '@/components/SpTopRightButtons';
 import { AdminPanel } from '@/components/AdminPanel';
+import toast from 'react-hot-toast';
+import { useEffect } from 'react';
 
 export default function Splash() {
+	useEffect(() => {
+		// Test toast on mount
+		toast.success('Welcome to Coin Game!', {
+			duration: 3000,
+		});
+	}, []);
+
 	return (
-		<div className="relative h-screen overflow-hidden flex flex-col justify-between">
+		<div className="splash-background relative h-screen overflow-hidden flex flex-col justify-between">
 			<SpMyBalance />
 
 			<div className="absolute top-14 left-2 notmobile:top-20 notmobile:left-6 scale-75 notmobile:scale-100">
