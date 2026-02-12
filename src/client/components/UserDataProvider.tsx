@@ -16,11 +16,11 @@ const fetchUserData = async (): Promise<UserDataResponse> => {
 const getChallengeLabel = (challengeId: string): string => {
 	switch (challengeId) {
 		case 'completion':
-			return 'Daily Challenge Completed';
+			return 'Daily completion';
 		case 'under30s':
-			return 'Under 30 Seconds';
+			return 'Finish under 30s';
 		case 'under15s':
-			return 'Under 15 Seconds';
+			return 'Finish under 15s';
 		default:
 			return 'Challenge Completed';
 	}
