@@ -25,22 +25,13 @@
 	"menu": {
 		"items": [
 			{
-				"label": "📅 Post Daily Challenge",
-				"description": "Create a new daily chess puzzle challenge",
+				"label": "Post Daily Challenge",
 				"location": "subreddit",
 				"forUserType": "moderator",
 				"endpoint": "/internal/menu/daily-challenge-create"
 			},
 			{
-				"label": "🎨 Post Level Creator",
-				"description": "Create a post where users can build custom puzzles",
-				"location": "subreddit",
-				"forUserType": "moderator",
-				"endpoint": "/internal/menu/level-creator-create"
-			},
-			{
-				"label": "🔧 Reset Daily Lock (Dev)",
-				"description": "Clear the daily post lock for testing multiple posts",
+				"label": "Reset Daily Lock",
 				"location": "subreddit",
 				"forUserType": "moderator",
 				"endpoint": "/internal/menu/dev-reset-daily-lock"
