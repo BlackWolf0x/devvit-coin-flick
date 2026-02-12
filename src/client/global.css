@@ -131,12 +131,12 @@
 }
 
 /* Background styling for splash page */
-.splash-background {
+/* .splash-background {
 	background-image: url('/misc/bg-gradient.png');
 	background-position: bottom center;
 	background-size: cover;
 	background-repeat: no-repeat;
-}
+} */
 
 .splash-background::before,
 .splash-background::after {
