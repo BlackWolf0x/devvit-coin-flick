@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { context } from '@devvit/web/server';
-import { createLevelCreatorPost } from '../../core/post';
+import { createLevelCreatorPost } from '../core/post';
 
 const router = Router();
 

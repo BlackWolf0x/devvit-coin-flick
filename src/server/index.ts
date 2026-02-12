@@ -1,7 +1,7 @@
 import express from 'express';
 import { createServer, getServerPort } from '@devvit/web/server';
 import apiRoutes from './api/';
-import internalRoutes from './routes/internal';
+import internalRoutes from './internal';
 
 const app = express();
 
