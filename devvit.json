@@ -11,10 +11,6 @@
 			},
 			"game": {
 				"entry": "index.html"
-			},
-			"creator": {
-				"entry": "creator.html",
-				"inline": true
 			}
 		}
 	},
