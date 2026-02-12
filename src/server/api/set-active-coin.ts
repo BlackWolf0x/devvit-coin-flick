@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
-import { context, redis } from '@devvit/web/server';
+import { context, redis, realtime } from '@devvit/web/server';
 import { coins } from '../../shared/coins/coins';
 
 const router = Router();
@@ -65,6 +65,13 @@ router.post('/api/set-active-coin', async (req: Request, res: Response): Promise
 		// Set as active coin
 		const activeCoinKey = `activecoin:${userId}`;
 		await redis.set(activeCoinKey, coin);
+
+		// Send real-time update to user's wallet channel
+		await realtime.send(`wallet_${userId}`, {
+			type: 'active-coin-update',
+			activeCoin: coin,
+			timestamp: Date.now(),
+		});
 
 		res.json({
 			status: 'success',

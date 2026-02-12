@@ -18,10 +18,10 @@ router.get('/api/user-data', async (req: Request, res: Response): Promise<void> 
 	try {
 		const userCollectionKey = `collection:${userId}`;
 
-		// Gift user a 'clover' coin only once (if collection doesn't exist yet)
-		const collectionExists = await redis.exists(userCollectionKey);
+		// Gift user a 'clover' coin only once (if they don't have it yet)
+		const cloverCount = await redis.hGet(userCollectionKey, 'clover');
 
-		if (!collectionExists) {
+		if (!cloverCount) {
 			// Gift the user 1 clover coin
 			await redis.hIncrBy(userCollectionKey, 'clover', 1);
 		}

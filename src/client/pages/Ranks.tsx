@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, LoaderCircle } from 'lucide-react';
 import { useNavigationStore } from '@/stores/navigationStore';
 
 // API function
@@ -12,6 +10,19 @@ const fetchRanks = async () => {
 	return response.json();
 };
 
+const formatTime = (milliseconds: number) => {
+	const totalSeconds = Math.floor(milliseconds / 1000);
+	const ms = Math.floor((milliseconds % 1000) / 10); // Get centiseconds (2 digits)
+	const minutes = Math.floor(totalSeconds / 60);
+	const seconds = totalSeconds % 60;
+
+	return {
+		minutes,
+		seconds,
+		ms,
+	};
+};
+
 export default function Ranks() {
 	const goBack = useNavigationStore((state) => state.goBack);
 	const { data, isLoading, error } = useQuery({
@@ -20,83 +31,121 @@ export default function Ranks() {
 	});
 
 	return (
-		<div className="relative h-screen pt-4 gap-4 px-4">
-			{/* Header */}
-			<header className="mb-6 flex items-center justify-center gap-4">
-				<Button onClick={goBack} variant="outline" size={'icon'}>
-					<ArrowLeft />
-				</Button>
-				<div className="sm:space-y-1">
-					<h1 className="h-6 text-xl font-bold font-title">Ranks</h1>
-					<p className="text-xs text-muted-foreground">Top 5 players by fewest moves</p>
-				</div>
+		<div className="relative h-screen p-2 notmobile:p-4 flex flex-col">
+			<header className="flex items-center gap-2">
+				<button
+					onClick={goBack}
+					onContextMenu={(e) => e.preventDefault()}
+					onTouchStart={(e) => e.preventDefault()}
+					className="cursor-pointer transition-transform scale-100 active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					<img
+						src="/misc/btn-back.png"
+						width={152}
+						height={154}
+						className="w-10 pointer-events-none"
+						draggable={false}
+					/>
+				</button>
+
+				<h1 className="text-lg font-semibold">Leaderboard</h1>
+				<p className="ml-auto text-sm font-semibold">Top 5 Players</p>
 			</header>
 
-			{/* Content */}
-			<div
-				className={`w-full h-[calc(100%-84px)] space-y-3 flex flex-col items-center ${
-					!data && 'justify-center'
-				}`}
-			>
+			<div className="flex-1 mt-3 rounded-lg p-4 bg-white/85 shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden">
 				{isLoading ? (
-					<LoaderCircle size={24} className="animate-spin" />
+					<div className="flex-1 flex items-center justify-center">
+						<div className="text-center text-gray-600">Loading...</div>
+					</div>
 				) : error ? (
-					<div className="text-center text-destructive">Error loading ranks</div>
+					<div className="flex-1 flex items-center justify-center">
+						<div className="text-center text-red-600">Error loading leaderboard</div>
+					</div>
 				) : !data || data.length === 0 ? (
-					<div className="text-center text-muted-foreground">
-						No plays yet. Be the first!
+					<div className="flex-1 flex items-center justify-center">
+						<div className="text-center text-gray-600">No times yet. Be the first!</div>
 					</div>
 				) : (
-					<>
+					<div className="flex-1 overflow-y-auto space-y-2">
 						{data.map((entry: any) => (
 							<div
 								key={entry.userId}
-								className="w-full flex items-center justify-between px-4 py-2 bg-secondary rounded-lg border"
+								className="flex items-center gap-2 p-3 rounded-lg border-2 border-gray-200 shadow-sm"
 							>
-								<div className="flex items-center gap-3">
-									<span className="text-lg font-bold">#{entry.rank}</span>
+								{/* Rank Badge */}
+								<div
+									className={`shrink-0 size-8 rounded-full flex items-center justify-center text-sm font-medium bg-secondary text-black`}
+								>
+									#{entry.rank}
+								</div>
 
-									<figure className="w-8">
-										{entry.snoovatar === 'none' ? (
-											<img
-												src="/misc/snoo.png"
-												className="grayscale opacity-40"
-											/>
-										) : (
-											<img src={entry.snoovatar} />
-										)}
-									</figure>
+								{/* Avatar */}
+								<div className="shrink-0 w-10 h-10">
+									{entry.snoovatar === 'none' ? (
+										<img
+											src="/misc/snoo.png"
+											className="w-full h-full object-contain grayscale opacity-40"
+											alt="Avatar"
+										/>
+									) : (
+										<img
+											src={entry.snoovatar}
+											className="w-full h-full object-contain"
+											alt="Avatar"
+										/>
+									)}
+								</div>
 
-									<div>
-										<h4 className="font-semibold">
-											{entry.username || 'Anonymous'}
-										</h4>
-										<div className="text-sm sm:hidden">
-											In{' '}
-											<span className="text-primary font-medium">
-												{entry.totalMoves}{' '}
-												{entry.totalMoves === 1 ? ' move' : ' moves'}
-											</span>{' '}
-											&{' '}
-											<span className="text-primary font-medium">
-												{entry.cellsTravelled}{' '}
-												{entry.cellsTravelled === 1 ? ' cell' : ' cells'}{' '}
+								{/* Username and Time (mobile) */}
+								<div className="flex-1 min-w-0">
+									<h4 className="font-semibold text-gray-900 truncate">
+										{entry.username || 'Anonymous'}
+									</h4>
+									{/* Time - Mobile only */}
+									<div className="notmobile:hidden">
+										<p className="text-sm font-bold text-green-600">
+											{formatTime(entry.score).minutes > 0 && (
+												<>
+													{formatTime(entry.score).minutes}
+													<span className="text-xs text-black opacity-50">
+														m{' '}
+													</span>
+												</>
+											)}
+											{formatTime(entry.score).seconds}
+											<span className="text-xs text-black opacity-50">
+												s{' '}
 											</span>
-										</div>
+											<span className="text-xs">
+												{formatTime(entry.score).ms}
+												<span className="text-black opacity-50">ms</span>
+											</span>
+										</p>
 									</div>
 								</div>
 
-								<div className="text-right hidden sm:block">
-									<p className="text-sm font-bold text-primary">
-										{entry.totalMoves} moves
-									</p>
-									<p className="text-xs font-medium text-muted-foreground">
-										{entry.cellsTravelled} cells
+								{/* Time - Desktop only */}
+								<div className="hidden notmobile:block shrink-0 text-right">
+									<p className="text-lg font-bold text-green-600">
+										{formatTime(entry.score).minutes > 0 && (
+											<>
+												{formatTime(entry.score).minutes}
+												<span className="text-sm text-black opacity-50">
+													m{' '}
+												</span>
+											</>
+										)}
+										{formatTime(entry.score).seconds}
+										<span className="text-sm text-black opacity-50">s </span>
+										<span className="text-sm">
+											{formatTime(entry.score).ms}
+											<span className="text-black opacity-50">ms</span>
+										</span>
 									</p>
 								</div>
 							</div>
 						))}
-					</>
+					</div>
 				)}
 			</div>
 		</div>

@@ -29,6 +29,8 @@ export default function ChestOpen() {
 
 	const hasEnoughBalance = (balance ?? 0) >= CHEST_COST;
 
+	const audio = new Audio('/chest/chest-open.mp3');
+
 	// Player count update mutation
 	const openChestMutation = useMutation({
 		mutationFn: openChest,
@@ -53,6 +55,7 @@ export default function ChestOpen() {
 				setTimeout(() => {
 					setShake(false);
 					setShowChestOpened(true);
+					audio.play().catch((error) => console.error('Error playing sound:', error));
 				}, 2000);
 			})
 			.catch((error) => {
@@ -68,7 +71,7 @@ export default function ChestOpen() {
 			<div className="relative mt-34 mb-6 w-[190px] h-[190px]">
 				{showCostLabel && (
 					<div
-						className={`absolute -top-8 left-1/2 -translate-x-1/2 w-43 rounded-xl text-center border px-2 py-1 animate-bounce ${
+						className={`absolute -top-8 left-1/2 -translate-x-1/2 w-48 rounded-xl text-center border px-2 py-1 animate-bounce ${
 							hasEnoughBalance
 								? 'bg-white border-black'
 								: 'bg-red-100 border-red-500 text-red-700'

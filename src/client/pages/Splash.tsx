@@ -4,10 +4,11 @@ import { SpCoinsCollected } from '@/components/SpCoinsCollected';
 import { SpOpenChest } from '@/components/SpOpenChest';
 import { SpPlayButton } from '@/components/SpPlayButton';
 import { SpTopRightButtons } from '@/components/SpTopRightButtons';
+import { AdminPanel } from '@/components/AdminPanel';
 
 export default function Splash() {
 	return (
-		<div className="relative h-screen overflow-hidden flex flex-col justify-between">
+		<div className="splash-background relative h-screen overflow-hidden flex flex-col justify-between">
 			<SpMyBalance />
 
 			<div className="absolute top-14 left-2 notmobile:top-20 notmobile:left-6 scale-75 notmobile:scale-100">
@@ -29,6 +30,8 @@ export default function Splash() {
 			<div className="pb-4 flex flex-col items-center justify-center gap-3">
 				<SpPlayButton />
 			</div>
+
+			<AdminPanel />
 		</div>
 	);
 }

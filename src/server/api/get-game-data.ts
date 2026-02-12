@@ -1,18 +1,8 @@
 import { Router } from 'express';
 import { context, reddit, redis } from '@devvit/web/server';
+import { getDailySeedFromDate } from '../utils/daily-seed';
 
 const router = Router();
-
-/**
- * Generate a daily seed from a date (same format as board-generator)
- * This ensures consistent levels for posts created on the same day
- */
-function getDailySeedFromDate(date: Date): number {
-	const year = date.getUTCFullYear();
-	const month = date.getUTCMonth() + 1; // 0-indexed
-	const day = date.getUTCDate();
-	return year * 10000 + month * 100 + day;
-}
 
 /**
  * GET /api/get-game-data
@@ -42,8 +32,20 @@ router.get('/api/get-game-data', async (_req, res): Promise<void> => {
 			return;
 		}
 
-		// Generate daily seed from post creation date
-		const dailySeed = getDailySeedFromDate(post.createdAt);
+		// Check if this is a bonus challenge with a custom seed stored in Redis
+		let dailySeed: number;
+		const bonusSeedKey = `post:${postId}:bonusSeed`;
+		const storedBonusSeed = await redis.get(bonusSeedKey);
+
+		if (storedBonusSeed) {
+			// Use the stored bonus seed
+			dailySeed = parseInt(storedBonusSeed, 10);
+			console.log('[GET-GAME-DATA] Using bonus seed:', dailySeed);
+		} else {
+			// Generate daily seed from post creation date
+			dailySeed = getDailySeedFromDate(post.createdAt);
+			console.log('[GET-GAME-DATA] Using daily seed from creation date:', dailySeed);
+		}
 
 		// Get user's active coin (if logged in)
 		let activeCoin = 'clover';

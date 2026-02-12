@@ -1,3 +1,9 @@
+export type InitResponse = {
+	type: 'init';
+	postId: string;
+	username: string;
+};
+
 export type ChallengeId = 'completion' | 'under30s' | 'under15s';
 
 export interface UserDataResponse {
