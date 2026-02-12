@@ -122,7 +122,12 @@ export default function MyCollection() {
 
 	const handleCoinClick = (coin: string, isOwned: boolean) => {
 		if (!isOwned) return;
-		setSelectedCoin(coin);
+		// If clicking the same selected coin (and it's not the active one), unselect it
+		if (selectedCoin === coin && coin !== activeCoin) {
+			setSelectedCoin(null);
+		} else {
+			setSelectedCoin(coin);
+		}
 	};
 
 	const handleSetActive = () => {
