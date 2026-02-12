@@ -35,7 +35,7 @@ if (_gameState == "lost") {
         draw_text_transformed(midX, midY + 6 * uiScale, "the table.", 1 * uiScale, 1 * uiScale, 0);
     } else {
         draw_text_transformed(midX, midY - 50 * uiScale, "You failed to hit exactly", 1 * uiScale, 1 * uiScale, 0);
-        draw_text_transformed(midX, midY + 6 * uiScale, "one coin.", 1 * uiScale, 1 * uiScale, 0);
+        draw_text_transformed(midX, midY + 6 * uiScale, "one other coin.", 1 * uiScale, 1 * uiScale, 0);
     }
 	
     draw_set_font(-1);
@@ -79,13 +79,17 @@ if (_gameState == "won") {
 	draw_text_transformed(midX, midY - 144 * uiScale, "YOU WON!", 1 * uiScale, 1 * uiScale, 0)
 
     
-    // Time display
-    var _seconds = gameController.elapsedTime / 1000;
-    var _minutes = floor(_seconds / 60);
-    var _secs = floor(_seconds mod 60);
+    // Time display - format: "10m 10s 10ms" (minutes only if > 0)
+    var _totalMs = gameController.elapsedTime;
+    var _minutes = floor(_totalMs / 60000);
+    var _seconds = floor((_totalMs mod 60000) / 1000);
+    var _milliseconds = floor((_totalMs mod 1000) / 10); // Divide by 10 to get 2 digits (0-99)
     
-    var _timeStr = string(_minutes) + ":" + 
-                   ((_secs < 10) ? "0" : "") + string(_secs);
+    var _timeStr = "";
+    if (_minutes > 0) {
+        _timeStr += string(_minutes) + "m ";
+    }
+    _timeStr += string(_seconds) + "s " + string(_milliseconds) + "ms";
     
     draw_set_color(c_white);
 	draw_set_font(saira_medium);
