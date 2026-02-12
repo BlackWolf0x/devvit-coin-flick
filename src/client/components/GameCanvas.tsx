@@ -3,6 +3,7 @@ import GameLoadingScreen from './GameLoadingScreen.tsx';
 import { useGameMakerGlobals } from '../hooks/useGameMakerGlobals';
 import { useGameLoader } from '../hooks/useGameLoader';
 import { useGameModule } from '../hooks/useGameModule';
+import { SpMyBalance } from './SpMyBalance';
 import '../types/gamemaker.ts';
 
 const GameCanvas = () => {
@@ -108,6 +109,10 @@ const GameCanvas = () => {
 
 	return (
 		<>
+			{/* Hidden balance component to keep it reactive to store updates */}
+			<div className="hidden">
+				<SpMyBalance />
+			</div>
 			<canvas
 				ref={canvasRef}
 				className={`border-0 outline-0 relative my-auto transition-opacity duration-500 ${
