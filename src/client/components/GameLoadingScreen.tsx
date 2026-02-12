@@ -17,7 +17,7 @@ const GameLoadingScreen = forwardRef<HTMLDivElement, LoadingScreenProps>(
 		return (
 			<div
 				ref={ref}
-				className={`absolute inset-0 flex flex-col justify-center items-center text-center pointer-events-none transition-opacity duration-500 ${
+				className={`text-white absolute inset-0 flex flex-col justify-center items-center text-center pointer-events-none transition-opacity duration-500 ${
 					isVisible ? 'opacity-100' : 'opacity-0'
 				}`}
 				id="loading"
