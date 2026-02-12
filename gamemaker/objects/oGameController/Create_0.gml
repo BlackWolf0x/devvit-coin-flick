@@ -78,6 +78,7 @@ movementThreshold = 25 * global.play_scale;  // Speed threshold to consider coin
 
 // Game state
 gameState = "start";  // "start", "playing", "lost", "won"
+loseType = "";  // "hitFail" or "coinFall"
 isFirstShot = true;  // Track if this is the first shot
 lastShotCoin = noone;  // The coin that was just shot
 waitingForHit = false;  // Waiting to see if shot coin hits another

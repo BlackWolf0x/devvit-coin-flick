@@ -139,8 +139,8 @@ with (oCoin) {
 if (_anyOutOfBounds) {
     if (gameState != "lost") {  // Only play sound once
         audio_play_sound(sndLose, 1, false);
-        gameState = "won";
-        submissionStatus = "success";
+        gameState = "lost";
+        loseType = "coinFall";
     }
 }
 
@@ -246,6 +246,7 @@ if (waitingForHit && !coinsMoving) {
         // Wrong number of hits - player loses!
         audio_play_sound(sndLose, 1, false);
         gameState = "lost";
+        loseType = "hitFail";
     }
     
     // Reset all wasHit flags

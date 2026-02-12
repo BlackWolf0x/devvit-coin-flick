@@ -14,16 +14,14 @@ var _gameState = gameController.gameState;
 
 // Handle lose screen
 if (_gameState == "lost") {
-    // Show sprite and layer
-    visible = true;
     layer_set_visible("GameOverUI", true);
     
     // Fade in popup
     losePopupAlpha = min(losePopupAlpha + 0.05, 1);
     
     // Check restart button hover for cursor (sprite is drawn at restartBtnY + topPadding)
-    var _spriteWidth = sprite_get_width(sPlayAgainButton) * 0.5;
-    var _spriteHeight = sprite_get_height(sPlayAgainButton) * 0.5;
+    var _spriteWidth = sprite_get_width(sPlayAgainButton) * 0.5 * uiScale;
+    var _spriteHeight = sprite_get_height(sPlayAgainButton) * 0.5 * uiScale;
     var _btnCenterY = restartBtnY + topPadding;
     var _onRestartBtn = point_in_rectangle(inputX, inputY,
         restartBtnX - _spriteWidth/2, _btnCenterY - _spriteHeight/2,
@@ -44,16 +42,14 @@ if (_gameState == "lost") {
 
 // Handle win screen
 if (_gameState == "won") {
-    // Show sprite and layer
-    visible = true;
     layer_set_visible("GameOverUI", true);
     
     // Fade in popup
     winPopupAlpha = min(winPopupAlpha + 0.05, 1);
     
     // Check restart button hover for cursor (sprite is drawn at restartBtnY + topPadding)
-    var _spriteWidth = sprite_get_width(sPlayAgainButton) * 0.5;
-    var _spriteHeight = sprite_get_height(sPlayAgainButton) * 0.5;
+    var _spriteWidth = sprite_get_width(sPlayAgainButton) * 0.5 * uiScale;
+    var _spriteHeight = sprite_get_height(sPlayAgainButton) * 0.5 * uiScale;
     var _btnCenterY = restartBtnY + topPadding;
     var _onRestartBtn = point_in_rectangle(inputX, inputY,
         restartBtnX - _spriteWidth/2, _btnCenterY - _spriteHeight/2,
