@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import initRoute from './init';
 import playerCount from './player-count';
 import playerCountUpdate from './player-count-update';
 import userData from './user-data';
@@ -17,6 +18,7 @@ import clearCollection from '../admin/clear-collection';
 const router = Router();
 
 // Mount API routes
+router.use(initRoute);
 router.use(playerCount);
 router.use(playerCountUpdate);
 router.use(userData);
