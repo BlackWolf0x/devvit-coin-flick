@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Check } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@/components/ui/popover';
 import { formatCoinName } from '@/lib/formatCoinName';
+import { useState, useEffect } from 'react';
 
 const fetchUserCoinData = async () => {
 	const response = await fetch('/api/get-user-coin-data');
@@ -16,11 +17,28 @@ const fetchUserCoinData = async () => {
 	return data;
 };
 
+const COINS_PER_PAGE_SMALL = 9; // 3x3 grid for screens < 500px
+const COINS_PER_PAGE_LARGE = 12; // 4x3 grid for screens >= 500px
+const BREAKPOINT_WIDTH = 500; // Width threshold in pixels
+
 export default function MyCollection() {
 	const goBack = useNavigationStore((state) => state.goBack);
 	const uniqueCoins = useUserDataStore((state) => state.uniqueCoins);
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+	const [coinsPerPage, setCoinsPerPage] = useState(COINS_PER_PAGE_SMALL);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setCoinsPerPage(
+				window.innerWidth >= BREAKPOINT_WIDTH ? COINS_PER_PAGE_LARGE : COINS_PER_PAGE_SMALL
+			);
+		};
+
+		handleResize();
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	const { data: userCoinData } = useQuery({
 		queryKey: ['userCoinData'],
@@ -30,8 +48,7 @@ export default function MyCollection() {
 	const collection = userCoinData?.collection || {};
 	const activeCoin = userCoinData?.activeCoin || null;
 
-	// Split coins into chunks of 12 (3 rows x 4 columns)
-	const coinsPerPage = 9;
+	// Split coins into chunks based on screen size (9 for small, 12 for >= 500px)
 	const pages = [];
 	for (let i = 0; i < coins.length; i += coinsPerPage) {
 		pages.push(coins.slice(i, i + coinsPerPage));
@@ -69,7 +86,13 @@ export default function MyCollection() {
 						{pages.map((pageCoins, pageIndex) => (
 							<div
 								key={pageIndex}
-								className="flex-none basis-full min-w-0 grid grid-cols-3 grid-rows-3 gap-2 items-center"
+								className="flex-none basis-full min-w-0 grid gap-2 items-center"
+								style={{
+									gridTemplateColumns: `repeat(${
+										coinsPerPage === COINS_PER_PAGE_LARGE ? 4 : 3
+									}, minmax(0, 1fr))`,
+									gridTemplateRows: `repeat(3, minmax(0, 1fr))`,
+								}}
 							>
 								{pageCoins.map((coin) => {
 									const count = collection[coin]
