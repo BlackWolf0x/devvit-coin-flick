@@ -11,6 +11,10 @@ import awardReward from './reward';
 import getGameData from './get-game-data';
 import submitTime from './submit-time';
 
+// Admin routes
+import giveCurrency from '../admin/give-currency';
+import clearCollection from '../admin/clear-collection';
+
 const router = Router();
 
 // Mount API routes
@@ -24,5 +28,9 @@ router.use(awardReward);
 
 router.use(getGameData);
 router.use(submitTime);
+
+// Admin routes
+router.use(giveCurrency);
+router.use(clearCollection);
 
 export default router;
