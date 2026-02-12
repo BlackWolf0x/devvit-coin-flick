@@ -40,7 +40,7 @@ export default function MyCollection() {
 	const uniqueCoins = useUserDataStore((state) => state.uniqueCoins);
 	const queryClient = useQueryClient();
 
-	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, watchDrag: false });
 	const [coinsPerPage, setCoinsPerPage] = useState(COINS_PER_PAGE_SMALL);
 	const [selectedCoin, setSelectedCoin] = useState<string | null>(null);
 	const [canScrollPrev, setCanScrollPrev] = useState(false);
