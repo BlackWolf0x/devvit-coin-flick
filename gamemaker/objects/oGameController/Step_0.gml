@@ -274,13 +274,35 @@ with (oBtnLockAim) {
 
 // Handle coin selection and aim lock (only if coins not moving and not waiting for hit)
 if (_pressed && !_onShootBtn && !_onUnselectBtn && !_onLockAimBtn && !coinsMoving && !waitingForHit) {
-    // Check if click is inside play area (ignore clicks outside)
+    // Check if click is inside play area
     var _inPlayArea = point_in_rectangle(inputX, inputY, 
         playAreaX, playAreaY, 
         playAreaX + playAreaWidth, playAreaY + playAreaHeight);
     
-    if (!_inPlayArea) {
-        // Click is outside play area, ignore it
+    // DESKTOP ONLY: Check if clicking on top buttons (restart/volume)
+    var _clickingTopButton = false;
+    if (!global.is_mobile) {
+        // Check if clicking on restart button
+        with (oBtnRestartIcon) {
+            if (point_in_rectangle(other.inputX, other.inputY, bbox_left, bbox_top, bbox_right, bbox_bottom)) {
+                _clickingTopButton = true;
+            }
+        }
+        // Check if clicking on volume button
+        with (oBtnVolume) {
+            if (point_in_rectangle(other.inputX, other.inputY, bbox_left, bbox_top, bbox_right, bbox_bottom)) {
+                _clickingTopButton = true;
+            }
+        }
+    }
+    
+    // Mobile: Ignore clicks outside play area
+    // Desktop: Allow clicks outside play area for lock/flick (unless clicking top buttons)
+    if (global.is_mobile && !_inPlayArea) {
+        // Mobile: Click is outside play area, ignore it
+        exit;
+    } else if (!global.is_mobile && !_inPlayArea && _clickingTopButton) {
+        // Desktop: Clicking on top buttons, ignore for game controls
         exit;
     }
     
