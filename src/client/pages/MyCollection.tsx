@@ -86,9 +86,35 @@ export default function MyCollection() {
 
 	const setActiveCoinMutation = useMutation({
 		mutationFn: setActiveCoin,
+		onMutate: async (newCoin) => {
+			// Cancel any outgoing refetches
+			await queryClient.cancelQueries({ queryKey: ['userCoinData'] });
+
+			// Snapshot the previous value
+			const previousData = queryClient.getQueryData(['userCoinData']);
+
+			// Optimistically update to the new value
+			queryClient.setQueryData(['userCoinData'], (old: any) => ({
+				...old,
+				activeCoin: newCoin,
+			}));
+
+			// Return context with the previous value
+			return { previousData };
+		},
+		onError: (_err, _newCoin, context) => {
+			// Rollback to the previous value on error
+			if (context?.previousData) {
+				queryClient.setQueryData(['userCoinData'], context.previousData);
+			}
+		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['userCoinData'] });
+			// Clear selection after successful update
 			setSelectedCoin(null);
+		},
+		onSettled: () => {
+			// Refetch to ensure we're in sync with the server
+			queryClient.invalidateQueries({ queryKey: ['userCoinData'] });
 		},
 	});
 
@@ -139,7 +165,7 @@ export default function MyCollection() {
 				</p>
 			</header>
 
-			<div className="flex-1 mt-3 rounded-lg p-4 bg-white shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] flex flex-col">
+			<div className="flex-1 mt-3 rounded-lg p-4 bg-white/90 shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] flex flex-col">
 				<div className="h-full pb-4 overflow-hidden" ref={emblaRef}>
 					<div className="flex h-full touch-pan-y touch-pinch-zoom">
 						{pages.map((pageCoins, pageIndex) => (
@@ -217,7 +243,12 @@ export default function MyCollection() {
 
 				{selectedCoin ? (
 					<div className="flex justify-center gap-2">
-						<Button onClick={handleUnselect} variant="secondary" size="sm">
+						<Button
+							onClick={handleUnselect}
+							variant="secondary"
+							size="sm"
+							disabled={setActiveCoinMutation.isPending}
+						>
 							<X />
 							Unselect
 						</Button>
