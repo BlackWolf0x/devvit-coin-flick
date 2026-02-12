@@ -31,7 +31,7 @@ export default function MyCollection() {
 	const activeCoin = userCoinData?.activeCoin || null;
 
 	// Split coins into chunks of 12 (3 rows x 4 columns)
-	const coinsPerPage = 12;
+	const coinsPerPage = 9;
 	const pages = [];
 	for (let i = 0; i < coins.length; i += coinsPerPage) {
 		pages.push(coins.slice(i, i + coinsPerPage));
@@ -64,12 +64,12 @@ export default function MyCollection() {
 			</header>
 
 			<div className="flex-1 mt-3 rounded-lg p-4 bg-white shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] flex flex-col">
-				<div className="flex-1 overflow-hidden" ref={emblaRef}>
+				<div className="h-full pb-4 overflow-hidden" ref={emblaRef}>
 					<div className="flex h-full touch-pan-y touch-pinch-zoom">
 						{pages.map((pageCoins, pageIndex) => (
 							<div
 								key={pageIndex}
-								className="flex-none basis-full min-w-0 grid grid-cols-4 auto-rows-fr gap-2 content-evenly items-center"
+								className="flex-none basis-full min-w-0 grid grid-cols-3 grid-rows-3 gap-2 items-center"
 							>
 								{pageCoins.map((coin) => {
 									const count = collection[coin]
@@ -87,9 +87,10 @@ export default function MyCollection() {
 															src={`/coins/${coin}.png`}
 															width={64}
 															height={64}
-															className={`size-16 object-contain ${
-																!isOwned ? 'opacity-10' : ''
-															}`}
+															className={`size-16 object-contain rounded-full border
+																${!isOwned ? 'opacity-10' : ''}
+																${isActive ? 'border-green-500' : 'border-transparent'}
+															`}
 														/>
 														{isActive && (
 															<div className="absolute -top-1 -right-1 bg-green-500 rounded-full border-2 border-white p-0.5">
@@ -121,7 +122,7 @@ export default function MyCollection() {
 				</div>
 
 				{pages.length > 1 && (
-					<div className="flex justify-center gap-4 mt-4">
+					<div className="flex justify-center gap-4">
 						<button
 							onClick={() => emblaApi?.scrollPrev()}
 							className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
