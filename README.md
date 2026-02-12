@@ -19,7 +19,6 @@ Collect all coins on the table in the fastest time possible by flicking coins in
 -   **The two coins can collide multiple times** with each other during a single flick
 -   **If any coin falls off the table**, you lose
 -   **Coins can bounce off obstacles freely**, so use them to your advantage to create bank shots
--   **Collect all coins to win**
 
 ## Key Features
 
