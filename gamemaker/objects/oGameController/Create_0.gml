@@ -58,16 +58,16 @@ if (!global.is_mobile) {
 	maxShotForce *= global.play_scale;
 }
 
-powerMeterSpeed = 1;     // How fast the meter oscillates (higher = faster)
+powerMeterSpeed = 1.1;  // How fast the meter oscillates (higher = faster) - reduced from 1 for better control
 powerMeterValue = 0;     // Current position (0 to 1)
 powerMeterDirection = 1; // 1 = going up, -1 = going down
 powerMeterActive = false; // Whether meter is oscillating
 
 // Power meter visual properties
 powerMeterX = room_width / 2;  // Centered horizontally
-powerMeterY = global.is_mobile ? room_height * 0.76 : room_height * 0.7; 
+powerMeterY = global.is_mobile ? room_height * 0.7 : room_height * 0.6; 
 powerMeterWidth = 50;
-powerMeterHeight = 300;
+powerMeterHeight = 450;  // Increased from 300 for more visual space and control
 
 // Debug info
 lastShotForce = 0;
