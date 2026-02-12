@@ -38,6 +38,7 @@ const setActiveCoin = async (coin: string) => {
 export default function MyCollection() {
 	const goBack = useNavigationStore((state) => state.goBack);
 	const uniqueCoins = useUserDataStore((state) => state.uniqueCoins);
+	const setActiveCoinInStore = useUserDataStore((state) => state.setActiveCoin);
 	const queryClient = useQueryClient();
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, watchDrag: false });
@@ -101,6 +102,9 @@ export default function MyCollection() {
 				activeCoin: newCoin,
 			}));
 
+			// Update Zustand store optimistically
+			setActiveCoinInStore(newCoin);
+
 			// Return context with the previous value
 			return { previousData };
 		},
@@ -108,6 +112,11 @@ export default function MyCollection() {
 			// Rollback to the previous value on error
 			if (context?.previousData) {
 				queryClient.setQueryData(['userCoinData'], context.previousData);
+				// Rollback Zustand store
+				const previousActiveCoin = (context.previousData as any)?.activeCoin;
+				if (previousActiveCoin !== undefined) {
+					setActiveCoinInStore(previousActiveCoin);
+				}
 			}
 		},
 		onSuccess: () => {

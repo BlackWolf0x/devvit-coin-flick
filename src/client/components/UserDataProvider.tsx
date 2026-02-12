@@ -52,6 +52,8 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
 						if (data.uniqueCoins !== undefined) {
 							setUniqueCoins(data.uniqueCoins);
 						}
+					} else if (data.type === 'active-coin-update') {
+						setActiveCoin(data.activeCoin);
 					}
 				},
 			});
