@@ -124,11 +124,15 @@ export default function MyCollection() {
 															</div>
 														)}
 													</div>
-													{isOwned && (
-														<span className="text-sm font-semibold text-gray-700 mt-1">
-															x{count}
-														</span>
-													)}
+													<span
+														className={`text-sm font-semibold mt-1 ${
+															isOwned
+																? 'text-gray-700'
+																: 'text-gray-400'
+														}`}
+													>
+														x{count}
+													</span>
 												</div>
 											</PopoverTrigger>
 											<PopoverContent className="w-auto" side="top">
