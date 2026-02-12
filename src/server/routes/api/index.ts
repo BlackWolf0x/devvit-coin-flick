@@ -2,7 +2,7 @@ import { Router } from 'express';
 import initRoute from './init';
 import boardDataRoute from './board-data';
 import submitScore from './submit-score';
-import leaderboard from './leaderboard';
+import leaderboard from '../../api/leaderboard';
 import deleteScore from './delete-score';
 import topPlayer from './top-player';
 import createPuzzle from './create-puzzle';
@@ -17,6 +17,5 @@ router.use(leaderboard);
 router.use(deleteScore);
 router.use(topPlayer);
 router.use(createPuzzle);
-
 
 export default router;

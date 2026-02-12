@@ -8,7 +8,7 @@ const router = Router();
  * GET /api/leaderboard
  * Get top scores from leaderboard
  */
-router.get('/api/leaderboard', async (req: Request, res: Response): Promise<void> => {
+router.get('/api/leaderboard', async (_req: Request, res: Response): Promise<void> => {
 	try {
 		const { postId } = context;
 
@@ -23,7 +23,8 @@ router.get('/api/leaderboard', async (req: Request, res: Response): Promise<void
 		const limit = 5;
 		const leaderboardKey = `leaderboard:${postId}`;
 
-		// Fetch top 50 users with scores
+		// Fetch top 5 users with lowest times (scores)
+		// zRange returns entries in ascending order by score (lowest first)
 		const entries = await redis.zRange(leaderboardKey, 0, limit - 1);
 
 		// If no entries, return empty array
@@ -33,30 +34,22 @@ router.get('/api/leaderboard', async (req: Request, res: Response): Promise<void
 			return;
 		}
 
-		// Reverse to get highest scores first
-		const sortedEntries = [...entries].reverse();
+		// Sort entries by score ascending (lowest time first) to ensure correct order
+		const sortedEntries = [...entries].sort((a, b) => a.score - b.score);
 
-		// Fetch user metadata and stats in parallel
+		// Fetch user metadata in parallel
 		const leaderboard = await Promise.all(
 			sortedEntries.map(async (entry, index) => {
 				const userId = entry.member;
 				const userKey = `user:${userId}`;
-				const statsKey = `user:${userId}:stats:${postId}`;
 
-				const [userMeta, userStats] = await Promise.all([
-					redis.hGetAll(userKey),
-					redis.hGetAll(statsKey),
-				]);
+				const userMeta = await redis.hGetAll(userKey);
 
 				return {
 					rank: index + 1,
 					userId,
 					username: userMeta.username ?? null,
 					snoovatar: userMeta.avatar ?? null,
-					totalMoves: userStats.totalMoves ? Number(userStats.totalMoves) : null,
-					cellsTravelled: userStats.cellsTravelled
-						? Number(userStats.cellsTravelled)
-						: null,
 					score: entry.score,
 				};
 			})

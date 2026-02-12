@@ -6,8 +6,7 @@ import userData from './user-data';
 import openChest from './open-chest';
 import setActiveCoin from './set-active-coin';
 import getUserCoinData from './get-user-coin-data';
-
-import awardReward from './reward';
+import leaderboard from './leaderboard';
 import getGameData from './get-game-data';
 import submitTime from './submit-time';
 
@@ -24,7 +23,7 @@ router.use(userData);
 router.use(openChest);
 router.use(setActiveCoin);
 router.use(getUserCoinData);
-router.use(awardReward);
+router.use(leaderboard);
 
 router.use(getGameData);
 router.use(submitTime);
