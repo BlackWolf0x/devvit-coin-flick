@@ -139,7 +139,8 @@ with (oCoin) {
 if (_anyOutOfBounds) {
     if (gameState != "lost") {  // Only play sound once
         audio_play_sound(sndLose, 1, false);
-        gameState = "lost";
+        gameState = "won";
+        submissionStatus = "success";
     }
 }
 
