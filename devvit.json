@@ -1,6 +1,6 @@
 {
 	"$schema": "https://developers.reddit.com/schema/config-file.v1.json",
-	"name": "chess-war",
+	"name": "coin-flick",
 	"post": {
 		"dir": "dist/client",
 		"entrypoints": {
@@ -52,6 +52,6 @@
 		}
 	},
 	"dev": {
-		"subreddit": "chess_war_dev"
+		"subreddit": "coin_flick_dev"
 	}
 }

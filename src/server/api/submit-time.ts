@@ -106,12 +106,19 @@ router.post('/api/submit-time', async (req: Request, res: Response): Promise<voi
 			const walletKey = `wallet:${userId}`;
 			const newBalance = await redis.incrBy(walletKey, totalReward);
 
-			// Send notice realtime
+			// Send challenge update to post-specific channel
 			await realtime.send(`challenges_${userId}_${postId}`, {
 				type: 'challenge-update',
 				challenges: challengesCompleted,
 				newBalance,
 			} satisfies ChallengeUpdateMessage);
+
+			// Send balance update to global wallet channel (for other posts)
+			await realtime.send(`wallet_${userId}`, {
+				type: 'balance-update',
+				balance: newBalance,
+				timestamp: Date.now(),
+			});
 		}
 
 		res.json({

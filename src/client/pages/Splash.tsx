@@ -4,7 +4,6 @@ import { SpCoinsCollected } from '@/components/SpCoinsCollected';
 import { SpOpenChest } from '@/components/SpOpenChest';
 import { SpPlayButton } from '@/components/SpPlayButton';
 import { SpTopRightButtons } from '@/components/SpTopRightButtons';
-import { AdminPanel } from '@/components/AdminPanel';
 
 export default function Splash() {
 	return (
@@ -30,8 +29,6 @@ export default function Splash() {
 			<div className="pb-4 flex flex-col items-center justify-center gap-3">
 				<SpPlayButton />
 			</div>
-
-			<AdminPanel />
 		</div>
 	);
 }

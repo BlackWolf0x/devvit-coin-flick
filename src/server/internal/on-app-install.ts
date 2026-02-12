@@ -10,11 +10,11 @@ const router = Router();
  */
 router.post('/internal/on-app-install', async (_req, res): Promise<void> => {
 	try {
-		const post = await createDailyChallengePost();
+		// const post = await createDailyChallengePost();
 
 		res.json({
 			status: 'success',
-			message: `Post created in subreddit ${context.subredditName} with id ${post.id}`,
+			message: `Post created in subreddit ${context.subredditName}`,
 		});
 	} catch (error) {
 		console.error(`Error creating post on app install:`, error);
