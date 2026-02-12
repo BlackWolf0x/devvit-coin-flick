@@ -56,6 +56,13 @@ export default function Rules() {
 							</li>
 							<li className="flex gap-2">
 								<span className="shrink-0 text-green-600 font-bold">•</span>
+								<span>
+									The coin you hit becomes the next coin to flick. You cannot
+									select another coin.
+								</span>
+							</li>
+							<li className="flex gap-2">
+								<span className="shrink-0 text-green-600 font-bold">•</span>
 								<span>If any coin falls off the table, you lose.</span>
 							</li>
 							<li className="flex gap-2">
@@ -64,6 +71,10 @@ export default function Rules() {
 									Coins can bounce off obstacles freely, so use them to your
 									advantage.
 								</span>
+							</li>
+							<li className="flex gap-2">
+								<span className="shrink-0 text-green-600 font-bold">•</span>
+								<span>The timer starts after your first shot.</span>
 							</li>
 						</ul>
 					</div>
