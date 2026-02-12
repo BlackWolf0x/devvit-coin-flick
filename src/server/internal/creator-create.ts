@@ -1,6 +1,5 @@
 import { Router } from 'express';
-import { context } from '@devvit/web/server';
-import { createLevelCreatorPost } from '../core/post';
+import { context, reddit } from '@devvit/web/server';
 
 const router = Router();
 
@@ -10,10 +9,24 @@ const router = Router();
  */
 router.post('/internal/menu/level-creator-create', async (_req, res): Promise<void> => {
 	try {
-		const post = await createLevelCreatorPost();
+		const { subredditName } = context;
+
+		if (!subredditName) {
+			throw new Error('subredditName is required');
+		}
+
+		const post = await reddit.submitCustomPost({
+			subredditName: subredditName,
+			title: 'Create Your Own Sweep Chess Level',
+			entry: 'creator',
+			postData: {
+				type: 'creator',
+				// Add any initial creator data here
+			},
+		});
 
 		res.json({
-			navigateTo: `https://reddit.com/r/${context.subredditName}/comments/${post.id}`,
+			navigateTo: `https://reddit.com/r/${subredditName}/comments/${post.id}`,
 		});
 	} catch (error) {
 		console.error(`Error creating level creator post:`, error);

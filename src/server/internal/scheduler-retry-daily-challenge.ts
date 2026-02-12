@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { context, scheduler } from '@devvit/web/server';
-import { createDailyChallengePost } from '../core/post';
+import { createDailyChallengePost } from '../utils/create-daily-challenge';
 
 const router = Router();
 
