@@ -96,15 +96,36 @@ export default function Ranks() {
 									)}
 								</div>
 
-								{/* Username */}
+								{/* Username and Time (mobile) */}
 								<div className="flex-1 min-w-0">
 									<h4 className="font-semibold text-gray-900 truncate">
 										{entry.username || 'Anonymous'}
 									</h4>
+									{/* Time - Mobile only */}
+									<div className="notmobile:hidden">
+										<p className="text-sm font-bold text-green-600">
+											{formatTime(entry.score).minutes > 0 && (
+												<>
+													{formatTime(entry.score).minutes}
+													<span className="text-xs text-black opacity-50">
+														m{' '}
+													</span>
+												</>
+											)}
+											{formatTime(entry.score).seconds}
+											<span className="text-xs text-black opacity-50">
+												s{' '}
+											</span>
+											<span className="text-xs">
+												{formatTime(entry.score).ms}
+												<span className="text-black opacity-50">ms</span>
+											</span>
+										</p>
+									</div>
 								</div>
 
-								{/* Time */}
-								<div className="shrink-0 text-right">
+								{/* Time - Desktop only */}
+								<div className="hidden notmobile:block shrink-0 text-right">
 									<p className="text-lg font-bold text-green-600">
 										{formatTime(entry.score).minutes > 0 && (
 											<>
@@ -112,17 +133,13 @@ export default function Ranks() {
 												<span className="text-sm text-black opacity-50">
 													m{' '}
 												</span>
-												<span className="text-sm text-black opacity-50">
-													:{' '}
-												</span>
 											</>
 										)}
 										{formatTime(entry.score).seconds}
 										<span className="text-sm text-black opacity-50">s </span>
-										<span className="text-sm text-black opacity-50">: </span>
 										<span className="text-sm">
 											{formatTime(entry.score).ms}
-											<span className="text-black opacity-50"> ms</span>
+											<span className="text-black opacity-50">ms</span>
 										</span>
 									</p>
 								</div>
