@@ -20,6 +20,8 @@ inputY = 0;
 
 midX = room_width / 2;
 midY = room_height / 2;
+x = midX;
+y = midY;
 
 // Hide sprite until game is over
 //visible = false;

@@ -22,7 +22,8 @@ if (_gameState == "lost") {
     draw_set_color(#FF5656);
 	draw_set_font(saira_bold);
     draw_set_alpha(1);
-    draw_text_transformed(midX, midY - 144, "YOU LOST!", 2, 2, 0);
+    //draw_text_transformed(midX, midY - 144, "YOU LOST!", 2, 2, 0);
+	draw_text(midX, midY - 144, "YOU LOST!");
     
     // Reason text
     draw_set_color(c_white);
@@ -68,7 +69,8 @@ if (_gameState == "won") {
     draw_set_color(#62CE4C);
 	draw_set_font(saira_bold);
     draw_set_alpha(1);
-    draw_text_transformed(midX, midY - 144, "YOU WON!", 2, 2, 0);
+	draw_text(midX, midY - 144, "YOU WON!");
+
     
     // Time display
     var _seconds = gameController.elapsedTime / 1000;
