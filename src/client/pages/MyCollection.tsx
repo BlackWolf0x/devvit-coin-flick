@@ -45,6 +45,7 @@ export default function MyCollection() {
 	const [selectedCoin, setSelectedCoin] = useState<string | null>(null);
 	const [canScrollPrev, setCanScrollPrev] = useState(false);
 	const [canScrollNext, setCanScrollNext] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
 
 	useEffect(() => {
 		if (!emblaApi) return;
@@ -52,6 +53,7 @@ export default function MyCollection() {
 		const onSelect = () => {
 			setCanScrollPrev(emblaApi.canScrollPrev());
 			setCanScrollNext(emblaApi.canScrollNext());
+			setCurrentPage(emblaApi.selectedScrollSnap() + 1);
 		};
 
 		onSelect();
@@ -165,7 +167,7 @@ export default function MyCollection() {
 				</p>
 			</header>
 
-			<div className="flex-1 mt-3 rounded-lg p-4 bg-white/90 shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] flex flex-col">
+			<div className="flex-1 mt-3 rounded-lg p-4 bg-white/85 shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] flex flex-col">
 				<div className="h-full pb-4 overflow-hidden" ref={emblaRef}>
 					<div className="flex h-full touch-pan-y touch-pinch-zoom">
 						{pages.map((pageCoins, pageIndex) => (
@@ -255,7 +257,9 @@ export default function MyCollection() {
 
 						<Button
 							onClick={handleSetActive}
-							disabled={setActiveCoinMutation.isPending}
+							disabled={
+								setActiveCoinMutation.isPending || selectedCoin === activeCoin
+							}
 							variant="default"
 							size="sm"
 						>
@@ -265,26 +269,31 @@ export default function MyCollection() {
 					</div>
 				) : (
 					pages.length > 1 && (
-						<div className="flex justify-center gap-2">
-							<Button
-								onClick={() => emblaApi?.scrollPrev()}
-								variant="secondary"
-								size="sm"
-								disabled={!canScrollPrev}
-							>
-								<ChevronLeft />
-								Prev
-							</Button>
+						<div className="flex justify-between items-center gap-2">
+							<span className="text-sm text-gray-600">
+								Page {currentPage} of {pages.length}
+							</span>
+							<div className="flex gap-2">
+								<Button
+									onClick={() => emblaApi?.scrollPrev()}
+									variant="secondary"
+									size="sm"
+									disabled={!canScrollPrev}
+								>
+									<ChevronLeft />
+									Prev
+								</Button>
 
-							<Button
-								onClick={() => emblaApi?.scrollNext()}
-								variant="secondary"
-								size="sm"
-								disabled={!canScrollNext}
-							>
-								Next
-								<ChevronRight />
-							</Button>
+								<Button
+									onClick={() => emblaApi?.scrollNext()}
+									variant="secondary"
+									size="sm"
+									disabled={!canScrollNext}
+								>
+									Next
+									<ChevronRight />
+								</Button>
+							</div>
 						</div>
 					)
 				)}
