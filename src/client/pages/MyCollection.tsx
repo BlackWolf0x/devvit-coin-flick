@@ -2,7 +2,7 @@ import { useNavigationStore } from '@/stores/navigationStore';
 import { useUserDataStore } from '@/stores/userDataStore';
 import useEmblaCarousel from 'embla-carousel-react';
 import { coins } from '../../shared/coins/coins';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Check } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@/components/ui/popover';
 import { formatCoinName } from '@/lib/formatCoinName';
@@ -21,12 +21,27 @@ const COINS_PER_PAGE_SMALL = 9; // 3x3 grid for screens < 500px
 const COINS_PER_PAGE_LARGE = 12; // 4x3 grid for screens >= 500px
 const BREAKPOINT_WIDTH = 500; // Width threshold in pixels
 
+const setActiveCoin = async (coin: string) => {
+	const response = await fetch('/api/set-active-coin', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ coin }),
+	});
+	if (!response.ok) {
+		const error = await response.json();
+		throw new Error(error.message || 'Failed to set active coin');
+	}
+	return response.json();
+};
+
 export default function MyCollection() {
 	const goBack = useNavigationStore((state) => state.goBack);
 	const uniqueCoins = useUserDataStore((state) => state.uniqueCoins);
+	const queryClient = useQueryClient();
 
 	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
 	const [coinsPerPage, setCoinsPerPage] = useState(COINS_PER_PAGE_SMALL);
+	const [selectedCoin, setSelectedCoin] = useState<string | null>(null);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -47,6 +62,29 @@ export default function MyCollection() {
 
 	const collection = userCoinData?.collection || {};
 	const activeCoin = userCoinData?.activeCoin || null;
+
+	const setActiveCoinMutation = useMutation({
+		mutationFn: setActiveCoin,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['userCoinData'] });
+			setSelectedCoin(null);
+		},
+	});
+
+	const handleCoinClick = (coin: string, isOwned: boolean) => {
+		if (!isOwned) return;
+		setSelectedCoin(coin);
+	};
+
+	const handleSetActive = () => {
+		if (selectedCoin) {
+			setActiveCoinMutation.mutate(selectedCoin);
+		}
+	};
+
+	const handleUnselect = () => {
+		setSelectedCoin(null);
+	};
 
 	// Split coins into chunks based on screen size (9 for small, 12 for >= 500px)
 	const pages = [];
@@ -100,19 +138,27 @@ export default function MyCollection() {
 										: 0;
 									const isOwned = count > 0;
 									const isActive = activeCoin === coin;
+									const isSelected = selectedCoin === coin;
 
 									return (
 										<Popover key={coin}>
 											<PopoverTrigger asChild>
-												<div className="relative flex flex-col items-center justify-center cursor-pointer">
+												<div
+													className={`relative flex flex-col items-center justify-center ${
+														isOwned
+															? 'cursor-pointer'
+															: 'cursor-default'
+													}`}
+													onClick={() => handleCoinClick(coin, isOwned)}
+												>
 													<div className="relative">
 														<img
 															src={`/coins/${coin}.png`}
 															width={64}
 															height={64}
-															className={`size-16 object-contain rounded-full border
+															className={`size-16 object-contain rounded-full border-2
 																${!isOwned ? 'opacity-10' : ''}
-																${isActive ? 'border-green-500' : 'border-transparent'}
+																${isSelected || isActive ? 'border-green-500' : 'border-transparent'}
 															`}
 														/>
 														{isActive && (
@@ -148,21 +194,39 @@ export default function MyCollection() {
 					</div>
 				</div>
 
-				{pages.length > 1 && (
+				{selectedCoin ? (
 					<div className="flex justify-center gap-4">
 						<button
-							onClick={() => emblaApi?.scrollPrev()}
+							onClick={handleUnselect}
 							className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
 						>
-							← Prev
+							Unselect
 						</button>
 						<button
-							onClick={() => emblaApi?.scrollNext()}
-							className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+							onClick={handleSetActive}
+							disabled={setActiveCoinMutation.isPending}
+							className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 						>
-							Next →
+							{setActiveCoinMutation.isPending ? 'Setting...' : 'Set as Active'}
 						</button>
 					</div>
+				) : (
+					pages.length > 1 && (
+						<div className="flex justify-center gap-4">
+							<button
+								onClick={() => emblaApi?.scrollPrev()}
+								className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+							>
+								← Prev
+							</button>
+							<button
+								onClick={() => emblaApi?.scrollNext()}
+								className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+							>
+								Next →
+							</button>
+						</div>
+					)
 				)}
 			</div>
 		</div>
