@@ -32,8 +32,20 @@ router.get('/api/get-game-data', async (_req, res): Promise<void> => {
 			return;
 		}
 
-		// Generate daily seed from post creation date
-		const dailySeed = getDailySeedFromDate(post.createdAt);
+		// Check if this is a bonus challenge with a custom seed stored in Redis
+		let dailySeed: number;
+		const bonusSeedKey = `post:${postId}:bonusSeed`;
+		const storedBonusSeed = await redis.get(bonusSeedKey);
+
+		if (storedBonusSeed) {
+			// Use the stored bonus seed
+			dailySeed = parseInt(storedBonusSeed, 10);
+			console.log('[GET-GAME-DATA] Using bonus seed:', dailySeed);
+		} else {
+			// Generate daily seed from post creation date
+			dailySeed = getDailySeedFromDate(post.createdAt);
+			console.log('[GET-GAME-DATA] Using daily seed from creation date:', dailySeed);
+		}
 
 		// Get user's active coin (if logged in)
 		let activeCoin = 'clover';

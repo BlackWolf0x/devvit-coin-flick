@@ -31,6 +31,12 @@
 				"location": "subreddit",
 				"forUserType": "moderator",
 				"endpoint": "/internal/menu/dev-reset-daily-lock"
+			},
+			{
+				"label": "Post Bonus Challenge",
+				"location": "subreddit",
+				"forUserType": "moderator",
+				"endpoint": "/internal/menu/bonus-challenge-create"
 			}
 		]
 	},
