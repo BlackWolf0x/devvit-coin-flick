@@ -1,41 +1,72 @@
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
 import { useNavigationStore } from '@/stores/navigationStore';
 
 export default function Rules() {
 	const goBack = useNavigationStore((state) => state.goBack);
 
 	return (
-		<div className="relative h-screen bg-background pt-4 gap-4 px-4">
-			{/* Header */}
-			<header className="mb-6 flex items-center justify-center gap-4">
-				<Button onClick={goBack} variant="outline" size={'icon'}>
-					<ArrowLeft />
-				</Button>
-				<div className="sm:space-y-1">
-					<h1 className="h-6 text-xl font-bold font-title">Rules</h1>
-					<p className="text-xs text-muted-foreground">How to play Sweep Chess</p>
-				</div>
+		<div className="relative h-screen p-2 notmobile:p-4 flex flex-col">
+			<header className="flex items-center gap-2">
+				<button
+					onClick={goBack}
+					onContextMenu={(e) => e.preventDefault()}
+					onTouchStart={(e) => e.preventDefault()}
+					className="cursor-pointer transition-transform scale-100 active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					<img
+						src="/misc/btn-back.png"
+						width={152}
+						height={154}
+						className="w-10 pointer-events-none"
+						draggable={false}
+					/>
+				</button>
+
+				<h1 className="text-lg font-semibold">How to Play</h1>
 			</header>
 
-			{/* Content */}
-			<div className="w-full h-[calc(100%-84px)] space-y-3 flex flex-col">
-				<div className="w-full px-4 py-3 bg-secondary rounded-lg border">
-					<h3 className="font-semibold mb-1">Objective</h3>
-					<p className="text-sm text-muted-foreground">
-						Clear the board by capturing all pieces using fewer moves and less
-						distance(cells).
-					</p>
-				</div>
+			<div className="flex-1 mt-3 rounded-lg p-4 bg-white/85 shadow-[0px_4px_0px_0px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden">
+				<div className="flex-1 overflow-y-auto space-y-4">
+					<div>
+						<h3 className="font-semibold text-gray-900 mb-2">Objective</h3>
+						<p className="text-sm text-gray-700">
+							Collect all coins on the table in the fastest time possible by flicking
+							coins into each other.
+						</p>
+					</div>
 
-				<div className="w-full px-4 py-3 bg-secondary rounded-lg border">
-					<h3 className="font-semibold mb-2">How to Play</h3>
-					<ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-						<li>Any white piece can be placed on an empty cell.</li>
-						<li>The Knight can be placed on a pawn, capturing it.</li>
-						<li>Valid moves are highlighted.</li>
-						<li>Pawns do not block movement. Pieces pass through and wipe them.</li>
-					</ul>
+					<div>
+						<h3 className="font-semibold text-gray-900 mb-2">Rules</h3>
+						<ul className="text-sm text-gray-700 space-y-2">
+							<li className="flex gap-2">
+								<span className="shrink-0 text-green-600 font-bold">•</span>
+								<span>Select a coin on the table to begin.</span>
+							</li>
+							<li className="flex gap-2">
+								<span className="shrink-0 text-green-600 font-bold">•</span>
+								<span>
+									Flick your coin so it hits exactly one other coin. If you hit
+									none or more than one, you lose.
+								</span>
+							</li>
+							<li className="flex gap-2">
+								<span className="shrink-0 text-green-600 font-bold">•</span>
+								<span>
+									The two coins can collide multiple times with each other.
+								</span>
+							</li>
+							<li className="flex gap-2">
+								<span className="shrink-0 text-green-600 font-bold">•</span>
+								<span>If any coin falls off the table, you lose.</span>
+							</li>
+							<li className="flex gap-2">
+								<span className="shrink-0 text-green-600 font-bold">•</span>
+								<span>
+									Coins can bounce off obstacles freely, so use them to your
+									advantage.
+								</span>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
